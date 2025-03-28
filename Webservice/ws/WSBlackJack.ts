@@ -1,0 +1,28 @@
+import axios from "axios";
+import Webservice from "./Webservice";
+
+export default class BlackJack extends Webservice {
+
+
+    public static url = "/blackjack";
+
+    // WS-Kommunikation
+
+
+
+    public static getProfile() {
+
+        this.ws.get(this.url + "/ziehen"); // fdf
+        // axios-Aufruf für Profildaten
+        return { username: "mmeiser", coins: 50 };
+    }
+
+
+    public static karteZiehen() {
+        const token = sessionStorage.getItem("token");
+        this.ws.get("/blackjack/ziehen", token).then()//
+
+        return { karte: "ASS HERZ" };
+    }
+
+}
