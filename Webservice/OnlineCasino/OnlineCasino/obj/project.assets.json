@@ -434,11 +434,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Daten\\mmeiser\\AE-Projekt\\onlinecasino\\Webservice\\OnlineCasino\\OnlineCasino\\OnlineCasino.csproj",
-      "projectName": "OnlineCasino",
-      "projectPath": "D:\\Daten\\mmeiser\\AE-Projekt\\onlinecasino\\Webservice\\OnlineCasino\\OnlineCasino\\OnlineCasino.csproj",
+      "projectUniqueName": "D:\\Daten\\mmeiser\\AE-Projekt\\onlinecasino\\Webservice\\OnlineCasino\\onlineCasino\\onlineCasino.csproj",
+      "projectName": "onlineCasino",
+      "projectPath": "D:\\Daten\\mmeiser\\AE-Projekt\\onlinecasino\\Webservice\\OnlineCasino\\onlineCasino\\onlineCasino.csproj",
       "packagesPath": "D:\\Daten\\mmeiser\\.nuget\\packages",
-      "outputPath": "D:\\Daten\\mmeiser\\AE-Projekt\\onlinecasino\\Webservice\\OnlineCasino\\OnlineCasino\\obj\\",
+      "outputPath": "D:\\Daten\\mmeiser\\AE-Projekt\\onlinecasino\\Webservice\\OnlineCasino\\onlineCasino\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

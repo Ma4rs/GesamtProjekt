@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System;
-using System.Reflection;
 
-namespace OnlineCasino.Controllers
+namespace onlineCasino.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -26,22 +23,11 @@ namespace OnlineCasino.Controllers
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
+                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                 TemperatureC = Random.Shared.Next(-20, 55),
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
         }
-
-        [HttpGet]
-        public WeatherForecast Getiajfiosdjfsiodfj()
-        {
-           
-            return new WeatherForecast
-            {
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            };
-        }
-
     }
 }
