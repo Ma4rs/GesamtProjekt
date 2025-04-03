@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS Casino.Users;  -- Falls die Tabelle existiert, löschen
+GO
+
+CREATE TABLE Casino.Users (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Username NVARCHAR(50) NOT NULL UNIQUE,
+    Credits INT DEFAULT 0
+);
+GO
