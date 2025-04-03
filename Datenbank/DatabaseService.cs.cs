@@ -33,5 +33,17 @@ namespace onlinecasino.Datenbank
         await _context.SaveChangesAsync();
         Console.WriteLine("Daten erfolgreich gespeichert!");
     }
+
+    public List<User> GetAllUsers()
+    {
+        return _context.Users.ToList();
+    }
+
+    // ✅ Credits eines bestimmten Nutzers abrufen
+    public int? GetUserCredits(int userId)
+    {
+        var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+        return user?.Credits;
+    }
 }
 }
