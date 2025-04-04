@@ -1,6 +1,0 @@
-@onlineCasino_HostAddress = http://localhost:5244
-
-GET {{onlineCasino_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
