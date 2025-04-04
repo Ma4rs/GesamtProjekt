@@ -16,6 +16,12 @@ namespace onlinecasino.Datenbank
         // 🔹 2. User in MSSQL speichern
         await databaseService.SaveUsers(users);
 
+        Console.WriteLine("📋 Nutzer in der Datenbank:");
+        foreach (var user in users)
+        {
+            Console.WriteLine($"ID: {user.Id} | Username: {user.Username} | Credits: {user.Credits}");
+        }
+
         Console.WriteLine("Fertig! ✨");
     }
     }

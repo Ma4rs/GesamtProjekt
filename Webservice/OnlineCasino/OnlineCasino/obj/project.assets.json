@@ -428,23 +428,23 @@
     ]
   },
   "packageFolders": {
-    "D:\\Daten\\mmeiser\\.nuget\\packages": {},
+    "D:\\Daten\\kschelle\\.nuget\\packages": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Daten\\mmeiser\\AE-Projekt\\onlinecasino\\Webservice\\OnlineCasino\\onlineCasino\\onlineCasino.csproj",
+      "projectUniqueName": "D:\\Daten\\kschelle\\onlinecasino\\Webservice\\OnlineCasino\\OnlineCasino\\onlineCasino.csproj",
       "projectName": "onlineCasino",
-      "projectPath": "D:\\Daten\\mmeiser\\AE-Projekt\\onlinecasino\\Webservice\\OnlineCasino\\onlineCasino\\onlineCasino.csproj",
-      "packagesPath": "D:\\Daten\\mmeiser\\.nuget\\packages",
-      "outputPath": "D:\\Daten\\mmeiser\\AE-Projekt\\onlinecasino\\Webservice\\OnlineCasino\\onlineCasino\\obj\\",
+      "projectPath": "D:\\Daten\\kschelle\\onlinecasino\\Webservice\\OnlineCasino\\OnlineCasino\\onlineCasino.csproj",
+      "packagesPath": "D:\\Daten\\kschelle\\.nuget\\packages",
+      "outputPath": "D:\\Daten\\kschelle\\onlinecasino\\Webservice\\OnlineCasino\\OnlineCasino\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "\\\\sw2k22v10411\\mmeiser$\\AppData\\NuGet\\NuGet.Config",
+        "\\\\sw2k22v10411\\kschelle$\\AppData\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Nuget.Config"
