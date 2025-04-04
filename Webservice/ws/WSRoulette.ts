@@ -10,6 +10,6 @@ export default class Roulette extends Webservice {
 
             return Number(response)
         });
-    }
+    }    
     
 }
