@@ -8,10 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = TestClient
-<<<<<<< HEAD
-build_property.ProjectDir = D:\Daten\mmeiser\AE-Projekt\onlinecasino\TestClient\
-=======
-build_property.ProjectDir = D:\Daten\kschelle\onlinecasino\TestClient\
->>>>>>> cf93474f8b6e529b965f59887f4d5448b855b736
+build_property.ProjectDir = d:\Daten\kschelle\onlinecasino\TestClient\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
