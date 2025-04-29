@@ -1,4 +1,18 @@
-let bankValue = 1000;
+import axios from "axios";
+
+async function fetchBankValue() {
+	try {
+		const response = await axios.get("http://localhost:5105/api/Casino/GetCredits");
+		// bankValue = Number(response.data); // Bankwert aktualisieren
+		return Number(response.data); // Bankwert aktualisieren
+		// document.getElementById('bankSpan').innerText = bankValue.toLocaleString("en-GB");
+	} catch (error) {
+		console.error("Fehler beim Laden des Bankwerts:", error);
+	}
+}
+
+
+let bankValue = fetchBankValue();
 let currentBet = 0;
 let wager = 5;
 let lastWager = 0;
