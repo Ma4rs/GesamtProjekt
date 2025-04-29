@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- DaisyUI -->
+    <link rel="stylesheet" href="../node_modules/daisyui/daisyui.css">
+    <link rel="stylesheet" href="../node_modules/daisyui/themes.css">
+
+    <!-- Tailwind -->
+    <script src="../node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+
+    <title>EDV-Royale-Webseite</title>
+</head>
+
+<body>
+    <div class="flex flex-col h-screen">
+        <!-- Navigation Bar -->
+        <!-- https://daisyui.com/components/navbar/ -->
+        <div class="navbar bg-base-100 shadow-sm flex-shrink-0">
+            <div class="flex-1">
+                <a class="btn btn-ghost text-xl" href="index.html">EDV-Royale-Casino</a>
+            </div>
+            <div class="flex gap-2">
+                <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto">
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                        <div class="w-10 rounded-full">
+                            <img alt="Tailwind CSS Navbar component"
+                                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp">
+                        </div>
+                    </div>
+                    <ul tabindex="0"
+                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
+                        <li><a class="justify-between">Profile <span class="badge">New</span></a></li>
+                        <li><a>Settings</a></li>
+                        <li><a href="anmelden.html">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Ende -->
+
+        <!-- Inhalt -->
+        <div class="flex flex-1">
+            
+            <!-- Sidebar -->
+            <div class="basis-3/12 bg-gray-300 p-4 flex flex-col ">
+                <div class="flex-grow">
+                    <!-- https://daisyui.com/components/menu/ -->
+                    <ul class="menu bg-base-200 w-full rounded text-lg">
+                        <li><a href="index.html">Startseite</a></li>
+                        <li><a class="menu-active">Roulette</a></li>
+                        <li><a>Blackjack</a></li>
+                        <li><a>Chicken Road</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <input type="button" value="Abmelden" onclick="{() => {
+                        alert('Sie werden abgemeldet')
+                    }}" class="btn w-full mt-auto hover:bg-slate-200">
+                </div>
+            </div>
+            <!-- Ende -->
+
+            <div class="basis-9/12 p-4 ">
+                <!-- Willkommensvideo -->
+                <div class="flex flex-1">
+                    <img class="basis-3/12 w-0 h-92" src="https://media.tenor.com/TM5jcQwGJYQAAAAM/gamler-gambler.gif" alt="#">
+                    <video class="basis-6/12 w-50" autoplay controls>
+                        <source src="https://vimeo.com/753580183" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <img class="basis-3/12 w-0" src="https://gifdb.com/images/high/gambling-498-x-498-gif-yyef1wzq6icwaoh5.gif" alt="#">
+                </div>
+                <!-- Ende -->
+
+
+                <!-- Spieleauswahl -->
+                <div class="flex">
+                    <div class="basis-1/3 p-5">
+                        <!-- https://daisyui.com/components/card/ -->
+                        <div class="card bg-base-100 w-96 shadow-sm">
+                            <figure class="px-10 pt-10">
+                                <img src="https://w0.peakpx.com/wallpaper/34/1019/HD-wallpaper-good-luck-gambling-1600x900-roulette-chips.jpg"
+                                    alt="Shoes" class="rounded-xl" />
+                            </figure>
+                            <div class="card-body items-center text-center">
+                                <h2 class="card-title">Roulette</h2>
+                                <p>A card component has a figure, a body part, and inside body there are title and
+                                    actions parts</p>
+                                <div class="card-actions">
+                                    <button class="btn btn-primary">Play Now</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="basis-1/3 p-5">
+
+                        <div class="card bg-base-100 w-96 shadow-sm">
+                            <figure class="px-10 pt-10">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIVLrBy9Lpz2ECCUAj2IXzmdEWMy4HcQxmLA&s"
+                                    alt="Shoes" class="rounded-xl" />
+                            </figure>
+                            <div class="card-body items-center text-center">
+                                <h2 class="card-title">Blackjack</h2>
+                                <p>A card component has a figure, a body part, and inside body there are title and
+                                    actions parts</p>
+                                <div class="card-actions">
+                                    <button class="btn btn-primary">Play Now</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="basis-1/3 p-5">
+
+                        <div class="card bg-base-100 w-96 shadow-sm">
+                            <figure class="px-10 pt-10">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY58wCN8Sx4dNdoONfHI28vJNu5I-vrN-w2g&s"
+                                    alt="Shoes" class="rounded-xl h-44" />
+                            </figure>
+                            <div class="card-body items-center text-center">
+                                <h2 class="card-title">Card Title</h2>
+                                <p>A card component has a figure, a body part, and inside body there are title and
+                                    actions parts</p>
+                                <div class="card-actions">
+                                    <button class="btn btn-primary">Buy Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ende -->
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

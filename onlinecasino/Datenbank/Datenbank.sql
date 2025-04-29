@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS Casino.Users;
+GO
+
+CREATE TABLE Casino.Users (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Username NVARCHAR(50) NOT NULL UNIQUE,
+    Email NVARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash NVARCHAR(200),
+    Credits INT DEFAULT 0
+);
+GO
