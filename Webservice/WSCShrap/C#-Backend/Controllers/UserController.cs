@@ -13,19 +13,19 @@ namespace C__Backend.Controllers
         {
             Debug.WriteLine($"Empfangen: {data.Username} hat {data.Credits} Credits.");
             return Ok(new { message = "Daten empfangen", user = data.Username });
+            
         }
 
         [HttpGet("GetData")]
         public string GetData()
         {
-
             return "noch keine werte Hier";
         }
 
-        [HttpGet("GetCredits/{response}")]
-        public string GetCredits(string response)
+        [HttpGet("GetCredits/{Username}")]
+        public string GetCredits(string username)
         {
-            return response;
+            return username;
         }
     }
 }
