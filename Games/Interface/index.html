@@ -17,14 +17,14 @@
 </head>
 
 <body>
-    <div class="flex flex-col h-screen">
+    <div class="flex flex-col h-screen bg-red-900">
         <!-- Navigation Bar -->
         <!-- https://daisyui.com/components/navbar/ -->
         <div class="navbar bg-base-100 shadow-sm flex-shrink-0">
             <div class="flex-1">
-                <a class="btn btn-ghost text-xl" href="index.html">EDV-Royale-Casino</a>
+                <a class="btn btn-ghost text-xl" href="index.html">EDV-Casino</a>
             </div>
-            <div class="flex gap-2">
+            <!-- <div class="flex gap-2">
                 <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto">
                 <div class="dropdown dropdown-end">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
@@ -40,7 +40,7 @@
                         <li><a href="anmelden.html">Logout</a></li>
                     </ul>
                 </div>
-            </div>
+            </div> -->
         </div>
         <!-- Ende -->
 
@@ -48,21 +48,20 @@
         <div class="flex flex-1">
             
             <!-- Sidebar -->
-            <div class="basis-3/12 bg-gray-300 p-4 flex flex-col ">
+            <div class="basis-3/12 bg-red-800 p-4 flex flex-col ">
                 <div class="flex-grow">
                     <!-- https://daisyui.com/components/menu/ -->
-                    <ul class="menu bg-base-200 w-full rounded text-lg">
-                        <li><a href="index.html">Startseite</a></li>
-                        <li><a class="menu-active">Roulette</a></li>
-                        <li><a>Blackjack</a></li>
-                        <li><a>Chicken Road</a></li>
+                    <ul class="menu bg-yellow-500 w-full rounded text-lg">
+                        <li class="bg-base-100 rounded mt-2"><a href="index.html" class="menu-active">Startseite</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a>Roulette</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a>Blackjack</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a>Chicken Road</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <input type="button" value="Abmelden" onclick="{() => {
-                        alert('Sie werden abgemeldet')
-                    }}" class="btn w-full mt-auto hover:bg-slate-200">
+                    <input type="button" value="Abmelden" onclick="alert('Sie werden abgemeldet!')
+                    " class="btn w-full mt-auto hover:bg-slate-200">
                 </div>
             </div>
             <!-- Ende -->
@@ -91,8 +90,7 @@
                             </figure>
                             <div class="card-body items-center text-center">
                                 <h2 class="card-title">Roulette</h2>
-                                <p>A card component has a figure, a body part, and inside body there are title and
-                                    actions parts</p>
+                                <p>Beim Roulette geht es um die Wette, in welches Zahlen- fach die Kugel im nächsten Spiel fallen wird</p>
                                 <div class="card-actions">
                                     <button class="btn btn-primary">Play Now</button>
                                 </div>
@@ -110,8 +108,7 @@
                             </figure>
                             <div class="card-body items-center text-center">
                                 <h2 class="card-title">Blackjack</h2>
-                                <p>A card component has a figure, a body part, and inside body there are title and
-                                    actions parts</p>
+                                <p>Beim Black Jack geht es darum, mit den eigenen Karten 21 Punkte zu erreichen oder möglichst nahe an diesen Wert heranzukommen</p>
                                 <div class="card-actions">
                                     <button class="btn btn-primary">Play Now</button>
                                 </div>
@@ -128,9 +125,8 @@
                                     alt="Shoes" class="rounded-xl h-44" />
                             </figure>
                             <div class="card-body items-center text-center">
-                                <h2 class="card-title">Card Title</h2>
-                                <p>A card component has a figure, a body part, and inside body there are title and
-                                    actions parts</p>
+                                <h2 class="card-title">Chicken Cross</h2>
+                                <p>Gehe ein Risiko ein als Huhn die Straße zu überqueren</p>
                                 <div class="card-actions">
                                     <button class="btn btn-primary">Buy Now</button>
                                 </div>
