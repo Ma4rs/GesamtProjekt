@@ -6,11 +6,9 @@ namespace C__Backend.Controllers
     [Route("api/casino/roulette/")]
     public class RouletteController : ControllerBase
     {
+        private static readonly Random _random = new();
+
         [HttpGet("spin")]
-        public int Spin()
-        {
-            Random random = new Random();
-            return random.Next(16);
-        }
+        public int Spin() => _random.Next(16);
     }
 }
