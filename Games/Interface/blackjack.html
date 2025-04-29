@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- DaisyUI -->
+    <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css">
+    <link rel="stylesheet" href="/node_modules/daisyui/themes.css">
+
+    <!-- Tailwind -->
+    <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+
+    <title>Blackjack</title>
+</head>
+
+<body>
+    <div class="flex flex-col h-screen bg-red-900">
+        <!-- Navigation Bar -->
+        <!-- https://daisyui.com/components/navbar/ -->
+        <div class="navbar bg-base-100 shadow-sm flex-shrink-0">
+            <div class="flex-1">
+                <a class="btn btn-ghost text-xl" href="index.html">EDV-Casino</a>
+            </div>
+        </div>
+        <!-- Ende -->
+
+        <!-- Inhalt -->
+        <div class="flex flex-1">
+
+            <!-- Sidebar -->
+            <div class="basis-3/12 bg-red-800 p-4 flex flex-col ">
+                <div class="flex-grow">
+                    <!-- https://daisyui.com/components/menu/ -->
+                    <ul class="menu bg-yellow-500 w-full rounded text-lg">
+                        <li class="bg-base-100 rounded mt-2"><a href="index.html">Startseite</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a>Roulette</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="blackjack.html" class="menu-active">Blackjack</a>
+                        </li>
+                        <li class="bg-base-100 rounded mt-2"><a>Chicken Road</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <input type="button" value="Abmelden" onclick="alert('Sie werden abgemeldet!')
+                    " class="btn w-full mt-auto hover:bg-slate-200">
+                </div>
+            </div>
+            <!-- Ende -->
+
+            <div class="basis-9/12 p-4 ">
+                <!-- Game -->
+                <div class="text-lg text-base-200 ">
+                    hallo
+                </div>
+
+                <div class="mockup-window bg-base-100 border-base-300">
+                    <div class="grid bg-gray-100 place-content-center h-80">Hello!</div>
+                </div>
+                <!-- Ende -->
+
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
