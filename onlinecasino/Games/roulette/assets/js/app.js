@@ -4,13 +4,21 @@ async function fetchBankValue() {
 	try {
 		const response = await axios.get("http://localhost:5105/api/Casino/GetCredits");
 		// bankValue = Number(response.data); // Bankwert aktualisieren
-		return Number(response.data); // Bankwert aktualisieren
+		return Number(response.data); // evt .data[x] weil noch nicht klar ob GetCredits geben wird oder nur GetData
 		// document.getElementById('bankSpan').innerText = bankValue.toLocaleString("en-GB");
 	} catch (error) {
-		console.error("Fehler beim Laden des Bankwerts:", error);
+		console.error("Fehler beim Laden des Bankwerts: ", error);
 	}
 }
 
+async function getWinningField() {
+	try{
+		const response = await axios.get("http://localhost:5105/api/roulette/GetWinningField");
+		return Number(response.data)
+	} catch (error) {
+		console.error("Fehler beim Laden des Winning Fields: ", error);
+	}
+}
 
 let bankValue = fetchBankValue();
 let currentBet = 0;
@@ -33,7 +41,7 @@ let wheel = document.getElementsByClassName('wheel')[0];
 let ballTrack = document.getElementsByClassName('ballTrack')[0];
 
 function resetGame(){
-	bankValue = 1000;	//Player Credits
+	bankValue = fetchBankValue()  //Player Credits
 	currentBet = 0;		
 	wager = 5;
 	bet = [];
@@ -510,8 +518,10 @@ function setBet(e, n, t, o){
 	}
 }
 
+
+
 function spin(){
-	var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
+	var winningSpin = getWinningField();  // Hier Zahl übergeben wer gewinnt
 	spinWheel(winningSpin);
 	setTimeout(function(){
 		if(numbersBet.includes(winningSpin)){
