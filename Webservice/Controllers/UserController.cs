@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 
 
 namespace C__Backend.Controllers
@@ -14,7 +15,7 @@ namespace C__Backend.Controllers
         public IActionResult PostUserCredits([FromBody] Userdata data)
         {
             Debug.WriteLine($"Empfangen: {data.Username} hat {data.Credits} Credits.");
-            return Ok(new { message = "Daten empfangen", user = data.Username });
+            return Ok(new { message = "Daten empfangen", user = data.Username , credits = data.Credits});
             
         }
 
