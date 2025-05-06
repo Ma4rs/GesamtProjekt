@@ -49,9 +49,18 @@ public async Task<IActionResult> GetData([FromBody] Userdata data)
 
 
         [HttpGet("GetCredits/{Username}")]
-        public string GetCredits(string username)
+        public async Task<IActionResult> GetCredits(string username)
         {
-            return username;
+            using (var context = new OnlineCasinoContext())
+            {
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+                if (user == null)
+                {
+                    return NotFound( new { message = "User nicht gefunden"});
+                }
+
+                return Ok(new { credits = user.Credits});
+            }
         }
     }
 }
