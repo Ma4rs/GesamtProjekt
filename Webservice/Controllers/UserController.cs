@@ -51,7 +51,7 @@ public async Task<IActionResult> GetData([FromBody] Userdata data)
         [HttpGet("GetCredits/{Username}")]
         public string GetCredits(string username)
         {
-            return username;
+            return username; // hier int zurücgeben nach db abfrage -> Credits 
         }
     }
 }
