@@ -3,11 +3,11 @@
 namespace C__Backend.Controllers
 {
     [ApiController]
-    [Route("api/Casino/Roulette/")]
+    [Route("api/casino/roulette/")]
     public class RouletteController : ControllerBase
     {
-        [HttpGet("RandomNumber")]
-        public int GetRandomNumber()
+        [HttpGet("spin")]
+        public int spin()
         {
             Random random = new Random();
             return random.Next(16);
