@@ -3,14 +3,14 @@
 namespace C__Backend.Controllers
 {
     [ApiController]
-    [Route("api/Casino/Roulette")]
+    [Route("api/casino/roulette/")]
     public class RouletteController : ControllerBase
     {
-        [HttpGet("RandomNumber/{max}")]
-        public int GetRandomNumber(int max)
+        [HttpGet("spin")]
+        public int spin()
         {
             Random random = new Random();
-            return random.Next(max);
+            return random.Next(16);
         }
     }
 }
