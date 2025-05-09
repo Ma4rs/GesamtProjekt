@@ -1,4 +1,6 @@
 using System;
+using Microsoft.EntityFrameworkCore;
+using C__Backend.Classes;
 
 namespace onlinecasino.Datenbank
 {
