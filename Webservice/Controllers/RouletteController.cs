@@ -10,7 +10,7 @@ namespace C__Backend.Controllers
         public int spin()
         {
             Random random = new Random();
-            return random.Next(16);
+            return random.Next(37);
         }
     }
 }

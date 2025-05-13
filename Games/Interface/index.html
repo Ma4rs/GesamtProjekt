@@ -30,16 +30,15 @@
             <div class="w-full md:w-1/4 bg-red-800 p-4 flex flex-col">
                 <div class="flex-grow">
                     <ul class="menu bg-base-300 w-full rounded text-lg">
-                        <li class="bg-base-100 rounded mt-2"><a href="index.html" class="menu-active">Startseite</a>
-                        </li>
+                        <li class="bg-base-100 rounded mt-2"><a href="index.html" class="menu-active">Startseite</a></li>
                         <li class="bg-base-100 rounded mt-2"><a>Roulette</a></li>
                         <li class="bg-base-100 rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
                         <li class="bg-base-100 rounded mt-2"><a>Chicken Road</a></li>
                     </ul>
                 </div>
                 <div>
-                    <input type="button" value="Abmelden" onclick="alert('Sie werden abgemeldet!')"
-                        class="btn w-full mt-auto hover:bg-slate-200">
+                    <a href="" class="btn w-full hover:bg-slate-200 mb-2">Credits aufladen</a>
+                    <input type="button" value="Abmelden" onclick="alert('Sie werden abgemeldet!')" class="btn w-full mt-auto hover:bg-slate-200">
                 </div>
             </div>
 
@@ -47,9 +46,9 @@
             <div class="w-full md:w-3/4 p-4 flex flex-col">
                 <!-- Willkommensvideo -->
                 <div class="flex w-full justify-center mb-6">
-                    <div class="w-3/4 h-72"> <!-- Erhöhte Höhe hier -->
+                    <div class="w-3/4 h-72">
                         <video class="w-full h-full object-cover rounded-lg overflow-hidden shadow-lg" autoplay controls>
-                            <source src="https://vimeo.com/753580183" type="video/mp4">
+                            <source src="/Picture/WelcomeVideo.mp4" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </div>
@@ -60,13 +59,11 @@
                     <!-- Roulette -->
                     <div class="card bg-base-100 w-80 shadow-sm">
                         <figure class="px-10 pt-10">
-                            <img src="https://w0.peakpx.com/wallpaper/34/1019/HD-wallpaper-good-luck-gambling-1600x900-roulette-chips.jpg"
-                                alt="Roulette" class="rounded-xl" />
+                            <img src="https://w0.peakpx.com/wallpaper/34/1019/HD-wallpaper-good-luck-gambling-1600x900-roulette-chips.jpg" alt="Roulette" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
                             <h2 class="card-title">Roulette</h2>
-                            <p>Beim Roulette geht es um die Wette, in welches Zahlenfach die Kugel im nächsten Spiel
-                                fallen wird</p>
+                            <p>Beim Roulette geht es um die Wette, in welches Zahlenfach die Kugel im nächsten Spiel fallen wird</p>
                             <div class="card-actions">
                                 <button class="btn btn-primary">Play Now</button>
                             </div>
@@ -76,8 +73,7 @@
                     <!-- Blackjack -->
                     <div class="card bg-base-100 w-80 shadow-sm">
                         <figure class="px-10 pt-10">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIVLrBy9Lpz2ECCUAj2IXzmdEWMy4HcQxmLA&s"
-                                alt="Blackjack" class="rounded-xl" />
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIVLrBy9Lpz2ECCUAj2IXzmdEWMy4HcQxmLA&s" alt="Blackjack" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
                             <h2 class="card-title">Blackjack</h2>
@@ -91,8 +87,7 @@
                     <!-- Chicken Cross -->
                     <div class="card bg-base-100 w-80 shadow-sm">
                         <figure class="px-10 pt-10">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY58wCN8Sx4dNdoONfHI28vJNu5I-vrN-w2g&s"
-                                alt="Chicken Cross" class="rounded-xl h-44" />
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY58wCN8Sx4dNdoONfHI28vJNu5I-vrN-w2g&s" alt="Chicken Cross" class="rounded-xl h-44" />
                         </figure>
                         <div class="card-body items-center text-center">
                             <h2 class="card-title">Chicken Cross</h2>
@@ -104,6 +99,16 @@
                     </div>
                 </div>
                 <!-- Ende Spieleauswahl -->
+
+                <!-- Impressum Kontaktdaten (zentriert) -->
+                <div class="bg-red-900 mt-10 text-center py-6 border-t border-gray-700">
+                    <hr class="h-px my-4 bg-gray-400 border-0">
+                    <div class="space-x-6">
+                        <a href="impressum.html" class="text-white hover:underline">Impressum</a>
+                        <a href="kontakt.html" class="text-white hover:underline">Kontakt</a>
+                    </div>
+                </div>
+                <!-- Ende Kontaktdaten -->
             </div>
         </div>
     </div>
