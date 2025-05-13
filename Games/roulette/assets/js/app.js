@@ -10,14 +10,14 @@
 // 		console.error("Fehler beim Laden des Bankwerts: ", error);
 // 	}
 // }
-// async function GetSpin() {
-// 	try {
-// 		const response = await axios.get("http://localhost:5500/api/casino/roulette/spin");		
-// 		return Number(response.data); 
-// 	} catch (error) {
-// 		console.error("Fehler beim Laden des Spins: ", error);
-// 	}
-// }
+async function GetSpin() {
+	try {
+		const response = await axios.get("http://localhost:5500/api/casino/roulette/spin");		
+		return Number(response.data); 
+	} catch (error) {
+		console.error("Fehler beim Laden des Spins: ", error);
+	}
+}
 
 // let bankValue = fetchBankValue();
 let bankValue = 1000;
@@ -521,8 +521,8 @@ function setBet(e, n, t, o) {
 }
 
 function spin() {
-	var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
-	// var winningSpin = GetSpin();  
+	// var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
+	var winningSpin = GetSpin();  
 	spinWheel(winningSpin);
 	setTimeout(function () {
 		if (numbersBet.includes(winningSpin)) {
