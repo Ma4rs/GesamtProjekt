@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using onlinecasino.Database;
 using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 
 
@@ -78,5 +79,7 @@ public async Task<IActionResult> GetData([FromBody] Userdata data)
                 return Ok(new { credits = user.Credits});
             }
         }
+
+        
     }
 }

@@ -2,8 +2,9 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using C__Backend.Controllers; // oder je nach Namespace
 using C__Backend.Classes;
+using onlinecasino.Database;
 
-namespace Webservice.Classes
+namespace C__Backend.Classes
 {
     public class DatabaseService
     {

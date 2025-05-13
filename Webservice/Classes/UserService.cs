@@ -2,7 +2,7 @@ using System;
 using System.Net.Http.Json;
 using C__Backend.Classes;
 
-namespace Webservice.Classes
+namespace C__Backend.Classes
 {
     public class UserService
     {
