@@ -12,74 +12,79 @@ namespace C__Backend.Controllers
     [Route("api/Casino/User")]
     public class UserController : ControllerBase
     {
-        [HttpPost("PostUserCredits")]
-        public IActionResult PostUserCredits([FromBody] Userdata data)
-        {
-            Debug.WriteLine($"Empfangen: {data.Username} hat {data.Credits} Credits.");
-            return Ok(new { message = "Daten empfangen", user = data.Username , credits = data.Credits});
-            
-        }
 
-[HttpPost("GetData")]
-public async Task<IActionResult> GetData([FromBody] Userdata data)
-{
-    using (var context = new OnlineCasinoContext())
-    {
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == data.Email);
-
-        if (user != null)
-        {
-            return Ok(new { credits = user.Credits, message = "User existiert bereits" });
-        }
-        else
-        {
-            var newUser = new User
-            {
-                Username = data.Username,
-                Email = data.Email,
-                PasswordHash = data.Password, // später Hash einbauen
-                Credits = 100 // Startcredits
-            };
-
-            context.Users.Add(newUser);
-            await context.SaveChangesAsync();
-
-            return Ok(new { credits = newUser.Credits, message = "Neuer User angelegt" });
-        }
-    }
-}
-
-
-        [HttpGet("GetCredits/{Username}")]
-        public async Task<IActionResult> GetCredits(string username)
+        [HttpGet("GetData/{username}")]
+        public async Task<IActionResult> GetData(string username)
         {
             using (var context = new OnlineCasinoContext())
             {
                 var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
                 if (user == null)
                 {
-                    return NotFound( new { message = "User nicht gefunden"});
+                    return NotFound(new { message = "User nicht gefunden." });
                 }
 
-                return Ok(new { credits = user.Credits});
+                return Ok(new
+                {
+                    Email = user.Email,
+                    Credits = user.Credits
+                });
             }
         }
 
-        [HttpPost("PostCredits/{Username}")]
-        public async Task<IActionResult> PostCredits(string username)
+
+        [HttpPost("RegisterUser")]
+        public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
         {
             using (var context = new OnlineCasinoContext())
             {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
-                if (user == null)
-                {
-                    return NotFound(new { message = "User nicht gefunden"});
-                }
+                var exists = await context.Users.AnyAsync(u => u.Email == data.Email);
+                if (exists)
+                    return Conflict(new { message = "User existiert bereits." });
 
-                return Ok(new { credits = user.Credits});
+                var newUser = new User
+                {
+                    Username = data.Username,
+                    Email = data.Email,
+                    PasswordHash = data.Password, // später: Hashed!
+                    Credits = 100
+                };
+
+                context.Users.Add(newUser);
+                await context.SaveChangesAsync();
+
+                return Ok(new { message = "User erfolgreich registriert", credits = newUser.Credits });
             }
         }
 
-        
+        [HttpPost("UpdateCredits")]
+        public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
+        {
+            using (var context = new OnlineCasinoContext())
+            {
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+
+                if (user == null)
+                {
+                    return NotFound(new { message = "User nicht gefunden." });
+                }
+
+                user.Credits += request.CreditsToAdd;
+                await context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Credits aktualisiert.",
+                    newCredits = user.Credits
+                });
+            }
+        }
+
+
+
+
+
+
     }
 }
