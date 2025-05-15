@@ -521,8 +521,8 @@ function setBet(e, n, t, o) {
 }
 
 function spin() {
-	// var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
-	var winningSpin = GetSpin();  
+	var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
+	// var winningSpin = GetSpin();  
 	spinWheel(winningSpin);
 	setTimeout(function () {
 		if (numbersBet.includes(winningSpin)) {
