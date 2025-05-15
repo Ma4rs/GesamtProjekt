@@ -25,22 +25,23 @@
         </div>
 
         <!-- Inhalt -->
-        <div class="flex flex-1 w-full overflow-auto">
+        <div class="flex flex-1 w-full overflow-hidden">
             <!-- Sidebar -->
-            <div class="w-full md:w-1/4 bg-red-800 p-4 flex flex-col">
+            <div class="basis-3/12 bg-red-800 p-4 flex flex-col">
                 <div class="flex-grow">
                     <ul class="menu bg-base-300 w-full rounded text-lg">
                         <li class="bg-base-100 rounded mt-2"><a href="index.html" class="menu-active">Startseite</a></li>
                         <li class="bg-base-100 rounded mt-2"><a href="roulette.html">Roulette</a></li>
                         <li class="bg-base-100 rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
-                        <li class="bg-base-100 rounded mt-2"><a>Chicken Road</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="chickencross.html">Chicken Cross</a></li>
                     </ul>
                 </div>
                 <div>
-                    <a href="" class="btn w-full hover:bg-slate-200 mb-2">Credits aufladen</a>
-                    <input type="button" value="Abmelden" onclick="alert('Sie werden abgemeldet!')" class="btn w-full mt-auto hover:bg-slate-200">
+                    <a href="credits.html" class="btn w-full hover:bg-slate-200 mb-2">Credits aufladen</a>
+                    <input type="button" value="Abmelden" onclick="window.location.href='anmelden.html'" class="btn w-full mt-auto hover:bg-slate-200">
                 </div>
             </div>
+            <!-- Ende Sidebar -->
 
             <!-- Hauptbereich -->
             <div class="w-full md:w-3/4 p-4 flex flex-col">
@@ -65,7 +66,7 @@
                             <h2 class="card-title">Roulette</h2>
                             <p>Beim Roulette geht es um die Wette, in welches Zahlenfach die Kugel im nächsten Spiel fallen wird</p>
                             <div class="card-actions">
-                                <button class="btn btn-primary">Play Now</button>
+                                <button class="btn btn-primary" onclick="window.location.href='roulette.html'" >Spielen!</button>
                             </div>
                         </div>
                     </div>
@@ -79,7 +80,7 @@
                             <h2 class="card-title">Blackjack</h2>
                             <p>Erreiche 21 Punkte oder komme so nah wie möglich dran – ohne drüber zu gehen.</p>
                             <div class="card-actions">
-                                <button class="btn btn-primary">Play Now</button>
+                                <button class="btn btn-primary" onclick="window.location.href='blackjack.html'">Spielen!</button>
                             </div>
                         </div>
                     </div>
@@ -93,7 +94,7 @@
                             <h2 class="card-title">Chicken Cross</h2>
                             <p>Gehe ein Risiko ein als Huhn die Straße zu überqueren</p>
                             <div class="card-actions">
-                                <button class="btn btn-primary">Play Now</button>
+                                <button class="btn btn-primary" onclick="window.location.href='chickencross.html'">Spielen!</button>
                             </div>
                         </div>
                     </div>
@@ -101,7 +102,7 @@
                 <!-- Ende Spieleauswahl -->
 
                 <!-- Impressum Kontaktdaten (zentriert) -->
-                <div class="bg-red-900 mt-10 text-center py-6 border-t border-gray-700">
+                <div class="bg-red-900 mt-10 text-center py-6">
                     <hr class="h-px my-4 bg-gray-400 border-0">
                     <div class="space-x-6">
                         <a href="impressum.html" class="text-white hover:underline">Impressum</a>
