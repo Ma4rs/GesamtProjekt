@@ -13,7 +13,7 @@ public class User
     {
         Id = id;
         Username = username;
-        PasswordHash = passwordHash;
+        PasswordHash = passwordHash
         Credits = credits;
         Email = email;
     }
