@@ -7,14 +7,13 @@
         public string Password { get; set; }
         public string Email { get; set; }
 
-        public int? Credits { get; set; }
+        // public int? Credits { get; set; }
         //public string PasswordHash { get; set; }
-        public Userdata(string username,string password, string email, int? credits)
+        public Userdata(string username,string password, string email)
         {
             Username = username;
             Password = password;
             Email = email;
-            Credits = credits;
         }
     }
 }
