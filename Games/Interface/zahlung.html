@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Zahlung wird verarbeitet...</title>
+</head>
+<body>
+  <p id="status">Zahlung wird verarbeitet...</p>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const credits = urlParams.get('credits');
+
+    setTimeout(() => {
+      document.getElementById('status').innerText = `${credits} Credits wurden Ihrem User hinzugefügt.`;
+
+      // Dann nach weiteren 2 Sekunden weiterleiten zur Startseite
+      setTimeout(() => {
+        window.location.href = './index.html';
+      }, 2000);
+    }, 3000);
+  </script>
+</body>
+</html>
