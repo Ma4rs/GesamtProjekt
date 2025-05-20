@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Blackjack Tisch mit Dealer</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #2e2e2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .table-container {
+      position: relative;
+      width: 800px;
+      height: 470px;
+      background: #0a3d0a;
+      border: 10px solid #654321;
+      border-radius: 50% / 30%;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .dealer {
+      position: absolute;
+      top: -90px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .head {
+      width: 50px;
+      height: 50px;
+      background: #f0d9b5;
+      border-radius: 50%;
+      border: 2px solid #333;
+    }
+
+    .body {
+      width: 10px;
+      height: 60px;
+      background: #333;
+      margin-top: 5px;
+    }
+
+    .arms {
+      width: 60px;
+      height: 10px;
+      background: #333;
+      margin-top: -5px;
+    }
+
+    .legs {
+      display: flex;
+      gap: 8px;
+      margin-top: 0;
+    }
+
+    .leg {
+      width: 10px;
+      height: 40px;
+      background: #333;
+    }
+
+    .dealer-label {
+      margin-top: 6px;
+      color: white;
+      font-size: 14px;
+      font-family: sans-serif;
+      opacity: 0.7;
+    }
+
+    .table-text {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="table-container">
+    <!-- Stickman Dealer -->
+    <div class="dealer">
+      <div class="head"></div>
+      <div class="body"></div>
+      <div class="arms"></div>
+      <div class="legs">
+        <div class="leg"></div>
+        <div class="leg"></div>
+      </div>
+      <div class="dealer-label">Dealer</div>
+    </div>
+
+    <div class="table-text">Blackjack Tisch</div>
+  </div>
+
+</body>
+</html>

@@ -12,8 +12,8 @@
 // }
 async function GetSpin() {
 	try {
-		const response = await axios.get("http://localhost:5500/api/casino/roulette/spin");		
-		return Number(response.data); 
+		const response = await axios.get("http://localhost:5105/api/casino/roulette/spin");
+		return Number(response.data);
 	} catch (error) {
 		console.error("Fehler beim Laden des Spins: ", error);
 	}
@@ -64,14 +64,14 @@ function gameOver() {
 	notification.setAttribute('id', 'notification');
 	let nSpan = document.createElement('span');
 	nSpan.setAttribute('class', 'nSpan');
-	nSpan.innerText = 'Bankrupt';
+	nSpan.innerText = 'Keine Credits mehr';
 	notification.append(nSpan);
 
 	let nBtn = document.createElement('div');
 	nBtn.setAttribute('class', 'nBtn');
-	nBtn.innerText = 'Play again';
+	nBtn.innerText = 'Kaufe mehr Credits';
 	nBtn.onclick = function () {
-		resetGame();
+		window.top.location.href = 	'../Interface/credits.html';  // .top nötig damit es nicht im Frame geöffnet wird
 	};
 	notification.append(nBtn);
 	container.prepend(notification);
@@ -390,14 +390,14 @@ function buildBettingBoard() {
 
 	let chipDeck = document.createElement('div');
 	chipDeck.setAttribute('class', 'chipDeck');
-	let chipValues = [1, 5, 10, 100, 'clear'];
+	let chipValues = [1, 5, 10, 100, 'All', 'clear'];
 	for (i = 0; i < chipValues.length; i++) {
 		let cvi = i;
-		let chipColour = (i == 0) ? 'red' : ((i == 1) ? 'blue cdChipActive' : ((i == 2) ? 'orange' : ((i == 3) ? 'gold' : 'clearBet')));
+		let chipColour = (i == 0) ? 'red' : ((i == 1) ? 'blue cdChipActive' : ((i == 2) ? 'orange' : ((i == 3) ? 'gold' : ((i == 4) ? 'black' : 'clearBet'))));
 		let chip = document.createElement('div');
 		chip.setAttribute('class', 'cdChip ' + chipColour);
 		chip.onclick = function () {
-			if (cvi !== 4) {
+			if (cvi !== 5) {
 				let cdChipActive = document.getElementsByClassName('cdChipActive');
 				for (i = 0; i < cdChipActive.length; i++) {
 					cdChipActive[i].classList.remove('cdChipActive');
@@ -407,6 +407,9 @@ function buildBettingBoard() {
 					this.setAttribute('class', curClass + ' cdChipActive');
 				}
 				wager = parseInt(chip.childNodes[0].innerText);
+				if (cvi === 4) {
+					wager = bankValue;
+				}
 			} else {
 				bankValue = bankValue + currentBet;
 				currentBet = 0;
@@ -523,6 +526,7 @@ function setBet(e, n, t, o) {
 function spin() {
 	var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
 	// var winningSpin = GetSpin();  
+	// console.log(winningSpin)
 	spinWheel(winningSpin);
 	setTimeout(function () {
 		if (numbersBet.includes(winningSpin)) {

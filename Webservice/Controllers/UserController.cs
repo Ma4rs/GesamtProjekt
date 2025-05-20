@@ -82,7 +82,32 @@ namespace C__Backend.Controllers
         }
 
 
+        [HttpPost("LoginUser")]
+        public async Task<IActionResult> LoginUser([FromBody] Userdata data)
+        {
+            using (var context = new OnlineCasinoContext())
+            {
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Email == data.Email);
 
+                if (user == null)
+                {
+                    return NotFound(new { message = "User nicht gefunden" });
+                }
+
+                // ❗ Passwortvergleich – aktuell unverschlüsselt (später: Hash-Vergleich)
+                if (user.PasswordHash != data.Password)
+                {
+                    return Unauthorized(new { message = "Falsches Passwort" });
+                }
+
+                return Ok(new
+                {
+                    message = "Login erfolgreich",
+                    username = user.Username,
+                    credits = user.Credits
+                });
+            }
+        }
 
 
 
