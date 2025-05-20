@@ -3,9 +3,9 @@
 namespace C__Backend.Controllers
 {
     [ApiController]
-    [Route("api/Casino/roulette/")]
+    [Route("api/casino/roulette/")]
     public class RouletteController : ControllerBase
-    {
+    {   
         [HttpGet("spin")]
         public int spin()
         {
