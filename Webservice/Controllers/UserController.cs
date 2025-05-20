@@ -93,13 +93,11 @@ namespace C__Backend.Controllers
                 return NotFound(new { message = "Benutzer nicht gefunden" });
             }
 
-            // ⚠️ Passwörter vergleichen (im Klartext – nur für den Anfang!)
             if (user.PasswordHash != request.Password)
             {
                 return Unauthorized(new { message = "Falsches Passwort" });
             }
 
-            // ✅ Login erfolgreich
             return Ok(new
             {
                 message = "Login erfolgreich",
