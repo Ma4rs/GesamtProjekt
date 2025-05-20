@@ -1,6 +1,9 @@
 ﻿using C__Backend.Classes;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using onlinecasino.Database;
+using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 
 
 namespace C__Backend.Controllers
@@ -9,48 +12,79 @@ namespace C__Backend.Controllers
     [Route("api/Casino/User")]
     public class UserController : ControllerBase
     {
-        [HttpPost("PostUserCredits")]
-        public IActionResult PostUserCredits([FromBody] Userdata data)
-        {
-            Debug.WriteLine($"Empfangen: {data.Username} hat {data.Credits} Credits.");
-            return Ok(new { message = "Daten empfangen", user = data.Username });
-            
-        }
 
-[HttpPost("GetData")]
-public async Task<IActionResult> GetData([FromBody] Userdata data)
-{
-    using (var context = new OnlineCasinoContext())
-    {
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == data.Email);
-
-        if (user != null)
+        [HttpGet("GetData/{username}")]
+        public async Task<IActionResult> GetData(string username)
         {
-            return Ok(new { credits = user.Credits, message = "User existiert bereits" });
-        }
-        else
-        {
-            var newUser = new User
+            using (var context = new OnlineCasinoContext())
             {
-                Username = data.Username,
-                Email = data.Email,
-                PasswordHash = data.Password, // später Hash einbauen
-                Credits = 100 // Startcredits
-            };
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
 
-            context.Users.Add(newUser);
-            await context.SaveChangesAsync();
+                if (user == null)
+                {
+                    return NotFound(new { message = "User nicht gefunden." });
+                }
 
-            return Ok(new { credits = newUser.Credits, message = "Neuer User angelegt" });
+                return Ok(new
+                {
+                    Email = user.Email,
+                    Credits = user.Credits
+                });
+            }
         }
-    }
-}
 
 
-        [HttpGet("GetCredits/{Username}")]
-        public string GetCredits(string username)
+        [HttpPost("RegisterUser")]
+        public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
         {
-            return username;
+            using (var context = new OnlineCasinoContext())
+            {
+                var exists = await context.Users.AnyAsync(u => u.Email == data.Email);
+                if (exists)
+                    return Conflict(new { message = "User existiert bereits." });
+
+                var newUser = new User
+                {
+                    Username = data.Username,
+                    Email = data.Email,
+                    PasswordHash = data.Password, // später: Hashed!
+                    Credits = 100
+                };
+
+                context.Users.Add(newUser);
+                await context.SaveChangesAsync();
+
+                return Ok(new { message = "User erfolgreich registriert", credits = newUser.Credits });
+            }
         }
+
+        [HttpPost("UpdateCredits")]
+        public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
+        {
+            using (var context = new OnlineCasinoContext())
+            {
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+
+                if (user == null)
+                {
+                    return NotFound(new { message = "User nicht gefunden." });
+                }
+
+                user.Credits += request.CreditsToAdd;
+                await context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Credits aktualisiert.",
+                    newCredits = user.Credits
+                });
+            }
+        }
+
+
+
+
+
+
     }
 }

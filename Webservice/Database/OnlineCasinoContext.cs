@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace C__Backend.Controllers
+namespace onlinecasino.Database
 {
     public class OnlineCasinoContext : DbContext
     {

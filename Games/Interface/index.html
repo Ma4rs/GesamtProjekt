@@ -2,7 +2,6 @@
 <html lang="de" data-theme="light">
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -17,129 +16,114 @@
 </head>
 
 <body>
-    <div class="flex flex-col h-screen bg-red-900">
+    <div class="flex flex-col min-h-screen bg-red-900">
         <!-- Navigation Bar -->
-        <!-- https://daisyui.com/components/navbar/ -->
-        <div class="navbar bg-base-100 shadow-sm flex-shrink-0">
+        <div class="navbar bg-base-100 shadow-sm flex-shrink-0 flex">
             <div class="flex-1">
-                <a class="btn btn-ghost text-xl" href="index.html">EDV-Casino</a>
+
+                <a class="btn btn-ghost text-xl" href="index.html">
+                    <img src="/Picture/krone.png" class="w-8" alt="Casino Logo">EDV-Casino</a>
             </div>
-            <!-- <div class="flex gap-2">
-                <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto">
-                <div class="dropdown dropdown-end">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                        <div class="w-10 rounded-full">
-                            <img alt="Tailwind CSS Navbar component"
-                                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp">
-                        </div>
-                    </div>
-                    <ul tabindex="0"
-                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
-                        <li><a class="justify-between">Profile <span class="badge">New</span></a></li>
-                        <li><a>Settings</a></li>
-                        <li><a href="anmelden.html">Logout</a></li>
-                    </ul>
-                </div>
-            </div> -->
         </div>
-        <!-- Ende -->
 
         <!-- Inhalt -->
-        <div class="flex flex-1">
-            
+        <div class="flex flex-1 w-full overflow-hidden">
             <!-- Sidebar -->
-            <div class="basis-3/12 bg-red-800 p-4 flex flex-col ">
+            <div class="basis-3/12 bg-red-800 p-4 flex flex-col">
                 <div class="flex-grow">
-                    <!-- https://daisyui.com/components/menu/ -->
-                    <ul class="menu bg-yellow-500 w-full rounded text-lg">
-                        <li class="bg-base-100 rounded mt-2"><a href="index.html" class="menu-active">Startseite</a></li>
-                        <li class="bg-base-100 rounded mt-2"><a>Roulette</a></li>
-                        <li class="bg-base-100 rounded mt-2"><a>Blackjack</a></li>
-                        <li class="bg-base-100 rounded mt-2"><a>Chicken Road</a></li>
+                    <ul class="menu bg-base-300 w-full rounded text-lg">
+                        <li class="bg-base-100 rounded mt-2"><a href="index.html" class="menu-active">Startseite</a>
+                        </li>
+                        <li class="bg-base-100 rounded mt-2"><a href="roulette.html">Roulette</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="chickencross.html">Chicken Cross</a></li>
                     </ul>
                 </div>
-
                 <div>
-                    <input type="button" value="Abmelden" onclick="alert('Sie werden abgemeldet!')
-                    " class="btn w-full mt-auto hover:bg-slate-200">
+                    <a href="credits.html" class="btn w-full hover:bg-slate-200 mb-2">Credits aufladen</a>
+                    <a href="anmelden.html" class="btn w-full hover:bg-slate-200 mb-2">Abmelden</a>
                 </div>
             </div>
-            <!-- Ende -->
+            <!-- Ende Sidebar -->
 
-            <div class="basis-9/12 p-4 ">
+            <!-- Hauptbereich -->
+            <div class="w-full md:w-3/4 p-4 flex flex-col">
                 <!-- Willkommensvideo -->
-                <div class="flex flex-1">
-                    <img class="basis-3/12 w-0 h-92" src="https://media.tenor.com/TM5jcQwGJYQAAAAM/gamler-gambler.gif" alt="#">
-                    <video class="basis-6/12 w-50" autoplay controls>
-                        <source src="https://vimeo.com/753580183" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <img class="basis-3/12 w-0" src="https://gifdb.com/images/high/gambling-498-x-498-gif-yyef1wzq6icwaoh5.gif" alt="#">
+                <div class="flex w-full justify-center mb-6">
+                    <div class="w-3/4 h-72">
+                        <video class="w-full h-full object-cover rounded-lg overflow-hidden shadow-lg" autoplay
+                            controls>
+                            <source src="/Picture/WelcomeVideo.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
                 </div>
-                <!-- Ende -->
-
 
                 <!-- Spieleauswahl -->
-                <div class="flex">
-                    <div class="basis-1/3 p-5">
-                        <!-- https://daisyui.com/components/card/ -->
-                        <div class="card bg-base-100 w-96 shadow-sm">
-                            <figure class="px-10 pt-10">
-                                <img src="https://w0.peakpx.com/wallpaper/34/1019/HD-wallpaper-good-luck-gambling-1600x900-roulette-chips.jpg"
-                                    alt="Shoes" class="rounded-xl" />
-                            </figure>
-                            <div class="card-body items-center text-center">
-                                <h2 class="card-title">Roulette</h2>
-                                <p>Beim Roulette geht es um die Wette, in welches Zahlen- fach die Kugel im nächsten Spiel fallen wird</p>
-                                <div class="card-actions">
-                                    <button class="btn btn-primary">Play Now</button>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div class="basis-1/3 p-5">
-
-                        <div class="card bg-base-100 w-96 shadow-sm">
-                            <figure class="px-10 pt-10">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIVLrBy9Lpz2ECCUAj2IXzmdEWMy4HcQxmLA&s"
-                                    alt="Shoes" class="rounded-xl" />
-                            </figure>
-                            <div class="card-body items-center text-center">
-                                <h2 class="card-title">Blackjack</h2>
-                                <p>Beim Black Jack geht es darum, mit den eigenen Karten 21 Punkte zu erreichen oder möglichst nahe an diesen Wert heranzukommen</p>
-                                <div class="card-actions">
-                                    <button class="btn btn-primary">Play Now</button>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div class="basis-1/3 p-5">
-
-                        <div class="card bg-base-100 w-96 shadow-sm">
-                            <figure class="px-10 pt-10">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY58wCN8Sx4dNdoONfHI28vJNu5I-vrN-w2g&s"
-                                    alt="Shoes" class="rounded-xl h-44" />
-                            </figure>
-                            <div class="card-body items-center text-center">
-                                <h2 class="card-title">Chicken Cross</h2>
-                                <p>Gehe ein Risiko ein als Huhn die Straße zu überqueren</p>
-                                <div class="card-actions">
-                                    <button class="btn btn-primary">Buy Now</button>
-                                </div>
+                <div class="flex flex-wrap justify-center gap-6">
+                    <!-- Roulette -->
+                    <div class="card bg-base-100 w-80 shadow-sm">
+                        <figure class="px-10 pt-10">
+                            <img src="https://w0.peakpx.com/wallpaper/34/1019/HD-wallpaper-good-luck-gambling-1600x900-roulette-chips.jpg"
+                                alt="Roulette" class="rounded-xl" />
+                        </figure>
+                        <div class="card-body items-center text-center">
+                            <h2 class="card-title">Roulette</h2>
+                            <p>Beim Roulette geht es um die Wette, in welches Zahlenfach die Kugel im nächsten Spiel
+                                fallen wird</p>
+                            <div class="card-actions">
+                                <button class="btn btn-primary transition delay-150 duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+                                    onclick="window.location.href='roulette.html'">Spielen!</button>
                             </div>
                         </div>
                     </div>
-                    <!-- Ende -->
+
+                    <!-- Blackjack -->
+                    <div class="card bg-base-100 w-80 shadow-sm">
+                        <figure class="px-10 pt-10">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIVLrBy9Lpz2ECCUAj2IXzmdEWMy4HcQxmLA&s"
+                                alt="Blackjack" class="rounded-xl" />
+                        </figure>
+                        <div class="card-body items-center text-center">
+                            <h2 class="card-title">Blackjack</h2>
+                            <p>Erreiche 21 Punkte oder komme so nah wie möglich dran – ohne drüber zu gehen.</p>
+                            <div class="card-actions">
+                                <button class="btn btn-primary transition delay-150 duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+                                    onclick="window.location.href='blackjack.html'">Spielen!</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chicken Cross -->
+                    <div class="card bg-base-100 w-80 shadow-sm">
+                        <figure class="px-10 pt-10">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY58wCN8Sx4dNdoONfHI28vJNu5I-vrN-w2g&s"
+                                alt="Chicken Cross" class="rounded-xl h-44" />
+                        </figure>
+                        <div class="card-body items-center text-center">
+                            <h2 class="card-title">Chicken Cross</h2>
+                            <p>Gehe ein Risiko ein als Huhn die Straße zu überqueren</p>
+                            <div class="card-actions">
+                                <button class="btn btn-primary transition delay-150 duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+                                    onclick="window.location.href='chickencross.html'">Spielen!</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
+                <!-- Ende Spieleauswahl -->
+
+                <!-- Impressum Kontaktdaten (zentriert) -->
+                <div class="bg-red-900 mt-10 text-center py-6">
+                    <hr class="h-px my-4 bg-gray-400 border-0">
+                    <div class="space-x-6">
+                        <a href="impressum.html" class="text-white hover:underline">Impressum</a>
+                        <a href="kontakt.html" class="text-white hover:underline">Kontakt</a>
+                    </div>
+                </div>
+                <!-- Ende Kontaktdaten -->
             </div>
         </div>
     </div>
-
 </body>
 
 </html>

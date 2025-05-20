@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- DaisyUI -->
+    <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css">
+    <link rel="stylesheet" href="/node_modules/daisyui/themes.css">
+
+    <!-- Tailwind -->
+    <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+
+    <title>Kontakt</title>
+</head>
+
+<body>
+    <div class="flex flex-col h-screen bg-red-900">
+        <!-- Navigation Bar -->
+        <div class="navbar bg-base-100 shadow-sm flex-shrink-0">
+            <div class="flex-1">
+                <a class="btn btn-ghost text-xl" href="index.html">
+                    <img src="/Picture/krone.png" class="w-8" alt="Casino Logo">EDV-Casino</a>
+            </div>
+        </div>
+
+        <!-- Inhalt -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar -->
+            <div class="basis-3/12 bg-red-800 p-4 flex flex-col">
+                <div class="flex-grow">
+                    <ul class="menu bg-base-300 w-full rounded text-lg">
+                        <li class="bg-base-100 rounded mt-2"><a href="index.html">Startseite</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="roulette.html">Roulette</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="chickencross.html">Chicken Cross</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <a href="credits.html" class="btn w-full hover:bg-slate-200 mb-2">Credits aufladen</a>
+                    <a href="anmelden.html" class="btn w-full hover:bg-slate-200 mb-2">Abmelden</a>
+                </div>
+            </div>
+
+            <!-- Hauptbereich -->
+            <div class="basis-9/12 p-4 flex flex-col overflow-auto">
+                <!-- Titel -->
+                <div class="text-7xl text-base-200 p-5">
+                    Kontakt
+                </div>
+
+                <!-- Kontaktformular -->
+                <div class="text-base-200 m-8">
+                    <form class="space-y-6 max-w-xl">
+                        <div>
+                            <label class="block text-lg mb-1">Name:</label>
+                            <input type="text" placeholder="Ihr Name"
+                                class="input input-bordered w-full bg-base-100 text-black" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-lg mb-1">E-Mail:</label>
+                            <input type="email" placeholder="Ihre E-Mail"
+                                class="input input-bordered w-full bg-base-100 text-black" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-lg mb-1">Nachricht:</label>
+                            <textarea placeholder="Ihre Nachricht"
+                                class="textarea textarea-bordered w-full h-40 bg-base-100 text-black"
+                                required></textarea>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="btn btn-primary">Absenden</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <div class="bg-red-900 mt-10 text-center py-6">
+                    <hr class="h-px my-4 bg-gray-400 border-0">
+                    <div class="space-x-6">
+                        <a href="impressum.html" class="text-white hover:underline">Impressum</a>
+                        <a href="kontakt.html" class="text-white hover:underline">Kontakt</a>
+                    </div>
+                </div>
+                <!-- Ende Footer -->
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

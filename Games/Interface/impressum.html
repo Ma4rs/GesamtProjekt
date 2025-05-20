@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- DaisyUI -->
+    <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css">
+    <link rel="stylesheet" href="/node_modules/daisyui/themes.css">
+
+    <!-- Tailwind -->
+    <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+
+    <title>Impressum</title>
+</head>
+
+<body>
+    <div class="flex flex-col h-screen bg-red-900">
+        <!-- Navigation Bar -->
+        <div class="navbar bg-base-100 shadow-sm flex-shrink-0">
+            <div class="flex-1">
+                <a class="btn btn-ghost text-xl" href="index.html">
+                    <img src="/Picture/krone.png" class="w-8" alt="Casino Logo">EDV-Casino</a>
+            </div>
+        </div>
+
+        <!-- Inhalt -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar -->
+            <div class="basis-3/12 bg-red-800 p-4 flex flex-col">
+                <div class="flex-grow">
+                    <ul class="menu bg-base-300 w-full rounded text-lg">
+                        <li class="bg-base-100 rounded mt-2"><a href="index.html">Startseite</a>
+                        </li>
+                        <li class="bg-base-100 rounded mt-2"><a href="roulette.html">Roulette</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="chickencross.html">Chicken-Cross</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <a href="credits.html" class="btn w-full hover:bg-slate-200 mb-2">Credits aufladen</a>
+                    <a href="anmelden.html" class="btn w-full hover:bg-slate-200 mb-2">Abmelden</a>
+
+                </div>
+            </div>
+
+            <!-- Hauptbereich -->
+            <div class="basis-9/12 p-4 flex flex-col overflow-auto">
+                <!-- Titel -->
+                <div class="text-7xl text-base-200 p-5">
+                    Impressum
+                </div>
+
+                <div class="text-base-200 m-8">
+                    <div class="text-lg">
+                        Anbieter:<br>
+                        Marcel Meiser<br>
+                        Blastrasse<br>
+                        94469 Deggendorf
+                    </div>
+                    <br>
+                    <div class="text-lg">
+                        Kontakt: <br>
+                        Telefon: 089/1234567-8 <br>
+                        Telefax: 089/1234567-9<br>
+                        E-Mail: mail@mustermann.de<br>
+                        Website: www.mustermann.de
+                    </div>
+                    <br>
+
+                    <div class="text-lg">
+                        Bei redaktionellen Inhalten:
+                        <br>
+                        Verantwortlich nach § 55 Abs.2 RStV
+                        <br>Moritz Schreiberling
+                        <br>Musterstraße 2
+                        <br>80999 München
+                    </div>
+                </div>
+                <!-- Impressum Kontaktdaten (zentriert) -->
+                <div class="bg-red-900 mt-10 text-center py-6">
+                    <hr class="h-px my-4 bg-gray-400 border-0">
+                    <div class="space-x-6">
+                        <a href="impressum.html" class="text-white hover:underline">Impressum</a>
+                        <a href="kontakt.html" class="text-white hover:underline">Kontakt</a>
+                    </div>
+                </div>
+                <!-- Ende Kontaktdaten -->
+
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

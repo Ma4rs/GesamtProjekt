@@ -2,7 +2,6 @@
 <html lang="de" data-theme="light">
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -19,57 +18,59 @@
 <body>
     <div class="flex flex-col h-screen bg-red-900">
         <!-- Navigation Bar -->
-        <!-- https://daisyui.com/components/navbar/ -->
         <div class="navbar bg-base-100 shadow-sm flex-shrink-0">
             <div class="flex-1">
-                <a class="btn btn-ghost text-xl" href="index.html">EDV-Casino</a>
+                <a class="btn btn-ghost text-xl" href="index.html">
+                    <img src="/Picture/krone.png" class="w-8" alt="Casino Logo">EDV-Casino</a>
             </div>
         </div>
-        <!-- Ende -->
 
         <!-- Inhalt -->
-        <div class="flex flex-1">
-
+        <div class="flex flex-1 overflow-hidden">
             <!-- Sidebar -->
-            <div class="basis-3/12 bg-red-800 p-4 flex flex-col ">
+            <div class="basis-3/12 bg-red-800 p-4 flex flex-col">
                 <div class="flex-grow">
-                    <!-- https://daisyui.com/components/menu/ -->
-                    <ul class="menu bg-yellow-500 w-full rounded text-lg">
-                        <li class="bg-base-100 rounded mt-2"><a href="index.html">Startseite</a></li>
-                        <li class="bg-base-100 rounded mt-2"><a>Roulette</a></li>
+                    <ul class="menu bg-base-300 w-full rounded text-lg">
+                        <li class="bg-base-100 rounded mt-2"><a href="index.html">Startseite</a>
+                        </li>
+                        <li class="bg-base-100 rounded mt-2"><a href="roulette.html">Roulette</a></li>
                         <li class="bg-base-100 rounded mt-2"><a href="blackjack.html" class="menu-active">Blackjack</a>
                         </li>
-                        <li class="bg-base-100 rounded mt-2"><a>Chicken Road</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="chickencross.html">Chicken Cross</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <input type="button" value="Abmelden" onclick="alert('Sie werden abgemeldet!')
-                    " class="btn w-full mt-auto hover:bg-slate-200">
+                    <a href="credits.html" class="btn w-full hover:bg-slate-200 mb-2">Credits aufladen</a>
+                    <a href="anmelden.html" class="btn w-full hover:bg-slate-200 mb-2">Abmelden</a>
                 </div>
             </div>
-            <!-- Ende -->
 
-            <div class="basis-9/12 p-4 ">
-                <!-- Game -->
-                <div class="text-5xl text-base-200 p-3 text-center">
+            <!-- Hauptbereich -->
+            <div class="basis-9/12 p-4 flex flex-col overflow-auto">
+                <!-- Titel -->
+                <div class="text-7xl text-base-200 p-5">
                     Blackjack
                 </div>
-                <div class="divider"></div>
-                <div class="mockup-window bg-base-100 border-base-300">
-                    <div class="grid bg-gray-100 place-content-center h-80">Hello!</div>
-                </div>
-                <!-- Ende -->
 
-                <div class="text-2xl text-base-200 p-3 text-center">
-                    Jeder Spieler setzt gegen die Bank und versucht, mit seinen Karten 21 Punkte zu erreichen oder an
-                    diesen Wert so nahe wie möglich heranzukommen, ohne ihn zu überschreiten
+                <!-- Responsiver Videobereich -->
+                <div class="flex-grow flex items-center justify-center bg-base-100 rounded-lg shadow-md">
+                    <div class="w-full max-w-[960px] aspect-video">
+                        <iframe src="https://www.example.com" class="w-full h-full rounded-lg" allowfullscreen></iframe>
+                    </div>
                 </div>
-
+                <!-- Impressum Kontaktdaten (zentriert) -->
+                <div class="bg-red-900 mt-10 text-center py-6">
+                    <hr class="h-px my-4 bg-gray-400 border-0">
+                    <div class="space-x-6">
+                        <a href="impressum.html" class="text-white hover:underline">Impressum</a>
+                        <a href="kontakt.html" class="text-white hover:underline">Kontakt</a>
+                    </div>
+                </div>
+                <!-- Ende Kontaktdaten -->
             </div>
         </div>
     </div>
-
 </body>
 
 </html>
