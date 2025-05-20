@@ -12,7 +12,7 @@
 // }
 async function GetSpin() {
 	try {
-		const response = await axios.get("http://localhost:5500/api/casino/roulette/spin");
+		const response = await axios.get("http://localhost:5105/api/casino/roulette/spin");
 		return Number(response.data);
 	} catch (error) {
 		console.error("Fehler beim Laden des Spins: ", error);
@@ -71,7 +71,6 @@ function gameOver() {
 	nBtn.setAttribute('class', 'nBtn');
 	nBtn.innerText = 'Kaufe mehr Credits';
 	nBtn.onclick = function () {
-		// resetGame();
 		window.top.location.href = 	'../Interface/credits.html';  // .top nötig damit es nicht im Frame geöffnet wird
 	};
 	notification.append(nBtn);
@@ -527,6 +526,7 @@ function setBet(e, n, t, o) {
 function spin() {
 	var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
 	// var winningSpin = GetSpin();  
+	// console.log(winningSpin)
 	spinWheel(winningSpin);
 	setTimeout(function () {
 		if (numbersBet.includes(winningSpin)) {
