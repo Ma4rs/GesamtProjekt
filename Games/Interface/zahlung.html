@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <title>Zahlung wird verarbeitet...</title>
@@ -20,4 +20,50 @@
     }, 3000);
   </script>
 </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zahlung wird verarbeitet...</title>
+  <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css">
+  <link rel="stylesheet" href="/node_modules/daisyui/themes.css">
+  <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+</head>
+
+<body>
+  <div class="flex flex-col min-h-screen bg-red-900">
+    <div class="navbar bg-base-100 shadow-sm flex-shrink-0 flex">
+      <div class="flex-1">
+        <a class="btn btn-ghost text-xl" href="index.html">
+          <img src="/Picture/krone.png" class="w-8" alt="Casino Logo">
+          EDV-Casino
+        </a>
+      </div>
+    </div>
+    <div class="flex flex-1 items-center justify-center">
+      <div class="bg-base-100 rounded-lg shadow-lg p-10 flex flex-col items-center">
+        <span class="loading loading-spinner loading-lg text-red-700 mb-8" id="spinner"></span>
+        <p id="status" class="text-xl font-semibold text-center">Zahlung wird verarbeitet...</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const credits = urlParams.get('credits');
+
+    setTimeout(() => {
+      document.getElementById('status').innerText = `${credits} Credits wurden Ihrem User hinzugefügt.`;
+      document.getElementById('spinner').style.display = "none";
+      setTimeout(() => {
+        window.location.href = './index.html';
+      }, 2000);
+    }, 3000);
+  </script>
+</body>
+
 </html>
