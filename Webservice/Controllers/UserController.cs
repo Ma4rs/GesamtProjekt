@@ -4,7 +4,11 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using onlinecasino.Database;
 using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
-
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace C__Backend.Controllers
 {
@@ -82,32 +86,86 @@ namespace C__Backend.Controllers
         }
 
 
+        // [HttpPost("Login")]
+        // public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        // {
+        //     using var context = new OnlineCasinoContext();
+
+        //     var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+        //     if (user == null)
+        //     {
+        //         return NotFound(new { message = "Benutzer nicht gefunden" });
+        //     }
+
+        //     if (user.PasswordHash != request.Password)
+        //     {
+        //         return Unauthorized(new { message = "Falsches Passwort" });
+        //     }
+
+        //     return Ok(new
+        //     {
+        //         message = "Login erfolgreich",
+        //         username = user.Username,
+        //         credits = user.Credits
+        //     });
+        // }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             using var context = new OnlineCasinoContext();
 
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (user == null)
+            if (user == null || user.PasswordHash != request.Password)
             {
-                return NotFound(new { message = "Benutzer nicht gefunden" });
+                return Unauthorized(new { message = "E-Mail oder Passwort falsch" });
             }
 
-            if (user.PasswordHash != request.Password)
+            // JWT erzeugen
+            var jwtKey = _configuration["Jwt:Key"];
+            var jwtIssuer = _configuration["Jwt:Issuer"];
+            var jwtAudience = _configuration["Jwt:Audience"];
+            var jwtExpire = int.Parse(_configuration["Jwt:ExpireMinutes"]);
+
+            var claims = new[]
             {
-                return Unauthorized(new { message = "Falsches Passwort" });
-            }
+        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim("UserId", user.Id.ToString())
+    };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: jwtIssuer,
+                audience: jwtAudience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(jwtExpire),
+                signingCredentials: creds
+            );
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
             return Ok(new
             {
                 message = "Login erfolgreich",
-                username = user.Username,
-                credits = user.Credits
+                token = tokenString
             });
         }
 
+        private readonly IConfiguration _configuration;
+        public UserController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
-
+        [Authorize]
+        [HttpGet("SecretArea")]
+        public IActionResult Secret()
+        {
+            return Ok("Nur sichtbar mit gültigem Token!");
+        }
 
     }
 }
