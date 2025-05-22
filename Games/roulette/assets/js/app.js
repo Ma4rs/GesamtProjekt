@@ -1,26 +1,34 @@
 // import axios from "axios";
 
-// async function fetchBankValue() {
-// 	try {
-// 		const response = await axios.get("http://localhost:5500/api/Casino/GetCredits/{username}");		
-// 		// String username = "";
-// 		// const response = await axios.get($"http://localhost:5105/api/Casino/GetCredits/{username}");		// username übergeben damit man die kredits ermitteln kann
-// 		return Number(response.data); // Bankwert aktualisieren
-// 	} catch (error) {
-// 		console.error("Fehler beim Laden des Bankwerts: ", error);
-// 	}
-// }
+async function fetchBankValue() {
+	try {
+		username = "string";
+		const response = await axios.get(`http://localhost:5105/api/Casino/User/GetData/${username}`);
+
+		// String username = "";
+		// const response = await axios.get($"http://localhost:5105/api/Casino/GetCredits/{username}");		// username übergeben damit man die kredits ermitteln kann
+		console.log(response.data.credits);
+		return Number(response.data.credits); // Bankwert aktualisieren
+	} catch (error) {
+		console.log("Fehler beim Laden des Bankwerts: ", error);
+	}
+}
 async function GetSpin() {
 	try {
 		const response = await axios.get("http://localhost:5105/api/casino/roulette/spin");
 		return Number(response.data);
 	} catch (error) {
-		console.error("Fehler beim Laden des Spins: ", error);
+		console.log("Fehler beim Laden des Spins: ", error);
 	}
 }
 
-// let bankValue = fetchBankValue();
-let bankValue = 1000;
+// async function main() {
+console.log(fetchBankValue());
+let bankValue = fetchBankValue();
+bankValue.then((ergebnis) => {
+	console.log("###############" + ergebnis)
+})
+// let bankValue = 1000;
 let currentBet = 0;
 let wager = 5;
 let lastWager = 0;
@@ -41,8 +49,10 @@ let wheel = document.getElementsByClassName('wheel')[0];
 let ballTrack = document.getElementsByClassName('ballTrack')[0];
 
 function resetGame() {
-	// bankValue = fetchBankValue();	//Player Credits
-	bankValue = 1000;	//Player Credits
+	bankValue.then((ergebnis) => {
+		console.log("###############" + ergebnis)
+	})	//Player Credits
+	// bankValue = 1000;	//Player Credits
 	currentBet = 0;
 	wager = 5;
 	bet = [];
@@ -59,7 +69,6 @@ function startGame() {
 }
 
 function gameOver() {
-	// Update Credits to 0
 	let notification = document.createElement('div');
 	notification.setAttribute('id', 'notification');
 	let nSpan = document.createElement('span');
@@ -71,7 +80,7 @@ function gameOver() {
 	nBtn.setAttribute('class', 'nBtn');
 	nBtn.innerText = 'Kaufe mehr Credits';
 	nBtn.onclick = function () {
-		window.top.location.href = 	'../Interface/credits.html';  // .top nötig damit es nicht im Frame geöffnet wird
+		window.top.location.href = '../Interface/credits.html';  // .top nötig damit es nicht im Frame geöffnet wird
 	};
 	notification.append(nBtn);
 	container.prepend(notification);
@@ -408,7 +417,7 @@ function buildBettingBoard() {
 				}
 				wager = parseInt(chip.childNodes[0].innerText);
 				if (cvi === 4) {
-					wager = bankValue;
+					wager = bankValue.then();
 				}
 			} else {
 				bankValue = bankValue + currentBet;
@@ -434,7 +443,10 @@ function buildBettingBoard() {
 	bank.setAttribute('class', 'bank');
 	let bankSpan = document.createElement('span');
 	bankSpan.setAttribute('id', 'bankSpan');
-	bankSpan.innerText = '' + bankValue.toLocaleString("en-GB") + '';
+	console.log(bankValue)
+	bankValue.then((ergebnis) => {
+		bankSpan.innerText = '' + ergebnis.toLocaleString("en-GB") + '';
+	})
 	bank.append(bankSpan);
 	bankContainer.append(bank);
 
@@ -524,9 +536,9 @@ function setBet(e, n, t, o) {
 }
 
 function spin() {
-	var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
-	// var winningSpin = GetSpin();  
-	// console.log(winningSpin)
+	// var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
+	var winningSpin = GetSpin();
+	console.log(winningSpin)
 	spinWheel(winningSpin);
 	setTimeout(function () {
 		if (numbersBet.includes(winningSpin)) {
@@ -672,3 +684,5 @@ function removeChips() {
 		removeChips();
 	}
 }
+// }
+// main();
