@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- DaisyUI -->
+    <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css">
+    <link rel="stylesheet" href="/node_modules/daisyui/themes.css">
+
+    <!-- Tailwind -->
+    <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+
+    <title>Chicken-Cross</title>
+</head>
+
+<body>
+    <div class="flex flex-col h-screen bg-red-900">
+        <!-- Navigation Bar -->
+        <div class="navbar bg-base-100 shadow-sm flex-shrink-0">
+            <div class="flex-1">
+                <a class="btn btn-ghost text-xl" href="index.html">
+                    <img src="/Picture/krone.png" class="w-8" alt="Casino Logo">EDV-Casino</a>
+            </div>
+            <div class=" bg-base-300 min-w-15 w-auto text-center h-auto m-1.5 rounded-md">
+                <div class="bg-white m-1.5 p-1.5 rounded-md">
+                    <span class="border-r-2 pr-2.5">150</span>
+                    <a class="pl-1.5" href="credits.html"><span
+                            class="font-bold text-gray-700 rounded-full bg-base-300 p-1  font-mono ">+</span></a>
+                </div>
+            </div>
+            <div class="relative ml-3">
+                <div>
+                    <button type="button"
+                        class="relative flex rounded-full bg-gray-800 text-xl focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+                        id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                        <span class="absolute -inset-1.5"></span>
+                        <span class="sr-only">Open user menu</span>
+                        <img class="size-8 rounded-full" src="/Picture/R2-D2.jfif" alt="R2-D2">
+                    </button>
+                </div>
+                <!-- Dropdown-Menü -->
+                <div id="user-menu"
+                    class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 hidden"
+                    role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                    <a href="anmelden.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                        id="user-menu-item-2">Sign out</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inhalt -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar -->
+            <div class="basis-3/12 bg-red-800 p-4 flex flex-col">
+                <div class="flex-grow">
+                    <ul class="menu bg-base-300 w-full rounded text-lg">
+                        <li class="bg-base-100 rounded mt-2"><a href="index.html">Startseite</a>
+                        </li>
+                        <li class="bg-base-100 rounded mt-2"><a href="roulette.html">Roulette</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="chickencross.html">Chicken Cross</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="tripleGuess.html" class="menu-active">tripleGuess.html</a></li>
+                    </ul>
+                </div>
+
+                <!-- <div>
+                    <a href="credits.html" class="btn w-full hover:bg-slate-200 mb-2">Credits aufladen</a>
+                    <a href="anmelden.html" class="btn w-full hover:bg-slate-200 mb-2">Abmelden</a>
+                </div> -->
+            </div>
+
+            <!-- Hauptbereich -->
+            <div class="basis-9/12 p-4 flex flex-col overflow-auto">
+                <!-- Titel -->
+                <div class="text-7xl text-base-200 p-5">
+                    Chicken Cross
+                </div>
+
+                <!-- Responsiver Videobereich -->
+                <div class="flex-grow flex items-center justify-center bg-base-100 rounded-lg shadow-md">
+                    <div class="w-full max-w-[960px] aspect-video">
+                        <iframe src="https://www.example.com" class="w-full h-full rounded-lg" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Impressum Kontaktdaten (zentriert) -->
+                <div class="bg-red-900 mt-10 text-center py-6">
+                    <hr class="h-px my-4 bg-gray-400 border-0">
+                    <div class="space-x-6">
+                        <a href="impressum.html" class="text-white hover:underline">Impressum</a>
+                        <a href="kontakt.html" class="text-white hover:underline">Kontakt</a>
+                    </div>
+                </div>
+                <!-- Ende Kontaktdaten -->
+            </div>
+        </div>
+    </div>
+    <!-- Script für Dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const button = document.getElementById('user-menu-button');
+            const menu = document.getElementById('user-menu');
+
+            button.addEventListener('click', function (event) {
+                event.stopPropagation(); // verhindert sofortiges Schließen
+                menu.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!button.contains(event.target) && !menu.contains(event.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
