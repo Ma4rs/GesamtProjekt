@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
   <meta charset="UTF-8">
@@ -17,7 +17,7 @@
     <!-- Logo -->
     <div class="flex min-h-full h-screen flex-col justify-center bg-red-900 px-6 py-12 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-30 w-auto" src="/Picture/image-removebg-preview.png" alt="Your Company">
+        <img class="mx-auto h-30 w-auto" src="/Picture/krone.png" alt="Your Company">
         <h3 class="mt-2 text-center text-2xl/5 tracking-normal text-yellow-400">EDV-Royale-Casino</h3>
         <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-yellow-400">Sign in to your account</h2>
       </div>
@@ -25,7 +25,7 @@
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <!-- Email Eingabe -->
-        <form class="space-y-6" action="#" method="POST">
+        <form class="space-y-6" onsubmit="handleRegister(event)">
           <div>
             <label for="email" class="block text-sm/6 font-medium text-yellow-400">Email Adresse</label>
             <div class="mt-2">
@@ -37,13 +37,12 @@
 
           <!-- Username Eingabe -->
           <div>
-            <label for="email" class="block text-sm/6 font-medium text-yellow-400">Benutzername</label>
+            <label for="username" class="block text-sm/6 font-medium text-yellow-400">Benutzername</label>
             <div class="mt-2">
-              <input type="text"
-                class=" block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+              <input type="text" id="username" name="username" required
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
             </div>
           </div>
-
           <!-- Ende -->
 
           <!-- Passwort eingabe -->
@@ -70,14 +69,36 @@
     </div>
   </div>
 
+  <!-- JavaScript -->
   <script>
-    document.querySelector("#registrieren").onsubmit = function (evt) {
-      evt.preventDefault();
-      
+    async function handleRegister(event) {
+      event.preventDefault();
 
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const email = document.getElementById('email').value;
+
+      try {
+        const response = await fetch('http://localhost:5105/api/Casino/User/RegisterUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password, email })
+        });
+
+        if (response.ok) {
+          alert('Registrierung erfolgreich!');
+          window.location.href = 'anmelden.html';
+        } else {
+          const errorText = await response.text();
+          alert('Fehler bei der Registrierung: ' + errorText);
+        }
+      } catch (error) {
+        alert('Verbindungsfehler: ' + error.message);
+      }
     }
   </script>
 </body>
-
 
 </html>

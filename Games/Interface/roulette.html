@@ -23,6 +23,30 @@
                 <a class="btn btn-ghost text-xl" href="index.html">
                     <img src="/Picture/krone.png" class="w-8" alt="Casino Logo">EDV-Casino</a>
             </div>
+            <div class=" bg-base-300 min-w-15 w-auto text-center h-auto m-1.5 rounded-md">
+                <div class="bg-white m-1.5 p-1.5 rounded-md">
+                    <span class="border-r-2 pr-2.5">150</span> 
+                    <a class="pl-1.5" href="credits.html"><span class="font-bold text-gray-700 rounded-full bg-base-300 p-1  font-mono ">+</span></a>
+                </div>
+            </div>
+            <div class="relative ml-3">
+                <div>
+                    <button type="button"
+                        class="relative flex rounded-full bg-gray-800 text-xl focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+                        id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                        <span class="absolute -inset-1.5"></span>
+                        <span class="sr-only">Open user menu</span>
+                        <img class="size-8 rounded-full" src="/Picture/R2-D2.jfif" alt="R2-D2">
+                    </button>
+                </div>
+                <!-- Dropdown-Menü -->
+                <div id="user-menu"
+                    class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 hidden"
+                    role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                    <a href="anmelden.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                        id="user-menu-item-2">Sign out</a>
+                </div>
+            </div>
         </div>
 
         <!-- Inhalt -->
@@ -37,14 +61,15 @@
                         </li>
                         <li class="bg-base-100 rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
                         <li class="bg-base-100 rounded mt-2"><a href="chickencross.html">Chicken Cross</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="tripleGuess.html">Triple Guess</a></li>
                     </ul>
                 </div>
 
-                <div>
+                <!-- <div>
                     <a href="credits.html" class="btn w-full hover:bg-slate-200 mb-2">Credits aufladen</a>
                     <a href="anmelden.html" class="btn w-full hover:bg-slate-200 mb-2">Abmelden</a>
 
-                </div>
+                </div> -->
             </div>
 
             <!-- Hauptbereich -->
@@ -75,6 +100,24 @@
             </div>
         </div>
     </div>
+    <!-- Script für Dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const button = document.getElementById('user-menu-button');
+            const menu = document.getElementById('user-menu');
+
+            button.addEventListener('click', function (event) {
+                event.stopPropagation(); // verhindert sofortiges Schließen
+                menu.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!button.contains(event.target) && !menu.contains(event.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

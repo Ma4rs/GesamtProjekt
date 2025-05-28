@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css">
-  <link rel="stylesheet" href="/node_modules/daisyui/themes.css">
-
-  <!-- Tailwind -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
+  <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
   <title>Anmelden EDV-Casino</title>
 </head>
@@ -16,19 +14,18 @@
   <div>
     <div class="flex min-h-full h-screen flex-col justify-center bg-red-900 px-6 py-12 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-30 w-auto"
-          src="/Picture/image-removebg-preview.png" alt="Your Company">
-          <h3 class="mt-2 text-center text-2xl/5 tracking-normal text-yellow-400">EDV-Royale-Casino</h3>
-          <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-yellow-400">Sign in to your account</h2>
+        <img class="mx-auto h-30 w-auto" src="/Picture/krone.png" alt="Your Company" />
+        <h3 class="mt-2 text-center text-2xl/5 tracking-normal text-yellow-400">EDV-Royale-Casino</h3>
+        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-yellow-400">Sign in to your account</h2>
       </div>
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" action="#" method="POST">
+        <form class="space-y-6" onsubmit="handleLogin(event)">
           <div>
             <label for="email" class="block text-sm/6 font-medium text-yellow-400">Email Adresse</label>
             <div class="mt-2">
               <input type="email" name="email" id="email" autocomplete="email" required
-                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
             </div>
           </div>
 
@@ -41,20 +38,49 @@
             </div>
             <div class="mt-2">
               <input type="password" name="password" id="password" autocomplete="current-password" required
-                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
             </div>
           </div>
 
           <div>
             <button type="submit"
               class="flex w-full justify-center rounded-md bg-yellow-400 px-3 py-1.5 text-sm/6 font-semibold text-red-900 shadow-xs hover:bg-cyan-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Anmelden</button>
-            <a href="registrieren.html" class="flex w-full mt-2 justify-center rounded-md bg-yellow-400 px-3 py-1.5 text-sm/6 font-semibold text-red-900 shadow-xs hover:bg-cyan-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrieren</a>
+            <a href="registrieren.html"
+              class="flex w-full mt-2 justify-center rounded-md bg-yellow-400 px-3 py-1.5 text-sm/6 font-semibold text-red-900 shadow-xs hover:bg-cyan-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrieren</a>
           </div>
         </form>
-
       </div>
     </div>
   </div>
+
+  <script>
+    async function handleLogin(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://localhost:5105/api/Casino/User/Login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (response.ok) {
+          // Weiterleitung z.B. zur Hauptseite
+          window.location.href = 'index.html';
+        } else {
+          const errorText = await response.text();
+          alert('Fehler beim Login: ' + errorText);
+        }
+      } catch (error) {
+        alert('Verbindungsfehler: ' + error.message);
+      }
+    }
+  </script>
 </body>
 
 </html>

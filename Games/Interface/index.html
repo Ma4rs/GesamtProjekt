@@ -20,9 +20,33 @@
         <!-- Navigation Bar -->
         <div class="navbar bg-base-100 shadow-sm flex-shrink-0 flex">
             <div class="flex-1">
-
                 <a class="btn btn-ghost text-xl" href="index.html">
-                    <img src="/Picture/krone.png" class="w-8" alt="Casino Logo">EDV-Casino</a>
+                    <img src="/Picture/krone.png" class="w-8" alt="Casino Logo">EDV-Casino
+                </a>
+            </div>
+            <div class=" bg-base-300 min-w-15 w-auto text-center h-auto m-1.5 rounded-md">
+                <div class="bg-white m-1.5 p-1.5 rounded-md">
+                    <span class="border-r-2 pr-2.5">150</span> 
+                    <a class="pl-1.5" href="credits.html"><span class="font-bold text-gray-700 rounded-full bg-base-300 p-1  font-mono ">+</span></a>
+                </div>
+            </div>
+            <div class="relative ml-3">
+                <div>
+                    <button type="button"
+                        class="relative flex rounded-full bg-gray-800 text-xl focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+                        id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                        <span class="absolute -inset-1.5"></span>
+                        <span class="sr-only">Open user menu</span>
+                        <img class="size-8 rounded-full" src="/Picture/R2-D2.jfif" alt="R2-D2">
+                    </button>
+                </div>
+                <!-- Dropdown-Menü -->
+                <div id="user-menu"
+                    class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 hidden"
+                    role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                    <a href="anmelden.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                        id="user-menu-item-2">Sign out</a>
+                </div>
             </div>
         </div>
 
@@ -32,27 +56,24 @@
             <div class="basis-3/12 bg-red-800 p-4 flex flex-col">
                 <div class="flex-grow">
                     <ul class="menu bg-base-300 w-full rounded text-lg">
-                        <li class="bg-base-100 rounded mt-2"><a href="index.html" class="menu-active">Startseite</a>
-                        </li>
-                        <li class="bg-base-100 rounded mt-2"><a href="roulette.html">Roulette</a></li>
-                        <li class="bg-base-100 rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
-                        <li class="bg-base-100 rounded mt-2"><a href="chickencross.html">Chicken Cross</a></li>
+                        <li class="bg-base-100 font-mono rounded mt-2"><a href="index.html" class="menu-active">Startseite</a></li>
+                        <li class="bg-base-100 font-mono rounded mt-2"><a href="roulette.html">Roulette</a></li>
+                        <li class="bg-base-100 font-mono rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
+                        <li class="bg-base-100 font-mono rounded mt-2"><a href="chickencross.html">Chicken Cross</a></li>
                     </ul>
                 </div>
-                <div>
+                <!-- <div>
                     <a href="credits.html" class="btn w-full hover:bg-slate-200 mb-2">Credits aufladen</a>
                     <a href="anmelden.html" class="btn w-full hover:bg-slate-200 mb-2">Abmelden</a>
-                </div>
+                </div> -->
             </div>
-            <!-- Ende Sidebar -->
 
             <!-- Hauptbereich -->
             <div class="w-full md:w-3/4 p-4 flex flex-col">
                 <!-- Willkommensvideo -->
                 <div class="flex w-full justify-center mb-6">
                     <div class="w-3/4 h-72">
-                        <video class="w-full h-full object-cover rounded-lg overflow-hidden shadow-lg" autoplay
-                            controls>
+                        <video class="w-full h-full object-cover rounded-lg overflow-hidden shadow-lg" autoplay controls>
                             <source src="/Picture/WelcomeVideo.mp4" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
@@ -72,7 +93,8 @@
                             <p>Beim Roulette geht es um die Wette, in welches Zahlenfach die Kugel im nächsten Spiel
                                 fallen wird</p>
                             <div class="card-actions">
-                                <button class="btn btn-primary transition delay-150 duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+                                <button
+                                    class="btn btn-primary transition delay-150 duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
                                     onclick="window.location.href='roulette.html'">Spielen!</button>
                             </div>
                         </div>
@@ -88,7 +110,8 @@
                             <h2 class="card-title">Blackjack</h2>
                             <p>Erreiche 21 Punkte oder komme so nah wie möglich dran – ohne drüber zu gehen.</p>
                             <div class="card-actions">
-                                <button class="btn btn-primary transition delay-150 duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+                                <button
+                                    class="btn btn-primary transition delay-150 duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
                                     onclick="window.location.href='blackjack.html'">Spielen!</button>
                             </div>
                         </div>
@@ -98,19 +121,19 @@
                     <div class="card bg-base-100 w-80 shadow-sm">
                         <figure class="px-10 pt-10">
                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY58wCN8Sx4dNdoONfHI28vJNu5I-vrN-w2g&s"
-                                alt="Chicken Cross" class="rounded-xl h-44" />
+                                alt="Chicken Cross" class="rounded-xl h-44"/>
                         </figure>
                         <div class="card-body items-center text-center">
                             <h2 class="card-title">Chicken Cross</h2>
                             <p>Gehe ein Risiko ein als Huhn die Straße zu überqueren</p>
                             <div class="card-actions">
-                                <button class="btn btn-primary transition delay-150 duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+                                <button
+                                    class="btn btn-primary transition delay-150 duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
                                     onclick="window.location.href='chickencross.html'">Spielen!</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Ende Spieleauswahl -->
 
                 <!-- Impressum Kontaktdaten (zentriert) -->
                 <div class="bg-red-900 mt-10 text-center py-6">
@@ -120,10 +143,28 @@
                         <a href="kontakt.html" class="text-white hover:underline">Kontakt</a>
                     </div>
                 </div>
-                <!-- Ende Kontaktdaten -->
             </div>
         </div>
     </div>
+
+    <!-- Script für Dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const button = document.getElementById('user-menu-button');
+            const menu = document.getElementById('user-menu');
+
+            button.addEventListener('click', function (event) {
+                event.stopPropagation(); // verhindert sofortiges Schließen
+                menu.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!button.contains(event.target) && !menu.contains(event.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
