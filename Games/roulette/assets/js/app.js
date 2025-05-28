@@ -3,7 +3,7 @@ const username = "string";
 async function fetchBankValue() {
 	try {
 		const response = await axios.get(`http://localhost:5105/api/Casino/User/GetData/${username}`);
-		console.log(Number(response.data.credits));
+		// console.log(Number(response.data.credits));
 		return Number(response.data.credits);
 	} catch (error) {
 		console.log("Fehler beim Laden des Bankwerts: ", error);
@@ -21,7 +21,7 @@ async function safeBankvalue(spinResult) {
 		console.log("Es werden " + spinResult + " Credits hinzugefügt")
 		const response = await axios.post("http://localhost:5105/api/Casino/User/UpdateCredits", body);
 
-		console.log("response: " + response)
+		// console.log("response: " + response)
 		console.log("message: " + response.message)
 		if (response.message == 200) {
 		} else {
@@ -31,7 +31,6 @@ async function safeBankvalue(spinResult) {
 		console.log("Fehler beim Speichern des Bankwerts: ", error);
 	}
 }
-
 
 async function GetSpin() {
 	try {
@@ -497,8 +496,9 @@ async function main() {
 		numbersBet = [];
 	}
 
-	function setBet(e, n, t, o) {
+	async function setBet(e, n, t, o) {
 		lastWager = wager;
+		// bankValue = await fetchBankValue();
 		wager = (bankValue < wager) ? bankValue : wager;
 		if (wager > 0) {
 			if (!container.querySelector('.spinBtn')) {
@@ -560,9 +560,9 @@ async function main() {
 		console.log(winningSpin)
 		spinWheel(winningSpin);
 		setTimeout(async function () {
+			let winValue = 0;
+			let betTotal = 0;
 			if (numbersBet.includes(winningSpin)) {
-				let winValue = 0;
-				let betTotal = 0;
 				for (i = 0; i < bet.length; i++) {
 					var numArray = bet[i].numbers.split(',').map(Number);
 					console.log(bet[i].numbers);
@@ -573,11 +573,15 @@ async function main() {
 						betTotal = betTotal + bet[i].amt;
 					}
 				}
-				win(winningSpin, winValue, betTotal);
 				bankValue = await fetchBankValue();
+				win(winningSpin, winValue, betTotal);
 			}
-			safeBankvalue();
-
+			else {
+				for (i = 0; i < bet.length; i++) {
+					betTotal = betTotal + bet[i].amt;
+				}
+				await safeBankvalue(betTotal * -1);
+			}
 			currentBet = 0;
 			document.getElementById('bankSpan').innerText = '' + bankValue.toLocaleString("en-GB") + '';
 			document.getElementById('betSpan').innerText = '' + currentBet.toLocaleString("en-GB") + '';
@@ -594,10 +598,12 @@ async function main() {
 			numbersBet = [];
 			removeChips();
 			wager = lastWager;
+			bankValue = await fetchBankValue();
 			if (bankValue == 0 && currentBet == 0) {
 				gameOver();
 			}
 		}, 10000);
+		bankValue = await fetchBankValue();
 	}
 
 	async function win(winningSpin, winValue, betTotal) {
@@ -645,8 +651,12 @@ async function main() {
 		else {
 			let los = betTotal * -1;
 			await safeBankvalue(los); // hier auch aber unsicher 
+			console.log("Verloren")
 		}
 		console.log("If verlassen")
+		bankValue = await fetchBankValue();
+		// console.log("Nach if bv: " + bankValue)
+		document.getElementById('bankSpan').innerText = '' + bankValue.toLocaleString("en-GB") + '';
 	}
 
 	function removeBet(e, n, t, o) {
