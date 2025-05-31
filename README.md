@@ -21,7 +21,7 @@ Dieses Projekt ist ein Onlinecasino, das im Rahmen eines Schulprojektes entwicke
 
 1. Repository klonen:
    ```bash
-   git clone <PfadZumRepo>
+   git clone https://github.com/Ma4rs/GesamtProjekt.git
    ```
 2. In das Hauptverzeichnis (`main`) wechseln (falls nicht automatisch):
    ```bash
