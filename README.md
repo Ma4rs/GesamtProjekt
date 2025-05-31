@@ -56,9 +56,6 @@ Dieses Projekt dient ausschließlich zu Lernzwecken im Rahmen eines Schulprojekt
 
 ## Autoren
 
-- Teammitglieder des Kurses  
-  *(Bitte hier Namen/Handles ergänzen)*
+- 2 weitere aus der Schule aber es werden auf Wunsch keine Namen angegeben  
 
 ---
-
-Viel Spaß beim Spielen und Lernen!
