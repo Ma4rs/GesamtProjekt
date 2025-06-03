@@ -125,7 +125,7 @@ namespace C__Backend.Controllers
             var jwtKey = _configuration["Jwt:Key"];
             var jwtIssuer = _configuration["Jwt:Issuer"];
             var jwtAudience = _configuration["Jwt:Audience"];
-            var jwtExpire = int.Parse(_configuration["Jwt:ExpireMinutes"]);
+            var jwtExpire = int.Parse(_configuration["Jwt:ExpireMinutes"]!);
 
             var claims = new[]
             {
@@ -134,7 +134,7 @@ namespace C__Backend.Controllers
         new Claim("UserId", user.Id.ToString())
     };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
