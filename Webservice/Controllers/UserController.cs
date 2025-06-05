@@ -14,7 +14,6 @@ namespace C__Backend.Controllers
     [Route("api/Casino/User")]
     public class UserController(IConfiguration configuration) : ControllerBase
     {
-
         [HttpGet("GetData/{username}")]
         public async Task<IActionResult> GetData(string username)
         {
@@ -128,10 +127,10 @@ namespace C__Backend.Controllers
 
             var claims = new[]
             {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-        new Claim(JwtRegisteredClaimNames.Email, user.Email),
-        new Claim("UserId", user.Id.ToString())
-    };
+                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("UserId", user.Id.ToString())
+            };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -159,6 +158,5 @@ namespace C__Backend.Controllers
         {
             return Ok("Nur sichtbar mit gültigem Token!");
         }
-
     }
 }
