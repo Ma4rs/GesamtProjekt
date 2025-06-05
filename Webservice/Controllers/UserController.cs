@@ -12,7 +12,7 @@ namespace C__Backend.Controllers
 {
     [ApiController]
     [Route("api/Casino/User")]
-    public class UserController : ControllerBase
+    public class UserController(IConfiguration configuration) : ControllerBase
     {
 
         [HttpGet("GetData/{username}")]
@@ -121,10 +121,10 @@ namespace C__Backend.Controllers
             }
 
             // JWT erzeugen
-            var jwtKey = _configuration["Jwt:Key"];
-            var jwtIssuer = _configuration["Jwt:Issuer"];
-            var jwtAudience = _configuration["Jwt:Audience"];
-            var jwtExpire = int.Parse(_configuration["Jwt:ExpireMinutes"]);
+            var jwtKey = configuration["Jwt:Key"];
+            var jwtIssuer = configuration["Jwt:Issuer"];
+            var jwtAudience = configuration["Jwt:Audience"];
+            var jwtExpire = int.Parse(configuration["Jwt:ExpireMinutes"]);
 
             var claims = new[]
             {
@@ -151,12 +151,6 @@ namespace C__Backend.Controllers
                 message = "Login erfolgreich",
                 token = tokenString
             });
-        }
-
-        private readonly IConfiguration _configuration;
-        public UserController(IConfiguration configuration)
-        {
-            _configuration = configuration;
         }
 
         [Authorize]
