@@ -14,3 +14,8 @@ chips.forEach(chip => {
     console.log("Ausgewählter Chip:", value);
   });
 });
+
+document.getElementById('bet').addEventListener('click', function () {
+  console.log('Div wurde geklickt!');
+  // Oder beliebige andere Aktionen
+});
