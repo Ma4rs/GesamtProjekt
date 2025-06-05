@@ -18,9 +18,10 @@ namespace C__Backend.Controllers
         [HttpGet("GetData/{username}")]
         public async Task<IActionResult> GetData(string username)
         {
+            // TODO: Move this code to a service called UserService (same for all methods and also in other controllers)
             await using (var context = new OnlineCasinoContext())
             {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+                var user = await context.Users.SingleOrDefaultAsync(u => u.Username == username);
 
                 if (user == null)
                 {
@@ -65,7 +66,7 @@ namespace C__Backend.Controllers
         {
             await using (var context = new OnlineCasinoContext())
             {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+                var user = await context.Users.SingleOrDefaultAsync(u => u.Username == request.Username);
 
                 if (user == null)
                 {
@@ -113,7 +114,7 @@ namespace C__Backend.Controllers
         {
             using var context = new OnlineCasinoContext();
 
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            var user = await context.Users.SingleOrDefaultAsync(u => u.Email == request.Email);
             if (user == null || user.PasswordHash != request.Password)
             {
                 return Unauthorized(new { message = "E-Mail oder Passwort falsch" });
