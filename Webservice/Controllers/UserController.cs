@@ -1,9 +1,7 @@
 ﻿using C__Backend.Classes;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using onlinecasino.Database;
-using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
