@@ -88,12 +88,20 @@
     }
 
     .card-slot {
-      width: 56px;
-      height: 80px;
-      border: 2px dashed rgba(255, 255, 255, 0.5);
-      border-radius: 6px;
+      width: 90px;
+      height: 140px;
+      border: 1px dashed #1a4d1a;
+      border-radius: 8px;
       background-color: rgba(255, 255, 255, 0.05);
       box-sizing: border-box;
+    }
+
+    .card-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Bild füllt den Slot komplett aus, kann an den Rändern beschnitten werden */
+      display: block;
     }
 
     .card {
@@ -117,7 +125,7 @@
       border-radius: 50% / 30%;
       background: radial-gradient(circle at center, #1a4d1a 0%, #0a3d0a 70%, #062d06 100%);
       margin-top: 200px;
-      margin-left: 100px; 
+      margin-left: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -131,6 +139,10 @@
       overflow: hidden;
       user-select: none;
     }
+
+    .canclick {
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -141,16 +153,21 @@
 
     <!-- Dealer Karten-Platzhalter (oben mittig) -->
     <div class="absolute top-16 w-full flex justify-center gap-6 z-0">
-      <div class="card-slot"></div>
-      <div class="card-slot"></div>
-      <div class="card-slot"></div>
-      <div class="card-slot"></div>
+      <div id="card1" class="card-slot">
+        <img src="/Picture/Karten/Hinterseite.png" alt="">
+      </div>
+      <div id="card2" class="card-slot">
+        <img src="/Picture/Karten/Hinterseite.png" alt="">
+      </div>
+      <div id="card3" class="card-slot">
+        <img src="/Picture/Karten/Hinterseite.png" alt="">
+      </div>
     </div>
 
     <!-- Spieler Karten (Beispielkarten, liegen über den Platzhaltern) -->
-    <div class="absolute bottom-28 w-full flex justify-center gap-6 z-10">
-      <div id="auswahl1" class="card"></div>
-      <div id="auswahl2" class="card"></div>
+    <div id="GameChoice" class="absolute bottom-28 w-full flex justify-center gap-6 z-10">
+      <div id="auswahl1" class="card canclick" style="color: red;">Red</div>
+      <div id="auswahl2" class="card canclick">Black</div>
     </div>
 
     <div id="bet" class="bet-container">
@@ -158,6 +175,7 @@
       <span class="einsatz-text">Bet</span>
       <div class="table-felt-pattern"></div>
     </div>
+
     <!-- Chips (unter Kartenbereich) mit Beschriftung -->
     <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 z-10">
       <div class="flex gap-1" id="chipContainer">
@@ -170,10 +188,11 @@
     </div>
 
     <div class="bankContainer">
-      <div class="bank"><span id="bankSpan">1000</span></div>
+      <div class="bank"><span id="bankSpan">0</span></div>
       <div class="bet"><span id="betSpan">0</span></div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="index.js"></script>
 </body>
 
