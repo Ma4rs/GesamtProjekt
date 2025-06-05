@@ -16,26 +16,36 @@ namespace C__Backend.Controllers
     [Route("api/Casino/User")]
     public class UserController : ControllerBase
     {
+        
+[Authorize]
+[HttpGet("GetData")]
+public async Task<IActionResult> GetData()
+{
+    var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        [HttpGet("GetData/{username}")]
-        public async Task<IActionResult> GetData(string username)
+    if (username == null)
+    {
+        return Unauthorized(new { message = "Kein Username im Token gefunden." });
+    }
+
+    using (var context = new OnlineCasinoContext())
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
         {
-            using (var context = new OnlineCasinoContext())
-            {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
-
-                if (user == null)
-                {
-                    return NotFound(new { message = "User nicht gefunden." });
-                }
-
-                return Ok(new
-                {
-                    Email = user.Email,
-                    Credits = user.Credits
-                });
-            }
+            return NotFound(new { message = "User nicht gefunden." });
         }
+
+        return Ok(new
+        {
+            Email = user.Email,
+            Credits = user.Credits
+        });
+    }
+}
+
+
 
 
         [HttpPost("RegisterUser")]

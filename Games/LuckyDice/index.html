@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gewinnleiter – OnlineCasino</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(160deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      text-align: center;
+      padding: 30px;
+      background-attachment: fixed;
+      background-size: cover;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      color: #ffeb3b;
+      text-shadow: 2px 2px 4px black;
+    }
+
+    .bet-panel {
+      background: rgba(0, 80, 0, 0.8);
+      border: 2px solid #fff;
+      display: inline-block;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .chip-buttons button {
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-weight: bold;
+      color: white;
+      margin: 3px;
+      cursor: pointer;
+    }
+
+    .chip-1 { background: red; }
+    .chip-5 { background: blue; }
+    .chip-10 { background: gold; color: black; }
+    .chip-100 { background: orange; color: black; }
+    .chip-all { background: black; }
+    .chip-clear { background: crimson; }
+
+    .bet-display {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .bet-display div {
+      background: black;
+      color: lime;
+      border: 2px solid white;
+      width: 90px;
+      padding: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+
+    .btn-start {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .ladder {
+      margin: 30px auto;
+      width: 240px;
+    }
+
+    .step {
+      padding: 12px;
+      margin: 5px 0;
+      background: #333;
+      border-left: 6px solid #999;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+
+    .active {
+      background: #ffc107;
+      color: #000;
+      font-weight: bold;
+      border-left: 6px solid #ff9800;
+    }
+
+    .controls {
+      margin-top: 20px;
+    }
+
+    .btn-risk { background: #ff5722; color: #fff; }
+    .btn-collect { background: #4caf50; color: #fff; }
+
+    .controls button {
+      padding: 10px 16px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎰 Gewinnleiter</h1>
+
+  <div class="bet-panel">
+    <div class="chip-buttons">
+      <button class="chip-1" onclick="addBet(1)">1</button>
+      <button class="chip-5" onclick="addBet(5)">5</button>
+      <button class="chip-10" onclick="addBet(10)">10</button>
+      <button class="chip-100" onclick="addBet(100)">100</button>
+      <button class="chip-all" onclick="betAll()">All</button>
+      <button class="chip-clear" onclick="clearBet()">Clear</button>
+    </div>
+    <div class="bet-display">
+      <div id="balanceBox">10,000</div>
+      <div id="betBox">0</div>
+    </div>
+    <button class="btn-start" onclick="startGame()">Start</button>
+  </div>
+
+  <div class="ladder" id="ladder"></div>
+
+  <div class="controls">
+    <button class="btn-risk" onclick="riskStep()" id="riskBtn" disabled>Risiko</button>
+    <button class="btn-collect" onclick="collectWin()" id="collectBtn" disabled>Auszahlen</button>
+  </div>
+
+  <p id="status"></p>
+
+  <script>
+    let playerBalance = 10000;
+    let currentBet = 0;
+    let bet = 0;
+
+    let currentIndex = 0;
+    let maxFailIndex = 0;
+    let levels = [];
+    let gameActive = false;
+
+    const multipliers = [0, 1.0, 1.2, 1.5, 1.8, 2.0, 2.2, 2.5];
+
+    const ladderEl = document.getElementById("ladder");
+    const statusEl = document.getElementById("status");
+    const riskBtn = document.getElementById("riskBtn");
+    const collectBtn = document.getElementById("collectBtn");
+
+    function updateBetDisplay() {
+      document.getElementById("balanceBox").textContent = playerBalance.toLocaleString();
+      document.getElementById("betBox").textContent = currentBet.toLocaleString();
+    }
+
+    function addBet(amount) {
+      if (playerBalance >= amount) {
+        currentBet += amount;
+        playerBalance -= amount;
+        updateBetDisplay();
+      } else {
+        alert("❗ Nicht genug Credits!");
+      }
+    }
+
+    function betAll() {
+      currentBet += playerBalance;
+      playerBalance = 0;
+      updateBetDisplay();
+    }
+
+    function clearBet() {
+      playerBalance += currentBet;
+      currentBet = 0;
+      updateBetDisplay();
+    }
+
+    function generateLadder(bet) {
+      return multipliers.map(m => Math.round(bet * m));
+    }
+
+    function renderLadder() {
+      ladderEl.innerHTML = "";
+      for (let i = levels.length - 1; i >= 0; i--) {
+        const step = document.createElement("div");
+        step.className = "step";
+        if (i === currentIndex) step.classList.add("active");
+        step.textContent = levels[i] + " Credits";
+        ladderEl.appendChild(step);
+      }
+    }
+
+    function startGame() {
+      if (currentBet <= 0) {
+        statusEl.textContent = "❗ Bitte zuerst Einsatz wählen!";
+        return;
+      }
+
+      bet = currentBet;
+      levels = generateLadder(bet);
+      maxFailIndex = Math.floor(Math.random() * (levels.length - 1));
+      currentIndex = 0;
+      gameActive = true;
+      renderLadder();
+
+      riskBtn.disabled = false;
+      collectBtn.disabled = false;
+      statusEl.textContent = "Spiel gestartet. Viel Glück!";
+
+      currentBet = 0;
+      updateBetDisplay();
+    }
+
+    function riskStep() {
+      if (!gameActive) return;
+
+      currentIndex++;
+      if (currentIndex >= levels.length) {
+        statusEl.textContent = "🎉 Jackpot erreicht! Gewinn: " + levels[levels.length - 1] + " Credits";
+        playerBalance += levels[levels.length - 1];
+        endGame();
+      } else if (currentIndex === maxFailIndex) {
+        statusEl.textContent = "💥 Leider verloren!";
+        endGame();
+      } else {
+        renderLadder();
+        statusEl.textContent = "Weitergerückt. Risiko?";
+      }
+    }
+
+    function collectWin() {
+      if (!gameActive) return;
+      playerBalance += levels[currentIndex];
+      statusEl.textContent = "✅ Ausgezahlt: " + levels[currentIndex] + " Credits";
+      endGame();
+    }
+
+    function endGame() {
+      gameActive = false;
+      riskBtn.disabled = true;
+      collectBtn.disabled = true;
+      renderLadder();
+      updateBetDisplay();
+    }
+  </script>
+</body>
+</html>
