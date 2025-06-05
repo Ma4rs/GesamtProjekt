@@ -7,37 +7,27 @@
   <!-- DaisyUI -->
   <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
   <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
-  <link rel="stylesheet" href="index.js" />
 
   <!-- Tailwind -->
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
 
   <style>
+    .einsatz-text {
+      position: relative;
+      color: #ffe066;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 4px #000c;
+      z-index: 2;
+      user-select: none;
+    }
+
     .bankContainer {
       margin-top: 400px;
       margin-left: 250px;
       margin-right: 210px;
     }
-
-    /* .nBtn:active {
-      top: 118px;
-      left: calc(25% + 2px);
-      box-shadow: 1px 2px rgb(0 0 0 / 25%);
-    } */
-
-    /* .selectable-chip {
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .selectable-chip:hover {
-      transform: scale(1.1);
-    }
-
-    .selectable-chip.active {
-      box-shadow: 0 0 10px 4px rgba(255, 255, 0, 0.8);
-      transform: scale(1.2);
-    } */
 
     .chip-btn {
       width: 2rem;
@@ -120,6 +110,25 @@
       color: black;
       user-select: none;
     }
+
+    .bet-container {
+      width: 150px;
+      height: 150px;
+      background: blueviolet;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.25rem;
+      color: black;
+      user-select: none;
+      margin-top: 200px;
+      margin-left: 100px;
+      border-color: black;
+      border-width: 5px;      
+    }
   </style>
 </head>
 
@@ -142,38 +151,16 @@
       <div id="auswahl2" class="card"></div>
     </div>
 
+    <div id="bet" class="bet-container"></div>
+
     <!-- Chips (unter Kartenbereich) mit Beschriftung -->
     <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 z-10">
-      <!-- <div class="flex gap-1">
-        <div
-          class="w-8 h-8 bg-red-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
-          1
-        </div>
-        <div
-          class="w-8 h-8 bg-blue-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
-          5
-        </div>
-        <div
-          class="w-8 h-8 bg-yellow-400 rounded-full shadow-md border border-white flex items-center justify-center text-black text-xs font-bold selectable-chip">
-          10
-        </div>
-        <div
-          class="w-8 h-8 bg-green-500 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
-          100
-        </div>
-        <div
-          class="w-8 h-8 bg-black rounded-full shadow-md border border-white flex items-center justify-center text-yellow-400 text-[10px] font-bold selectable-chip">
-          ALL<br />IN
-        </div>
-      </div> -->
       <div class="flex gap-1" id="chipContainer">
         <button class="chip-btn bg-red-600 text-white" data-value="1">1</button>
         <button class="chip-btn bg-blue-600 text-white" data-value="5">5</button>
         <button class="chip-btn bg-yellow-400 text-black" data-value="10">10</button>
         <button class="chip-btn bg-green-500 text-white" data-value="100">100</button>
-        <button class="chip-btn bg-black text-yellow-400 text-[10px] leading-tight" data-value="ALL">
-          ALL<br>IN
-        </button>
+        <button class="chip-btn bg-black text-yellow-400" data-value="ALL">ALL<br>IN</button>
       </div>
     </div>
 
@@ -182,6 +169,7 @@
       <div class="bet"><span id="betSpan">0</span></div>
     </div>
   </div>
+  <script src="index.js"></script>
 </body>
 
 </html>
