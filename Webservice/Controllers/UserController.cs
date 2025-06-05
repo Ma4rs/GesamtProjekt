@@ -15,9 +15,9 @@ namespace C__Backend.Controllers
     public class UserController(IConfiguration configuration) : ControllerBase
     {
         [HttpGet("GetData/{username}")]
-        public async Task<IActionResult> GetData(string username)
+        public async Task<ActionResult<User>> GetData(string username)
         {
-            // TODO: Move this code to a service called UserService (same for all methods and also in other controllers)
+            // TODO: Move this code to a new service called UserService (same for all methods and also in other controllers)
             await using (var context = new OnlineCasinoContext())
             {
                 var user = await context.Users.SingleOrDefaultAsync(u => u.Username == username);
@@ -35,9 +35,8 @@ namespace C__Backend.Controllers
             }
         }
 
-
         [HttpPost("RegisterUser")]
-        public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
+        public async Task<ActionResult<User>> RegisterUser([FromBody] Userdata data)
         {
             await using (var context = new OnlineCasinoContext())
             {
@@ -75,6 +74,7 @@ namespace C__Backend.Controllers
                 user.Credits += request.CreditsToAdd;
                 await context.SaveChangesAsync();
 
+                // TODO: return an known class instead of an anonymous object (and make it clear in the signature Task<ActionResult<UpdateCreditsResponse>>). Same for all api endpoints
                 return Ok(new
                 {
                     message = "Credits aktualisiert.",
@@ -119,6 +119,7 @@ namespace C__Backend.Controllers
                 return Unauthorized(new { message = "E-Mail oder Passwort falsch" });
             }
 
+            // TODO: Move this code to a new service called AuthService.GenerateJwtToken(user, configuration);
             // JWT erzeugen
             var jwtKey = configuration["Jwt:Key"];
             var jwtIssuer = configuration["Jwt:Issuer"];
@@ -153,6 +154,7 @@ namespace C__Backend.Controllers
         }
 
         [Authorize]
+        // TODO: Correct terminology: It's a "protected" resource, not a "secret" resource.
         [HttpGet("SecretArea")]
         public IActionResult Secret()
         {
