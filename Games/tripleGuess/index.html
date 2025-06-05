@@ -7,37 +7,52 @@
   <!-- DaisyUI -->
   <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
   <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
-  <link rel="stylesheet" href="index.js" />
 
   <!-- Tailwind -->
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
 
   <style>
+    .einsatz-text {
+      position: relative;
+      color: #ffe066;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 4px #000c;
+      z-index: 2;
+      user-select: none;
+    }
+
     .bankContainer {
-      margin-top: 400px;
+      margin-top: 100px;
       margin-left: 250px;
       margin-right: 210px;
     }
 
-    /* .nBtn:active {
-      top: 118px;
-      left: calc(25% + 2px);
-      box-shadow: 1px 2px rgb(0 0 0 / 25%);
-    } */
-
-    .selectable-chip {
-      cursor: pointer;
+    .chip-btn {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 9999px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      border: 1px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.75rem;
       transition: all 0.2s ease;
+      cursor: pointer;
     }
 
-    .selectable-chip:hover {
+    .chip-btn:hover {
       transform: scale(1.1);
     }
 
-    .selectable-chip.active {
+    .chip-btn.active {
       box-shadow: 0 0 10px 4px rgba(255, 255, 0, 0.8);
       transform: scale(1.2);
     }
+
 
     .bank,
     .bet {
@@ -73,12 +88,20 @@
     }
 
     .card-slot {
-      width: 56px;
-      height: 80px;
-      border: 2px dashed rgba(255, 255, 255, 0.5);
-      border-radius: 6px;
+      width: 90px;
+      height: 140px;
+      border: 1px dashed #1a4d1a;
+      border-radius: 8px;
       background-color: rgba(255, 255, 255, 0.05);
       box-sizing: border-box;
+    }
+
+    .card-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Bild füllt den Slot komplett aus, kann an den Rändern beschnitten werden */
+      display: block;
     }
 
     .card {
@@ -95,6 +118,31 @@
       color: black;
       user-select: none;
     }
+
+    .bet-container {
+      width: 100px;
+      height: 100px;
+      border-radius: 50% / 30%;
+      background: radial-gradient(circle at center, #1a4d1a 0%, #0a3d0a 70%, #062d06 100%);
+      margin-top: 200px;
+      margin-left: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffe066;
+      font-weight: bold;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 6px 32px 0 #0008;
+      border: 4px solid #d2b48c;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .canclick {
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -105,55 +153,47 @@
 
     <!-- Dealer Karten-Platzhalter (oben mittig) -->
     <div class="absolute top-16 w-full flex justify-center gap-6 z-0">
-      <div class="card-slot"></div>
-      <div class="card-slot"></div>
-      <div class="card-slot"></div>
-      <div class="card-slot"></div>
+      <div id="card1" class="card-slot">
+        <img src="/Picture/Karten/Hinterseite.png" alt="">
+      </div>
+      <div id="card2" class="card-slot">
+        <img src="/Picture/Karten/Hinterseite.png" alt="">
+      </div>
+      <div id="card3" class="card-slot">
+        <img src="/Picture/Karten/Hinterseite.png" alt="">
+      </div>
     </div>
 
     <!-- Spieler Karten (Beispielkarten, liegen über den Platzhaltern) -->
-    <div class="absolute bottom-28 w-full flex justify-center gap-6 z-10">
-      <div id="auswahl1" class="card"></div>
-      <div id="auswahl2" class="card"></div>
+    <div id="GameChoice" class="absolute bottom-28 w-full flex justify-center gap-6 z-10">
+      <div id="auswahl1" class="card canclick" style="color: red;">Red</div>
+      <div id="auswahl2" class="card canclick">Black</div>
+    </div>
+
+    <div id="bet" class="bet-container">
+      <!-- <div class="einsatz-text"> Hier Wetten ablegen</div> -->
+      <span class="einsatz-text">Bet</span>
+      <div class="table-felt-pattern"></div>
     </div>
 
     <!-- Chips (unter Kartenbereich) mit Beschriftung -->
     <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 z-10">
-      <div class="flex gap-1">
-        <div
-          class="w-8 h-8 bg-red-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
-          1
-        </div>
-        <div
-          class="w-8 h-8 bg-blue-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
-          5
-        </div>
-        <div
-          class="w-8 h-8 bg-yellow-400 rounded-full shadow-md border border-white flex items-center justify-center text-black text-xs font-bold nBtn:active selectable-chip">
-          10
-        </div>
-        <div
-          class="w-8 h-8 bg-green-500 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
-          100
-        </div>
-        <div
-          class="w-8 h-8 bg-black rounded-full shadow-md border border-white flex items-center justify-center text-yellow-400 text-[10px] font-bold selectable-chip">
-          ALL<br />IN
-        </div>
+      <div class="flex gap-1" id="chipContainer">
+        <button class="chip-btn bg-red-600 text-white" data-value="1">1</button>
+        <button class="chip-btn bg-blue-600 text-white" data-value="5">5</button>
+        <button class="chip-btn bg-yellow-400 text-black" data-value="10">10</button>
+        <button class="chip-btn bg-green-500 text-white" data-value="100">100</button>
+        <button class="chip-btn bg-black text-yellow-400" data-value="ALL">ALL<br>IN</button>
       </div>
     </div>
 
-    <!-- Spielersteuerung -->
-    <!-- <div class="absolute bottom-4 w-full flex justify-center gap-4 z-10">
-      <button class="btn btn-success">Karte</button>
-      <button class="btn btn-warning">Passen</button>
-      <button class="btn btn-error">Neustart</button>
-      </div> -->
     <div class="bankContainer">
       <div class="bank"><span id="bankSpan">0</span></div>
       <div class="bet"><span id="betSpan">0</span></div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="index.js"></script>
 </body>
 
 </html>
