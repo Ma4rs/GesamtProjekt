@@ -1,9 +1,7 @@
 ﻿using C__Backend.Classes;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using onlinecasino.Database;
-using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
@@ -14,15 +12,15 @@ namespace C__Backend.Controllers
 {
     [ApiController]
     [Route("api/Casino/User")]
-    public class UserController : ControllerBase
+    public class UserController(IConfiguration configuration) : ControllerBase
     {
-
         [HttpGet("GetData/{username}")]
-        public async Task<IActionResult> GetData(string username)
+        public async Task<ActionResult<User>> GetData(string username)
         {
-            using (var context = new OnlineCasinoContext())
+            // TODO: Move this code to a new service called UserService (same for all methods and also in other controllers)
+            await using (var context = new OnlineCasinoContext())
             {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+                var user = await context.Users.SingleOrDefaultAsync(u => u.Username == username);
 
                 if (user == null)
                 {
@@ -37,15 +35,14 @@ namespace C__Backend.Controllers
             }
         }
 
-
         [HttpPost("RegisterUser")]
-        public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
+        public async Task<ActionResult<User>> RegisterUser([FromBody] Userdata data)
         {
-            using (var context = new OnlineCasinoContext())
+            await using (var context = new OnlineCasinoContext())
             {
                 var exists = await context.Users.AnyAsync(u => u.Email == data.Email);
                 if (exists)
-                    return Conflict(new { message = "User existiert bereits." });
+                    return Conflict(new { message = "Email existiert bereits." });
 
                 var newUser = new User
                 {
@@ -65,9 +62,9 @@ namespace C__Backend.Controllers
         [HttpPost("UpdateCredits")]
         public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
         {
-            using (var context = new OnlineCasinoContext())
+            await using (var context = new OnlineCasinoContext())
             {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+                var user = await context.Users.SingleOrDefaultAsync(u => u.Username == request.Username);
 
                 if (user == null)
                 {
@@ -77,6 +74,7 @@ namespace C__Backend.Controllers
                 user.Credits += request.CreditsToAdd;
                 await context.SaveChangesAsync();
 
+                // TODO: return an known class instead of an anonymous object (and make it clear in the signature Task<ActionResult<UpdateCreditsResponse>>). Same for all api endpoints
                 return Ok(new
                 {
                     message = "Credits aktualisiert.",
@@ -115,24 +113,25 @@ namespace C__Backend.Controllers
         {
             using var context = new OnlineCasinoContext();
 
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            var user = await context.Users.SingleOrDefaultAsync(u => u.Email == request.Email);
             if (user == null || user.PasswordHash != request.Password)
             {
                 return Unauthorized(new { message = "E-Mail oder Passwort falsch" });
             }
 
+            // TODO: Move this code to a new service called AuthService.GenerateJwtToken(user, configuration);
             // JWT erzeugen
-            var jwtKey = _configuration["Jwt:Key"];
-            var jwtIssuer = _configuration["Jwt:Issuer"];
-            var jwtAudience = _configuration["Jwt:Audience"];
-            var jwtExpire = int.Parse(_configuration["Jwt:ExpireMinutes"]);
+            var jwtKey = configuration["Jwt:Key"];
+            var jwtIssuer = configuration["Jwt:Issuer"];
+            var jwtAudience = configuration["Jwt:Audience"];
+            var jwtExpire = int.Parse(configuration["Jwt:ExpireMinutes"]);
 
             var claims = new[]
             {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-        new Claim(JwtRegisteredClaimNames.Email, user.Email),
-        new Claim("UserId", user.Id.ToString())
-    };
+                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("UserId", user.Id.ToString())
+            };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -154,18 +153,12 @@ namespace C__Backend.Controllers
             });
         }
 
-        private readonly IConfiguration _configuration;
-        public UserController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
         [Authorize]
+        // TODO: Correct terminology: It's a "protected" resource, not a "secret" resource.
         [HttpGet("SecretArea")]
         public IActionResult Secret()
         {
             return Ok("Nur sichtbar mit gültigem Token!");
         }
-
     }
 }
