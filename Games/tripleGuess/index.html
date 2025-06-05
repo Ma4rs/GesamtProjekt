@@ -7,17 +7,41 @@
   <!-- DaisyUI -->
   <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
   <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
+  <link rel="stylesheet" href="index.js" />
 
   <!-- Tailwind -->
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
 
   <style>
     .bankContainer {
-      margin-top: -21px;
+      margin-top: 400px;
+      margin-left: 250px;
+      margin-right: 210px;
+    }
+
+    /* .nBtn:active {
+      top: 118px;
+      left: calc(25% + 2px);
+      box-shadow: 1px 2px rgb(0 0 0 / 25%);
+    } */
+
+    .selectable-chip {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .selectable-chip:hover {
+      transform: scale(1.1);
+    }
+
+    .selectable-chip.active {
+      box-shadow: 0 0 10px 4px rgba(255, 255, 0, 0.8);
+      transform: scale(1.2);
     }
 
     .bank,
     .bet {
+      color: white;
       display: inline-block;
       width: calc(50% - 28px);
       background-color: #000;
@@ -97,23 +121,23 @@
     <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 z-10">
       <div class="flex gap-1">
         <div
-          class="w-8 h-8 bg-red-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold">
+          class="w-8 h-8 bg-red-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
           1
         </div>
         <div
-          class="w-8 h-8 bg-blue-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold">
+          class="w-8 h-8 bg-blue-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
           5
         </div>
         <div
-          class="w-8 h-8 bg-yellow-400 rounded-full shadow-md border border-white flex items-center justify-center text-black text-xs font-bold">
+          class="w-8 h-8 bg-yellow-400 rounded-full shadow-md border border-white flex items-center justify-center text-black text-xs font-bold nBtn:active selectable-chip">
           10
         </div>
         <div
-          class="w-8 h-8 bg-green-500 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold">
+          class="w-8 h-8 bg-green-500 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
           100
         </div>
         <div
-          class="w-8 h-8 bg-black rounded-full shadow-md border border-white flex items-center justify-center text-yellow-400 text-[10px] font-bold">
+          class="w-8 h-8 bg-black rounded-full shadow-md border border-white flex items-center justify-center text-yellow-400 text-[10px] font-bold selectable-chip">
           ALL<br />IN
         </div>
       </div>
