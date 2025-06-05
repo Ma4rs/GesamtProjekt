@@ -20,7 +20,7 @@ namespace C__Backend.Controllers
         [HttpGet("GetData/{username}")]
         public async Task<IActionResult> GetData(string username)
         {
-            using (var context = new OnlineCasinoContext())
+            await using (var context = new OnlineCasinoContext())
             {
                 var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
 
@@ -41,7 +41,7 @@ namespace C__Backend.Controllers
         [HttpPost("RegisterUser")]
         public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
         {
-            using (var context = new OnlineCasinoContext())
+            await using (var context = new OnlineCasinoContext())
             {
                 var exists = await context.Users.AnyAsync(u => u.Email == data.Email);
                 if (exists)
@@ -65,7 +65,7 @@ namespace C__Backend.Controllers
         [HttpPost("UpdateCredits")]
         public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
         {
-            using (var context = new OnlineCasinoContext())
+            await using (var context = new OnlineCasinoContext())
             {
                 var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
 
