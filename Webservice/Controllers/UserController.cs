@@ -45,7 +45,7 @@ namespace C__Backend.Controllers
             {
                 var exists = await context.Users.AnyAsync(u => u.Email == data.Email);
                 if (exists)
-                    return Conflict(new { message = "User existiert bereits." });
+                    return Conflict(new { message = "Email existiert bereits." });
 
                 var newUser = new User
                 {
