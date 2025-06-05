@@ -22,7 +22,7 @@ async function safeBankvalue(spinResult) {
 		const response = await axios.post("http://localhost:5105/api/Casino/User/UpdateCredits", body);
 
 		// console.log("response: " + response)
-		console.log("message: " + response.message)
+		// console.log("message: " + response.message)
 		if (response.message == 200) {
 		} else {
 			console.log("Antwort ungültig:", response);
@@ -555,6 +555,7 @@ async function main() {
 	}
 
 	async function spin() {
+		// hier chip
 		// var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
 		var winningSpin = await GetSpin();
 		console.log(winningSpin)

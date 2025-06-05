@@ -1,109 +1,133 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Blackjack Tisch mit Dealer</title>
+  <meta charset="UTF-8" />
+  <title>Blackjack Tisch mit Dealer - Kartenplatzhalter logisch angeordnet</title>
+  <!-- DaisyUI -->
+  <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
+  <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
+
+  <!-- Tailwind -->
+  <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+
   <style>
-    body {
-      margin: 0;
-      background-color: #2e2e2e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-
-    .table-container {
-      position: relative;
-      width: 800px;
-      height: 470px;
-      background: #0a3d0a;
-      border: 10px solid #654321;
+    .table-shape {
       border-radius: 50% / 30%;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+      background: radial-gradient(circle at center, #1a4d1a 0%, #0a3d0a 70%, #062d06 100%);
+      position: relative;
+      overflow: hidden;
     }
 
-    .dealer {
+    .table-felt-pattern {
       position: absolute;
-      top: -90px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .head {
-      width: 50px;
-      height: 50px;
-      background: #f0d9b5;
-      border-radius: 50%;
-      border: 2px solid #333;
-    }
-
-    .body {
-      width: 10px;
-      height: 60px;
-      background: #333;
-      margin-top: 5px;
-    }
-
-    .arms {
-      width: 60px;
-      height: 10px;
-      background: #333;
-      margin-top: -5px;
-    }
-
-    .legs {
-      display: flex;
-      gap: 8px;
-      margin-top: 0;
-    }
-
-    .leg {
-      width: 10px;
-      height: 40px;
-      background: #333;
-    }
-
-    .dealer-label {
-      margin-top: 6px;
-      color: white;
-      font-size: 14px;
-      font-family: sans-serif;
-      opacity: 0.7;
-    }
-
-    .table-text {
-      position: absolute;
-      bottom: 10px;
       width: 100%;
-      text-align: center;
-      color: white;
-      font-family: Arial, sans-serif;
-      font-size: 18px;
-      opacity: 0.5;
+      height: 100%;
+      background-image: repeating-linear-gradient(45deg,
+          rgba(255, 255, 255, 0.05) 0,
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 1px,
+          transparent 20px);
+      pointer-events: none;
+    }
+
+    .card-slot {
+      width: 56px;
+      height: 80px;
+      border: 2px dashed rgba(255, 255, 255, 0.5);
+      border-radius: 6px;
+      background-color: rgba(255, 255, 255, 0.05);
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 56px;
+      height: 80px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.25rem;
+      color: black;
+      user-select: none;
     }
   </style>
 </head>
-<body>
 
-  <div class="table-container">
-    <!-- Stickman Dealer -->
-    <div class="dealer">
-      <div class="head"></div>
-      <div class="body"></div>
-      <div class="arms"></div>
-      <div class="legs">
-        <div class="leg"></div>
-        <div class="leg"></div>
-      </div>
-      <div class="dealer-label">Dealer</div>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+
+  <div class="relative w-[800px] h-[470px] border-[10px] border-[#654321] shadow-2xl table-shape">
+    <div class="table-felt-pattern"></div>
+
+    <!-- Dealer Karten-Platzhalter (oben mittig) -->
+    <div class="absolute top-16 w-full flex justify-center gap-6 z-0">
+      <div class="card-slot"></div>
+      <div class="card-slot"></div>
     </div>
 
-    <div class="table-text">Blackjack Tisch</div>
-  </div>
+    <!-- Dealer Karten (Beispielkarten, liegen über den Platzhaltern) -->
+    <div class="absolute top-16 w-full flex justify-center gap-6 z-10">
+      <div class="card">10♠</div>
+      <div class="card">7♦</div>
+    </div>
 
+    <!-- Spieler Karten-Platzhalter (unten mittig) -->
+    <div class="absolute bottom-28 w-full flex justify-center gap-6 z-0">
+      <div class="card-slot"></div>
+      <div class="card-slot"></div>
+    </div>
+
+    <!-- Spieler Karten (Beispielkarten, liegen über den Platzhaltern) -->
+    <div class="absolute bottom-28 w-full flex justify-center gap-6 z-10">
+      <div class="card">A♥</div>
+      <div class="card">K♠</div>
+    </div>
+
+    <!-- Karten-Stapel beim Dealer rechts oben -->
+    <div class="absolute top-24 left-[65%] transform -translate-x-1/2 z-10">
+      <div
+        class="w-12 h-16 bg-white shadow-inner border border-gray-300 rounded-sm flex items-center justify-center text-black text-sm font-bold">
+        🂠
+      </div>
+      <div class="mt-1 text-center text-white text-xs opacity-70">Stapel</div>
+    </div>
+
+    <!-- Chips (unter Kartenbereich) mit Beschriftung -->
+    <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 z-10">
+      <div class="flex gap-1">
+        <div
+          class="w-8 h-8 bg-red-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold">
+          1
+        </div>
+        <div
+          class="w-8 h-8 bg-blue-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold">
+          5
+        </div>
+        <div
+          class="w-8 h-8 bg-yellow-400 rounded-full shadow-md border border-white flex items-center justify-center text-black text-xs font-bold">
+          10
+        </div>
+        <div
+          class="w-8 h-8 bg-green-500 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold">
+          100
+        </div>
+        <div
+          class="w-8 h-8 bg-black rounded-full shadow-md border border-white flex items-center justify-center text-yellow-400 text-[10px] font-bold">
+          ALL<br />IN
+        </div>
+      </div>
+    </div>
+
+    <!-- Spielersteuerung -->
+    <div class="absolute bottom-4 w-full flex justify-center gap-4 z-10">
+      <button class="btn btn-success">Karte</button>
+      <button class="btn btn-warning">Passen</button>
+      <button class="btn btn-error">Neustart</button>
+    </div>
+  </div>
 </body>
+
 </html>

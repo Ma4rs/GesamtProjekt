@@ -1,20 +1,187 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Triple Guess</title>
-  
+  <!-- DaisyUI -->
+  <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
+  <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
+  <link rel="stylesheet" href="index.js" />
+
+  <!-- Tailwind -->
+  <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+
+  <style>
+    .bankContainer {
+      margin-top: 400px;
+      margin-left: 250px;
+      margin-right: 210px;
+    }
+
+    /* .nBtn:active {
+      top: 118px;
+      left: calc(25% + 2px);
+      box-shadow: 1px 2px rgb(0 0 0 / 25%);
+    } */
+
+    /* .selectable-chip {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .selectable-chip:hover {
+      transform: scale(1.1);
+    }
+
+    .selectable-chip.active {
+      box-shadow: 0 0 10px 4px rgba(255, 255, 0, 0.8);
+      transform: scale(1.2);
+    } */
+
+    .chip-btn {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 9999px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      border: 1px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.75rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .chip-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .chip-btn.active {
+      box-shadow: 0 0 10px 4px rgba(255, 255, 0, 0.8);
+      transform: scale(1.2);
+    }
+
+
+    .bank,
+    .bet {
+      color: white;
+      display: inline-block;
+      width: calc(50% - 28px);
+      background-color: #000;
+      font-size: 18px;
+      margin-left: 7px;
+      padding: 5px;
+      border: 4px solid silver;
+      border-radius: 7px;
+      text-align: right;
+    }
+
+    .table-shape {
+      border-radius: 50% / 30%;
+      background: radial-gradient(circle at center, #1a4d1a 0%, #0a3d0a 70%, #062d06 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .table-felt-pattern {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: repeating-linear-gradient(45deg,
+          rgba(255, 255, 255, 0.05) 0,
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 1px,
+          transparent 20px);
+      pointer-events: none;
+    }
+
+    .card-slot {
+      width: 56px;
+      height: 80px;
+      border: 2px dashed rgba(255, 255, 255, 0.5);
+      border-radius: 6px;
+      background-color: rgba(255, 255, 255, 0.05);
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 56px;
+      height: 80px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.25rem;
+      color: black;
+      user-select: none;
+    }
+  </style>
 </head>
-<body>
-  <div class="table">
-    <div class="deck">
-      <!-- Einfaches gestapeltes Kartendeck -->
-      <div class="card1">test1</div>
-      <div class="card">test2</div>
-      <div class="card">test3</div>
-      <div class="card">test4</div>
-      <div class="card">test5</div>
+
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+
+  <div class="relative w-[800px] h-[470px] border-[10px] border-[#654321] shadow-2xl table-shape">
+    <div class="table-felt-pattern"></div>
+
+    <!-- Dealer Karten-Platzhalter (oben mittig) -->
+    <div class="absolute top-16 w-full flex justify-center gap-6 z-0">
+      <div class="card-slot"></div>
+      <div class="card-slot"></div>
+      <div class="card-slot"></div>
+      <div class="card-slot"></div>
+    </div>
+
+    <!-- Spieler Karten (Beispielkarten, liegen über den Platzhaltern) -->
+    <div class="absolute bottom-28 w-full flex justify-center gap-6 z-10">
+      <div id="auswahl1" class="card"></div>
+      <div id="auswahl2" class="card"></div>
+    </div>
+
+    <!-- Chips (unter Kartenbereich) mit Beschriftung -->
+    <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 z-10">
+      <!-- <div class="flex gap-1">
+        <div
+          class="w-8 h-8 bg-red-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
+          1
+        </div>
+        <div
+          class="w-8 h-8 bg-blue-600 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
+          5
+        </div>
+        <div
+          class="w-8 h-8 bg-yellow-400 rounded-full shadow-md border border-white flex items-center justify-center text-black text-xs font-bold selectable-chip">
+          10
+        </div>
+        <div
+          class="w-8 h-8 bg-green-500 rounded-full shadow-md border border-white flex items-center justify-center text-white text-xs font-bold selectable-chip">
+          100
+        </div>
+        <div
+          class="w-8 h-8 bg-black rounded-full shadow-md border border-white flex items-center justify-center text-yellow-400 text-[10px] font-bold selectable-chip">
+          ALL<br />IN
+        </div>
+      </div> -->
+      <div class="flex gap-1" id="chipContainer">
+        <button class="chip-btn bg-red-600 text-white" data-value="1">1</button>
+        <button class="chip-btn bg-blue-600 text-white" data-value="5">5</button>
+        <button class="chip-btn bg-yellow-400 text-black" data-value="10">10</button>
+        <button class="chip-btn bg-green-500 text-white" data-value="100">100</button>
+        <button class="chip-btn bg-black text-yellow-400 text-[10px] leading-tight" data-value="ALL">
+          ALL<br>IN
+        </button>
+      </div>
+    </div>
+
+    <div class="bankContainer">
+      <div class="bank"><span id="bankSpan">0</span></div>
+      <div class="bet"><span id="betSpan">0</span></div>
     </div>
   </div>
 </body>
+
 </html>
