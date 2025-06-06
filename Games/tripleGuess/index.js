@@ -76,7 +76,7 @@ async function main() {
         if (red.includes(card.art) === userChoice) {
 
         } else {
-          gameOver();
+          setTimeout(gameOver, 500);
         }
 
         document.querySelector("#auswahl1").innerHTML = "Higher";
@@ -86,7 +86,7 @@ async function main() {
         if (userChoice === (cardvalue1 <= card.wert)) {
 
         } else {
-          gameOver();
+          setTimeout(gameOver, 500);
         }
 
         cardvalue2 = card.wert;
@@ -99,16 +99,16 @@ async function main() {
         if (userChoice === (card.wert)) {
 
         } else {
-          gameOver();
+          setTimeout(gameOver, 500);
         }
 
       }
 
       // if (cardcount === 3) {
-      //   setTimeout(() => {
-      //     clear();
-      //     cardcount = 0;
-      //   }, 1000);
+      // setTimeout(() => {
+      //   clear();
+      //   cardcount = 0;
+      // }, 1000);
       // }
     } catch (e) {
       console.error("Fehler :", e);
@@ -146,13 +146,7 @@ async function GetCard() {
     console.log("Fehler beim Laden der Karte: ", error);
   }
 }
-function clear() {
-  document.querySelector("#card1").innerHTML = `<img src="/Picture/Karten/Hinterseite.png" alt="">`;
-  document.querySelector("#card2").innerHTML = `<img src="/Picture/Karten/Hinterseite.png" alt="">`;
-  document.querySelector("#card3").innerHTML = `<img src="/Picture/Karten/Hinterseite.png" alt="">`;
-  document.querySelector("#auswahl1").innerHTML = "Red";
-  document.querySelector("#auswahl2").innerHTML = "Black";
-}
+
 function gameOver() {
   let losMsg = 'Lost!';
   let losAct = 'Play Again';
