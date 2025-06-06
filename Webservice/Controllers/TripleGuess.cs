@@ -6,9 +6,9 @@ namespace C__Backend.Controllers
     [Route("api/casino/tripleguess/")]
     public class TripleGuessController : ControllerBase
     {
-        private static readonly string[] Suits = { "Heart", "Clover", "Spade", "Diamond" };
+        private static readonly string[] Suits = { "hearts", "clubs", "spades", "diamonds" };
         private static readonly (string Name, int Value)[] Values = {
-            ("A", 1),
+            ("ace", 14),
             ("2", 2),
             ("3", 3),
             ("4", 4),
@@ -17,10 +17,10 @@ namespace C__Backend.Controllers
             ("7", 7),
             ("8", 8),
             ("9", 9),
-            ("0", 10),
-            ("B", 11),
-            ("D", 12),
-            ("K", 13)
+            ("10", 10),
+            ("jack", 11),
+            ("queen", 12),
+            ("king", 13)
         };
         // https://deckofcardsapi.com/static/img/AH.png -> Bilder => alle Kopieren und lokal speichern wenn man das selber machen will
         // https://deckofcardsapi.com/api/deck/new/ -> create Deck => deck_id speichern
@@ -32,10 +32,11 @@ namespace C__Backend.Controllers
             var rnd = new Random();
             string suit = Suits[rnd.Next(Suits.Length)];
             var valueTuple = Values[rnd.Next(Values.Length)];
-            string imageUrl = $"https://deckofcardsapi.com/static/img/{valueTuple.Name}{suit.First()}.png";
+            string imageUrl = $"/Picture/Karten/{valueTuple.Name}_of_{suit}.png";
 
             var card = new
             {
+                Name = valueTuple.Name,
                 Wert = valueTuple.Value,
                 Art = suit,
                 Bild = imageUrl

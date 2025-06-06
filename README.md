@@ -20,9 +20,9 @@ Dieses Projekt ist ein Onlinecasino, das im Rahmen eines Schulprojektes entwicke
 
 1. Repository klonen:
    ```bash
-   git clone https://github.com/Ma4rs/GesamtProjekt.git
+   git clone https://gl.edvschule-plattling.de/bfs2023ik/202425trfiaeb2/onlinecasino.git
    ```
-2. In das Hauptverzeichnis (`main`) wechseln (falls nicht automatisch):
+2. In das Verzeichnis (aktuell `develop`) wechseln (falls nicht automatisch):
    ```bash
    cd GesamtProjekt
    ```
@@ -36,7 +36,7 @@ Dieses Projekt ist ein Onlinecasino, das im Rahmen eines Schulprojektes entwicke
    dotnet run
    ```
 5. Zurück ins Hauptverzeichnis und den Live-Server starten (z. B. mit VS Code „Go Live“):
-   - Stelle sicher, dass du im `main`-Verzeichnis bist.
+   - Stelle sicher, dass du im richtigen Verzeichnis bist.
    - „Go Live“ (meist unten rechts in VS Code) starten.
 
 ## Nutzung

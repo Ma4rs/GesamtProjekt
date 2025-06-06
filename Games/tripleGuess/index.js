@@ -1,6 +1,8 @@
 async function main() {
-  let cardcount = 1;
-  const username = "string";
+  let cardcount = 0;
+  let cardvalue1 = 0
+  let cardvalue2 = 0;
+  const red = ["hearts", "diamonds"];
   let bankValue = await fetchBankValue();
   document.querySelector("#bankSpan").innerHTML = bankValue;
 
@@ -52,31 +54,73 @@ async function main() {
   });
 
   // Spiel Auswahl Treffen
-  document.getElementById("GameChoice").addEventListener("click", async function () {
-    if (document.querySelector("#betSpan")?.textContent !== "0") {
-      try {
-        const card = await GetCard();
-        console.log(card.wert);
-        console.log(card.art);
-        cardid = `#card${cardcount}`;
-        console.log(cardid)
-        document.querySelector(cardid).innerHTML = `<img src="${card.bild}" alt="">`;
-        cardcount++;
-        
-      } catch (e) {
-        console.error("Fehler beim Ziehen einer Karte:", e);
-      }
-    } else {
+  document.getElementById("GameChoice").addEventListener("click", async function (event) {
+    if (!event.target.classList.contains("card")) return; // Nur Karten-Auswahl
+    const clickedId = event.target.id; // "auswahl1" oder "auswahl2"
+    if (cardcount >= 3) return; // maximal 3 Karten
+
+    if (document.querySelector("#betSpan")?.textContent === "0") {
       console.log("Kein Einsatz gesetzt!");
+      return;
+    }
+
+    cardcount++;
+    try {
+      const card = await GetCard();
+      const cardid = `#card${cardcount}`;
+      document.querySelector(cardid).innerHTML = `<img src="${card.bild}" alt="">`;
+
+      // Auswertung
+      let userChoice = (clickedId === "auswahl1");
+      if (cardcount === 1) {
+        cardvalue1 = card.wert;
+        
+        console.log((red.includes(card.art) === userChoice) ? "Player Wins" : "House Wins");
+        
+        document.querySelector("#auswahl1").innerHTML = "Higher";
+        document.querySelector("#auswahl2").innerHTML = "Lower";
+      }
+      else if (cardcount === 2) {
+        console.log((userChoice === (cardvalue1 <= card.wert)) ? "Player Wins" : "House Wins");
+
+        cardvalue2 = card.wert;
+        document.querySelector("#auswahl1").innerHTML = "Inside";
+        document.querySelector("#auswahl2").innerHTML = "Outside";
+      }
+      else if (cardcount === 3) {
+        let greater = cardvalue1;
+        let lesser = cardvalue2;
+        console.log((userChoice === (card.wert)) ? "Player Wins" : "House Wins");
+
+      }
+
+      // Bei 3 Karten alles zurücksetzen
+      if (cardcount === 3) {
+        setTimeout(() => {
+          clear();
+          cardcount = 0;
+        }, 1000); // kurz anzeigen lassen
+      }
+    } catch (e) {
+      console.error("Fehler beim Ziehen einer Karte:", e);
     }
   });
 
-
   // Für BankValue
   async function fetchBankValue() {
+    const body = {
+      "email": "string",
+      "password": "string"
+    }
+    const Login = await axios.post(`http://localhost:5105/api/Casino/User/Login`, body);
+    const token = Login.data.token;
     try {
-      const response = await axios.get(`http://localhost:5105/api/Casino/User/GetData/${username}`);
-      return Number(response.data.credits);
+      const userData = await axios.get('http://localhost:5105/api/Casino/User/GetData', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return Number(userData.data.credits);
     } catch (error) {
       console.log("Fehler beim Laden des Bankwerts: ", error);
       return 0;
@@ -89,8 +133,15 @@ async function main() {
       const response = await axios.get("http://localhost:5105/api/casino/tripleguess/newCard");
       return response.data;
     } catch (error) {
-      console.log("Fehler beim Laden des Spins: ", error);
+      console.log("Fehler beim Laden der Karte: ", error);
     }
   }
+}
+function clear() {
+  document.querySelector("#card1").innerHTML = `<img src="/Picture/Karten/Hinterseite.png" alt="">`;
+  document.querySelector("#card2").innerHTML = `<img src="/Picture/Karten/Hinterseite.png" alt="">`;
+  document.querySelector("#card3").innerHTML = `<img src="/Picture/Karten/Hinterseite.png" alt="">`;
+  document.querySelector("#auswahl1").innerHTML = "Red";
+  document.querySelector("#auswahl2").innerHTML = "Black";
 }
 main();
