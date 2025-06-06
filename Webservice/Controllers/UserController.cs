@@ -72,28 +72,37 @@ public async Task<IActionResult> GetData()
             }
         }
 
-        [HttpPost("UpdateCredits")]
-        public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
+[Authorize]
+[HttpPost("UpdateCredits")]
+public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
+{
+    var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    if (username == null)
+    {
+        return Unauthorized(new { message = "Kein Username im Token gefunden." });
+    }
+
+    using (var context = new OnlineCasinoContext())
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
         {
-            using (var context = new OnlineCasinoContext())
-            {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
-
-                if (user == null)
-                {
-                    return NotFound(new { message = "User nicht gefunden." });
-                }
-
-                user.Credits += request.CreditsToAdd;
-                await context.SaveChangesAsync();
-
-                return Ok(new
-                {
-                    message = "Credits aktualisiert.",
-                    newCredits = user.Credits
-                });
-            }
+            return NotFound(new { message = "User nicht gefunden." });
         }
+
+        user.Credits += request.CreditsToAdd;
+        await context.SaveChangesAsync();
+
+        return Ok(new
+        {
+            message = "Credits aktualisiert.",
+            newCredits = user.Credits
+        });
+    }
+}
+
 
 
         // [HttpPost("Login")]
