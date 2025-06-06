@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css">
   <link rel="stylesheet" href="/node_modules/daisyui/themes.css">
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -46,6 +47,7 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- Probleme bei using deswegen so -->
   <script type="module">
+
     
     const ws = axios.create({ baseURL: "http://localhost:5105" });
     const urlParams = new URLSearchParams(window.location.search);
@@ -53,14 +55,14 @@
     const username = urlParams.get('username') || "string"; // Fallback-Wert fürs testen
 
     const body = {
-      username : "string",
+      username: "string",
       creditsToAdd: credits
     };
 
     ws.post("/api/Casino/User/UpdateCredits", body)
       .then((res) => {
         if (res.status >= 200 && res.status < 300) {
-          setTimeout(() =>{
+          setTimeout(() => {
             document.getElementById('status').innerText = `${credits} Credits wurden Ihrem User hinzugefügt.`;
             document.getElementById('spinner').style.display = "none";
           }, 1500);
