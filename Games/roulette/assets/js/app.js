@@ -1,15 +1,24 @@
 const username = "string";
 // const ws = axios.get(`http://localhost:5105/api/Casino/User/`);
 async function fetchBankValue() {
-	try {
-		const response = await axios.get(`http://localhost:5105/api/Casino/User/GetData/${username}`);
-		// console.log(Number(response.data.credits));
-		return Number(response.data.credits);
-	} catch (error) {
-		console.log("Fehler beim Laden des Bankwerts: ", error);
-		return 0;
+	const body = {
+	  "email": "string",
+	  "password": "string"
 	}
-}
+	const Login = await axios.post(`http://localhost:5105/api/Casino/User/Login`, body);
+	const token = Login.data.token;
+	try {
+	  const userData = await axios.get('http://localhost:5105/api/Casino/User/GetData', {
+		headers: {
+		  Authorization: `Bearer ${token}`
+		}
+	  });
+	  return Number(userData.data.credits);
+	} catch (error) {
+	  console.log("Fehler beim Laden des Bankwerts: ", error);
+	  return 0;
+	}
+  }
 
 async function safeBankvalue(spinResult) {
 	try {
