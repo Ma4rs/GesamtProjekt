@@ -12,6 +12,51 @@
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
 
   <style>
+    .nSpan {
+      display: block;
+      position: relative;
+      top: 80px;
+      font-size: 53px;
+      text-align: center;
+    }
+
+    .nBtn {
+      display: block;
+      position: relative;
+      top: 100px;
+      left: 25%;
+      width: 45%;
+      padding: 10px;
+      font-size: 32px;
+      text-align: center;
+      background-color: green;
+      border-radius: 15px;
+      box-shadow: 3px 4px rgb(0 0 0 / 25%);
+      cursor: pointer;
+      transition: .5s;
+    }
+
+    .nBtn:active {
+      top: 118px;
+      left: calc(25% + 2px);
+      box-shadow: 1px 2px rgb(0 0 0 / 25%);
+    }
+
+    #notification {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 318px;
+      background-color: #ad0205;
+      z-index: 9999;
+      border: 8px solid #d3b201;
+      border-radius: 12px;
+      transition: 1s;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
     .einsatz-text {
       position: relative;
       color: #ffe066;

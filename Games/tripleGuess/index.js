@@ -58,8 +58,8 @@ async function main() {
     if (!event.target.classList.contains("card")) return; // Nur Karten-Auswahl
     const clickedId = event.target.id; // "auswahl1" oder "auswahl2"
     if (cardcount >= 3) return; // maximal 3 Karten
-
-    if (document.querySelector("#betSpan")?.textContent === "0") {
+    let bankValue = Number(document.querySelector("#betSpan")?.textContent);
+    if (bankValue === 0) {
       console.log("Kein Einsatz gesetzt!");
       return;
     }
@@ -70,18 +70,24 @@ async function main() {
       const cardid = `#card${cardcount}`;
       document.querySelector(cardid).innerHTML = `<img src="${card.bild}" alt="">`;
 
-      // Auswertung
       let userChoice = (clickedId === "auswahl1");
       if (cardcount === 1) {
         cardvalue1 = card.wert;
-        
-        console.log((red.includes(card.art) === userChoice) ? "Player Wins" : "House Wins");
-        
+        if (red.includes(card.art) === userChoice) {
+
+        } else {
+          gameOver();
+        }
+
         document.querySelector("#auswahl1").innerHTML = "Higher";
         document.querySelector("#auswahl2").innerHTML = "Lower";
       }
       else if (cardcount === 2) {
-        console.log((userChoice === (cardvalue1 <= card.wert)) ? "Player Wins" : "House Wins");
+        if (userChoice === (cardvalue1 <= card.wert)) {
+
+        } else {
+          gameOver();
+        }
 
         cardvalue2 = card.wert;
         document.querySelector("#auswahl1").innerHTML = "Inside";
@@ -90,51 +96,54 @@ async function main() {
       else if (cardcount === 3) {
         let greater = cardvalue1;
         let lesser = cardvalue2;
-        console.log((userChoice === (card.wert)) ? "Player Wins" : "House Wins");
+        if (userChoice === (card.wert)) {
+
+        } else {
+          gameOver();
+        }
 
       }
 
-      // Bei 3 Karten alles zurücksetzen
-      if (cardcount === 3) {
-        setTimeout(() => {
-          clear();
-          cardcount = 0;
-        }, 1000); // kurz anzeigen lassen
-      }
+      // if (cardcount === 3) {
+      //   setTimeout(() => {
+      //     clear();
+      //     cardcount = 0;
+      //   }, 1000);
+      // }
     } catch (e) {
-      console.error("Fehler beim Ziehen einer Karte:", e);
+      console.error("Fehler :", e);
     }
   });
 
   // Für BankValue
-  async function fetchBankValue() {
-    const body = {
-      "email": "string",
-      "password": "string"
-    }
-    const Login = await axios.post(`http://localhost:5105/api/Casino/User/Login`, body);
-    const token = Login.data.token;
-    try {
-      const userData = await axios.get('http://localhost:5105/api/Casino/User/GetData', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      return Number(userData.data.credits);
-    } catch (error) {
-      console.log("Fehler beim Laden des Bankwerts: ", error);
-      return 0;
-    }
+}
+async function fetchBankValue() {
+  const body = {
+    "email": "string",
+    "password": "string"
   }
+  const Login = await axios.post(`http://localhost:5105/api/Casino/User/Login`, body);
+  const token = Login.data.token;
+  try {
+    const userData = await axios.get('http://localhost:5105/api/Casino/User/GetData', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return Number(userData.data.credits);
+  } catch (error) {
+    console.log("Fehler beim Laden des Bankwerts: ", error);
+    return 0;
+  }
+}
 
-  // Für Karte die man zieht
-  async function GetCard() {
-    try {
-      const response = await axios.get("http://localhost:5105/api/casino/tripleguess/newCard");
-      return response.data;
-    } catch (error) {
-      console.log("Fehler beim Laden der Karte: ", error);
-    }
+// Für Karte die man zieht
+async function GetCard() {
+  try {
+    const response = await axios.get("http://localhost:5105/api/casino/tripleguess/newCard");
+    return response.data;
+  } catch (error) {
+    console.log("Fehler beim Laden der Karte: ", error);
   }
 }
 function clear() {
@@ -143,5 +152,33 @@ function clear() {
   document.querySelector("#card3").innerHTML = `<img src="/Picture/Karten/Hinterseite.png" alt="">`;
   document.querySelector("#auswahl1").innerHTML = "Red";
   document.querySelector("#auswahl2").innerHTML = "Black";
+}
+function gameOver() {
+  let losMsg = 'Lost!';
+  let losAct = 'Play Again';
+  let losFrw = '../Interface/tripleGuess.html';
+  if (Number(document.querySelector("#bankSpan").textContent) === 0) {
+    losMsg = 'Keine Credits mehr';
+    losAct = 'Kaufe mehr Credits';
+    losFrw = '../Interface/credits.html';
+  }
+  let notification = document.createElement('div');
+  notification.setAttribute('id', 'notification');
+  let nSpan = document.createElement('span');
+  nSpan.setAttribute('class', 'nSpan');
+  nSpan.innerText = losMsg;
+  notification.append(nSpan);
+
+  let nBtn = document.createElement('div');
+  nBtn.setAttribute('class', 'nBtn');
+  nBtn.innerText = losAct;
+  nBtn.onclick = function () {
+    window.top.location.href = losFrw;  // .top nötig damit es nicht im Frame geöffnet wird
+  };
+  let container = document.createElement('div');
+  container.setAttribute('id', 'container');
+  document.body.append(container);
+  notification.append(nBtn);
+  container.prepend(notification);
 }
 main();
