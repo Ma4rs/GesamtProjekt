@@ -8,7 +8,7 @@ Dieses Projekt ist ein Onlinecasino, das im Rahmen eines Schulprojektes entwicke
 - **Blackjack**
 - **Roulette**
 - **Triple Guess**
-- **(Viertes Spiel in Planung)**
+- **Riskladder**
 
 ## Verzeichnisstruktur
 
@@ -24,7 +24,7 @@ Dieses Projekt ist ein Onlinecasino, das im Rahmen eines Schulprojektes entwicke
    ```
 2. In das Verzeichnis (aktuell `develop`) wechseln (falls nicht automatisch):
    ```bash
-   cd GesamtProjekt
+   cd onlinecasino
    ```
 3. Abhängigkeiten installieren:
    ```bash
