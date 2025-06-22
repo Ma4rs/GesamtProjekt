@@ -1,38 +1,45 @@
-const username = "string";
-// const ws = axios.get(`http://localhost:5105/api/Casino/User/`);
-async function fetchBankValue() {
+let token = null;
+
+async function authorize() {
 	const body = {
-	  "email": "string",
-	  "password": "string"
+		"email": "string",
+		"password": "string"
 	}
 	const Login = await axios.post(`http://localhost:5105/api/Casino/User/Login`, body);
-	const token = Login.data.token;
+	token = Login.data.token; // Token global merken!
+	return token;
+}
+
+async function fetchBankValue() {
 	try {
-	  const userData = await axios.get('http://localhost:5105/api/Casino/User/GetData', {
-		headers: {
-		  Authorization: `Bearer ${token}`
-		}
-	  });
-	  return Number(userData.data.credits);
+		if (!token) await authorize();
+		const userData = await axios.get('http://localhost:5105/api/Casino/User/GetData', {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+		return Number(userData.data.credits);
 	} catch (error) {
-	  console.log("Fehler beim Laden des Bankwerts: ", error);
-	  return 0;
+		console.log("Fehler beim Laden des Bankwerts: ", error);
+		return 0;
 	}
-  }
+}
 
-async function safeBankvalue(spinResult) {
+async function safeBankvalue(gameResultsum) {
 	try {
+		if (!token) await authorize();
 		const body = {
-			username: username,
-			creditsToAdd: spinResult
+			"creditsToAdd": gameResultsum
 		};
+		console.log("Es werden " + gameResultsum + " Credits hinzugefügt")
+		const response = await axios.post("http://127.0.0.1:5105/api/Casino/User/UpdateCredits", body, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
 
-		console.log("Es werden " + spinResult + " Credits hinzugefügt")
-		const response = await axios.post("http://localhost:5105/api/Casino/User/UpdateCredits", body);
-
-		// console.log("response: " + response)
-		// console.log("message: " + response.message)
-		if (response.message == 200) {
+		if (response.status == 200) {
+			// Erfolg
 		} else {
 			console.log("Antwort ungültig:", response);
 		}
@@ -51,10 +58,7 @@ async function GetSpin() {
 }
 
 async function main() {
-	// console.log("###############" + await safeBankvalue(0) + "###############");
-	console.log(fetchBankValue());
 	let bankValue = await fetchBankValue();
-	// let bankValue = 1000;
 	let currentBet = 0;
 	let wager = 5;
 	let lastWager = 0;
@@ -69,28 +73,26 @@ async function main() {
 	container.setAttribute('id', 'container');
 	document.body.append(container);
 
-	startGame();
+	let wheel = null;
+	let ballTrack = null;
 
-	let wheel = document.getElementsByClassName('wheel')[0];
-	let ballTrack = document.getElementsByClassName('ballTrack')[0];
-
-	function resetGame() {
-		bankValue.then((ergebnis) => {
-			console.log("###############" + ergebnis)
-		})	//Player Credits
-		// bankValue = 1000;	//Player Credits
-		currentBet = 0;
-		wager = 5;
-		bet = [];
-		numbersBet = [];
-		previousNumbers = [];
-		document.getElementById('betting_board').remove();
-		document.getElementById('notification').remove();
-		buildBettingBoard();
-	}
+	// function resetGame() {
+	// 	currentBet = 0;
+	// 	wager = 5;
+	// 	bet = [];
+	// 	numbersBet = [];
+	// 	previousNumbers = [];
+	// 	const bb = document.getElementById('betting_board');
+	// 	if (bb) bb.remove();
+	// 	const notif = document.getElementById('notification');
+	// 	if (notif) notif.remove();
+	// 	buildBettingBoard();
+	// }
 
 	function startGame() {
 		buildWheel();
+		wheel = document.getElementsByClassName('wheel')[0];
+		ballTrack = document.getElementsByClassName('ballTrack')[0];
 		buildBettingBoard();
 	}
 
@@ -106,22 +108,22 @@ async function main() {
 		nBtn.setAttribute('class', 'nBtn');
 		nBtn.innerText = 'Kaufe mehr Credits';
 		nBtn.onclick = function () {
-			window.top.location.href = '../Interface/credits.html';  // .top nötig damit es nicht im Frame geöffnet wird
+			window.top.location.href = '../Interface/credits.html';
 		};
 		notification.append(nBtn);
 		container.prepend(notification);
 	}
 
 	function buildWheel() {
-		let wheel = document.createElement('div');
-		wheel.setAttribute('class', 'wheel');
+		let wheelDiv = document.createElement('div');
+		wheelDiv.setAttribute('class', 'wheel');
 
 		let outerRim = document.createElement('div');
 		outerRim.setAttribute('class', 'outerRim');
-		wheel.append(outerRim);
+		wheelDiv.append(outerRim);
 
 		let numbers = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
-		for (i = 0; i < numbers.length; i++) {
+		for (let i = 0; i < numbers.length; i++) {
 			let a = i + 1;
 			let spanClass = (numbers[i] < 10) ? 'single' : 'double';
 			let sect = document.createElement('div');
@@ -134,31 +136,31 @@ async function main() {
 			let block = document.createElement('div');
 			block.setAttribute('class', 'block');
 			sect.append(block);
-			wheel.append(sect);
+			wheelDiv.append(sect);
 		}
 
 		let pocketsRim = document.createElement('div');
 		pocketsRim.setAttribute('class', 'pocketsRim');
-		wheel.append(pocketsRim);
+		wheelDiv.append(pocketsRim);
 
-		let ballTrack = document.createElement('div');
-		ballTrack.setAttribute('class', 'ballTrack');
+		let ballTrackDiv = document.createElement('div');
+		ballTrackDiv.setAttribute('class', 'ballTrack');
 		let ball = document.createElement('div');
 		ball.setAttribute('class', 'ball');
-		ballTrack.append(ball);
-		wheel.append(ballTrack);
+		ballTrackDiv.append(ball);
+		wheelDiv.append(ballTrackDiv);
 
 		let pockets = document.createElement('div');
 		pockets.setAttribute('class', 'pockets');
-		wheel.append(pockets);
+		wheelDiv.append(pockets);
 
 		let cone = document.createElement('div');
 		cone.setAttribute('class', 'cone');
-		wheel.append(cone);
+		wheelDiv.append(cone);
 
 		let turret = document.createElement('div');
 		turret.setAttribute('class', 'turret');
-		wheel.append(turret);
+		wheelDiv.append(turret);
 
 		let turretHandle = document.createElement('div');
 		turretHandle.setAttribute('class', 'turretHandle');
@@ -168,9 +170,9 @@ async function main() {
 		let thendTwo = document.createElement('div');
 		thendTwo.setAttribute('class', 'thendTwo');
 		turretHandle.append(thendTwo);
-		wheel.append(turretHandle);
+		wheelDiv.append(turretHandle);
 
-		container.append(wheel);
+		container.append(wheelDiv);
 	}
 
 	async function buildBettingBoard() {
@@ -567,6 +569,7 @@ async function main() {
 		// hier chip
 		// var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
 		var winningSpin = await GetSpin();
+		// var winningSpin = 0;
 		console.log(winningSpin)
 		spinWheel(winningSpin);
 		setTimeout(async function () {
@@ -613,7 +616,6 @@ async function main() {
 				gameOver();
 			}
 		}, 10000);
-		bankValue = await fetchBankValue();
 	}
 
 	async function win(winningSpin, winValue, betTotal) {
@@ -663,9 +665,8 @@ async function main() {
 			await safeBankvalue(los); // hier auch aber unsicher 
 			console.log("Verloren")
 		}
-		console.log("If verlassen")
+		// console.log("If verlassen")
 		bankValue = await fetchBankValue();
-		// console.log("Nach if bv: " + bankValue)
 		document.getElementById('bankSpan').innerText = '' + bankValue.toLocaleString("en-GB") + '';
 	}
 
@@ -698,14 +699,18 @@ async function main() {
 	}
 
 	function spinWheel(winningSpin) {
-		for (i = 0; i < wheelnumbersAC.length; i++) {
+		// Bestimme die Gradzahl, auf die das Rad und die Kugel drehen sollen
+		let degree = 0;
+		for (let i = 0; i < wheelnumbersAC.length; i++) {
 			if (wheelnumbersAC[i] == winningSpin) {
-				var degree = (i * 9.73) + 362;
+				degree = (i * 9.73) + 362;
 			}
 		}
+		// Startanimation: Das Rad dreht sich und die Kugel läuft schnell herum
 		wheel.style.cssText = 'animation: wheelRotate 5s linear infinite;';
 		ballTrack.style.cssText = 'animation: ballRotate 1s linear infinite;';
 
+		// Nach 2 Sekunden wird die Kugel langsamer (Animation wird angepasst)
 		setTimeout(function () {
 			ballTrack.style.cssText = 'animation: ballRotate 2s linear infinite;';
 			style = document.createElement('style');
@@ -713,12 +718,15 @@ async function main() {
 			style.innerText = '@keyframes ballStop {from {transform: rotate(0deg);}to{transform: rotate(-' + degree + 'deg);}}';
 			document.head.appendChild(style);
 		}, 2000);
+		// Nach 6 Sekunden stoppt die Kugel langsam auf dem Gewinnerfeld
 		setTimeout(function () {
 			ballTrack.style.cssText = 'animation: ballStop 3s linear;';
 		}, 6000);
+		// Nach 9 Sekunden bleibt die Kugel endgültig stehen
 		setTimeout(function () {
 			ballTrack.style.cssText = 'transform: rotate(-' + degree + 'deg);';
 		}, 9000);
+		// Nach 10 Sekunden wird die Animation zurückgesetzt
 		setTimeout(function () {
 			wheel.style.cssText = '';
 			style.remove();
@@ -734,5 +742,7 @@ async function main() {
 			removeChips();
 		}
 	}
+
+	startGame();
 }
 main();

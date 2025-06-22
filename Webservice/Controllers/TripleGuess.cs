@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Concurrent;
+using System.Security.Claims;
 
 namespace C__Backend.Controllers
 {
@@ -22,10 +25,13 @@ namespace C__Backend.Controllers
             ("queen", 12),
             ("king", 13)
         };
-        // https://deckofcardsapi.com/static/img/AH.png -> Bilder => alle Kopieren und lokal speichern wenn man das selber machen will
-        // https://deckofcardsapi.com/api/deck/new/ -> create Deck => deck_id speichern
-        // https://deckofcardsapi.com/api/deck/t41lp9yeb2oe/draw/?count=1 -> eine Karte ziehen
-        // https://deckofcardsapi.com/api/deck/t41lp9yeb2oe/shuffle/ -> das Deck wieder shuffeln und anschließend kann man wieder spielen
+
+        private static ConcurrentDictionary<string, int> Bets = new();
+        private string? GetUserId()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
         [HttpGet("newCard")]
         public IActionResult GetRandomCard()
         {
@@ -44,5 +50,38 @@ namespace C__Backend.Controllers
 
             return Ok(card);
         }
+
+        [Authorize]
+        [HttpPost("setBet")]
+        public IActionResult SetBet([FromBody] SetBetRequest request)
+        {
+            var userId = GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "Kein Username im Token gefunden." });
+            }
+
+            Bets[userId] = request.BetAmount;
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("getBet")]
+        public IActionResult GetBet()
+        {
+            var userId = GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "Kein Username im Token gefunden." });
+            }
+
+            Bets.TryGetValue(userId, out int betAmount);
+            return Ok(new { bet = betAmount });
+        }
+    }
+
+    public class SetBetRequest
+    {
+        public int BetAmount { get; set; }
     }
 }
