@@ -9,7 +9,7 @@
 
 </head>
 <body>
-  <h1>🎰 Gewinnleiter</h1>
+
 
   <div class="bet-panel">
     <div class="chip-buttons">
@@ -24,14 +24,14 @@
       <div id="balanceBox">10,000</div>
       <div id="betBox">0</div>
     </div>
-    <button class="btn-start" onclick="startGame()">Start</button>
+    <button class="btn-start large" onclick="startGame()">Start</button>
   </div>
 
   <div class="ladder" id="ladder"></div>
 
   <div class="controls">
-    <button class="btn-risk" onclick="riskStep()" id="riskBtn" disabled>Risiko</button>
-    <button class="btn-collect" onclick="collectWin()" id="collectBtn" disabled>Auszahlen</button>
+    <button class="btn-risk large" onclick="riskStep()" id="riskBtn" disabled>Risiko</button>
+    <button class="btn-collect large" onclick="collectWin()" id="collectBtn" disabled>Auszahlen</button>
   </div>
 
   <p id="status"></p>
@@ -109,7 +109,7 @@
 
       riskBtn.disabled = false;
       collectBtn.disabled = false;
-      statusEl.textContent = "Spiel gestartet. Viel Glück!";
+
 
       currentBet = 0;
       updateBetDisplay();
@@ -124,18 +124,18 @@
         playerBalance += levels[levels.length - 1];
         endGame();
       } else if (currentIndex === maxFailIndex) {
-        statusEl.textContent = "💥 Leider verloren!";
+
         endGame();
       } else {
         renderLadder();
-        statusEl.textContent = "Weitergerückt. Risiko?";
+
       }
     }
 
     function collectWin() {
       if (!gameActive) return;
       playerBalance += levels[currentIndex];
-      statusEl.textContent = "✅ Ausgezahlt: " + levels[currentIndex] + " Credits";
+
       endGame();
     }
 
