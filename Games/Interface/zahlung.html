@@ -51,13 +51,13 @@
 
     const ws = axios.create({ baseURL: "http://localhost:5105" });
     const urlParams = new URLSearchParams(window.location.search);
-    const credits = parseInt(urlParams.get('credits')) || 0;
+    const credits = parseInt(urlParams.get('credits')) || 0; // über localStorage übergeben
 
     const body = {
       creditsToAdd: credits
     };
 
-    const token = localStorage.getItem('userID'); // oder wie dein Token gespeichert ist
+    const token = localStorage.getItem('token');
 
     ws.post("/api/Casino/User/UpdateCredits", body, {
       headers: {
