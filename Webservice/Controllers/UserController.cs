@@ -148,8 +148,8 @@ public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest r
 
             var claims = new[]
             {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim(JwtRegisteredClaimNames.Sub, user.Username!),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email!),
         new Claim("UserId", user.Id.ToString())
     };
 
