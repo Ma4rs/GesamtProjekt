@@ -34,7 +34,7 @@ let dealerScore = 0;
 let betAmount = 0;
 async function getCredits() {
   try {
-    const userData = await axios.get('http://localhost:5105/api/Casino/User/GetData', {
+    const userData = await axios.get('http://localhost:5105/api/user/getData', {
       headers: {
         Authorization: `Bearer ${player}`
       }

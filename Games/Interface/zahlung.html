@@ -59,7 +59,7 @@
 
     const token = localStorage.getItem('token');
 
-    ws.post("/api/Casino/User/UpdateCredits", body, {
+    ws.post("/api/user/updateCredits", body, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
