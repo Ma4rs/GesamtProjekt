@@ -14,7 +14,7 @@ async function main() {
         // }
         // const Login = await axios.post(`http://localhost:5105/api/Casino/User/Login`, body);
         // const token = Login.data.token;
-        const token = localStorage.getItem("userID")
+        const token = localStorage.getItem("token")
         try {
             const userData = await axios.get('http://localhost:5105/api/user/getData', {
                 headers: {
@@ -30,7 +30,7 @@ async function main() {
 
     async function updateBankValue()
     {
-        const token = localStorage.getItem("userID")
+        const token = localStorage.getItem("token")
         
     }
 }
