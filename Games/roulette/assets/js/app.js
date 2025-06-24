@@ -568,6 +568,13 @@ async function main() {
 	async function spin() {
 		// hier chip
 		// var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
+		blockiereKlicks();
+		let cdChipActive = document.getElementsByClassName('cdChipActive');
+		for (i = 0; i < cdChipActive.length; i++) {
+			cdChipActive[i].classList.remove('cdChipActive');
+		}
+		const clearBtn = document.querySelector('.cdChip.clearBet');
+		if (clearBtn) clearBtn.style.display = 'none';
 		var winningSpin = await GetSpin();
 		// var winningSpin = 0;
 		console.log(winningSpin)
@@ -615,6 +622,8 @@ async function main() {
 			if (bankValue == 0 && currentBet == 0) {
 				gameOver();
 			}
+			if (clearBtn) clearBtn.style.display = '';
+			erlaubeKlicks();
 		}, 10000);
 	}
 
@@ -743,6 +752,27 @@ async function main() {
 		}
 	}
 
+	// während eines spins muss nicht geklickt werden deswegen wird alles blockiert
+	function blockiereKlicks() {
+		document.getElementById("klickSperre").style.display = "block";
+	}
+	function erlaubeKlicks() {
+		document.getElementById("klickSperre").style.display = "none";
+
+		// Alle bisher aktiven Chips deaktivieren
+		var activeChips = document.getElementsByClassName("cdChipActive");
+		for (var i = 0; i < activeChips.length; i++) {
+			activeChips[i].classList.remove("cdChipActive");
+		}
+
+		// Den blauen Chip suchen und aktivieren
+		// Im Roulette-Code ist der blaue Chip immer der zweite Chip (Index 1)
+		var chips = document.getElementsByClassName("cdChip");
+		if (chips.length > 1) {
+			chips[1].classList.add("cdChipActive");
+		}
+		wager = 5;
+	}
 	startGame();
 }
 main();
