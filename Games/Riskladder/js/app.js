@@ -16,7 +16,7 @@ async function main() {
         // const token = Login.data.token;
         const token = localStorage.getItem("userID")
         try {
-            const userData = await axios.get('http://localhost:5105/api/Casino/User/GetData', {
+            const userData = await axios.get('http://localhost:5105/api/user/getData', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

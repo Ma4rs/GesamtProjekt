@@ -6,7 +6,7 @@ using System.Security.Claims;
 namespace C__Backend.Controllers
 {
     [ApiController]
-    [Route("api/casino/tripleguess/")]
+    [Route("api/tripleguess/")]
     public class TripleGuessController : ControllerBase
     {
         private static readonly string[] Suits = { "hearts", "clubs", "spades", "diamonds" };

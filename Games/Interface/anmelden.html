@@ -62,7 +62,7 @@
       const password = document.getElementById('password').value;
 
       try {
-        const response = await fetch('http://localhost:5105/api/Casino/User/Login', {
+        const response = await fetch('http://localhost:5105/api/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

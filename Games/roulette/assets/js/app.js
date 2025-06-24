@@ -5,7 +5,7 @@ async function authorize() {
 		"email": "string",
 		"password": "string"
 	}
-	const Login = await axios.post(`http://localhost:5105/api/Casino/User/Login`, body);
+	const Login = await axios.post(`http://localhost:5105/api/user/login`, body);
 	token = Login.data.token; // Token global merken!
 	return token;
 }
@@ -13,7 +13,7 @@ async function authorize() {
 async function fetchBankValue() {
 	try {
 		if (!token) await authorize();
-		const userData = await axios.get('http://localhost:5105/api/Casino/User/GetData', {
+		const userData = await axios.get('http://localhost:5105/api/user/getData', {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -32,7 +32,7 @@ async function safeBankvalue(gameResultsum) {
 			"creditsToAdd": gameResultsum
 		};
 		console.log("Es werden " + gameResultsum + " Credits hinzugefügt")
-		const response = await axios.post("http://127.0.0.1:5105/api/Casino/User/UpdateCredits", body, {
+		const response = await axios.post("http://127.0.0.1:5105/api/user/updateCredits", body, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -50,7 +50,7 @@ async function safeBankvalue(gameResultsum) {
 
 async function GetSpin() {
 	try {
-		const response = await axios.get("http://localhost:5105/api/casino/roulette/spin");
+		const response = await axios.get("http://localhost:5105/api/roulette/spin");
 		return Number(response.data);
 	} catch (error) {
 		console.log("Fehler beim Laden des Spins: ", error);

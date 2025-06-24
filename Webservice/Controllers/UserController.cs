@@ -13,12 +13,12 @@ using Microsoft.AspNetCore.Authorization;
 namespace C__Backend.Controllers
 {
     [ApiController]
-    [Route("api/Casino/User")]
+    [Route("api/user")]
     public class UserController : ControllerBase
     {
         
 [Authorize]
-[HttpGet("GetData")]
+[HttpGet("getData")]
 public async Task<IActionResult> GetData()
 {
     var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -48,7 +48,7 @@ public async Task<IActionResult> GetData()
 
 
 
-        [HttpPost("RegisterUser")]
+        [HttpPost("registerUser")]
         public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
         {
             using (var context = new OnlineCasinoContext())
@@ -73,7 +73,7 @@ public async Task<IActionResult> GetData()
         }
 
 [Authorize]
-[HttpPost("UpdateCredits")]
+[HttpPost("updateCredits")]
 public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
 {
     var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -129,7 +129,7 @@ public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest r
         //     });
         // }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             using var context = new OnlineCasinoContext();
@@ -179,12 +179,12 @@ public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest r
             _configuration = configuration;
         }
 
-        [Authorize]
-        [HttpGet("SecretArea")]
-        public IActionResult Secret()
-        {
-            return Ok("Nur sichtbar mit gültigem Token!");
-        }
+        // [Authorize]
+        // [HttpGet("SecretArea")]
+        // public IActionResult Secret()
+        // {
+        //     return Ok("Nur sichtbar mit gültigem Token!");
+        // }
 
     }
 }
