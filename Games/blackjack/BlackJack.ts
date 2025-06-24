@@ -1,3 +1,5 @@
+
+let player = localStorage.getItem("userID")
 type Card = {
   suit: string;
   rank: string;
@@ -30,7 +32,20 @@ let playerScore = 0;
 let dealerScore = 0;
 
 let betAmount = 0;
-let playerMoney = 1000;
+async function getCredits() {
+  try {
+    const userData = await axios.get('http://localhost:5105/api/Casino/User/GetData', {
+      headers: {
+        Authorization: `Bearer ${player}`
+      }
+    });
+    return userData.data.credits;;
+  } catch (error) {
+    console.log("Fehler beim Laden des Bankwerts: ", error);
+    return 0;
+  }
+}
+
 
 const betContainer = document.getElementById("bet") as HTMLDivElement;
 const betText = betContainer.querySelector(".einsatz-text") as HTMLElement;
