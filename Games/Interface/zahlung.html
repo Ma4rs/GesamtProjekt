@@ -51,7 +51,8 @@
 
     const ws = axios.create({ baseURL: "http://localhost:5105" });
     const urlParams = new URLSearchParams(window.location.search);
-    const credits = parseInt(urlParams.get('credits')) || 0; // über localStorage übergeben
+    const credits = parseInt(localStorage.getItem('credits'));
+    localStorage.removeItem('credits')
 
     const body = {
       creditsToAdd: credits
