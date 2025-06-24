@@ -3,27 +3,29 @@
 
 // === Hilfsfunktionen für Token und API ===
 
-async function authorize() {
-  const body = {
-    email: "string", // TODO: Echte Werte verwenden!
-    password: "string"
-  };
-  const response = await axios.post("http://localhost:5105/api/user/login", body);
-  localStorage.setItem("token", response.data.token);
-  return response.data.token;
-}
+// async function authorize() {
+//   const body = {
+//     email: "string", // TODO: Echte Werte verwenden!
+//     password: "string"
+//   };
+//   const response = await axios.post("http://localhost:5105/api/user/login", body);
+//   localStorage.setItem("token", response.data.token);
+//   return response.data.token;
+// }
 
-async function getToken() {
-  let token = localStorage.getItem("token");
-  if (!token) {
-    token = await authorize();
-  }
-  return token;
-}
+// async function getToken() {
+//   let token = localStorage.getItem("token");
+//   // if (!token) {
+//   //   token = await authorize();
+//   // }
+//   return token;
+// }
+const token = localStorage.getItem("token");
 
 async function fetchBankValue() {
   try {
-    const token = await getToken();
+    // const token = await getToken();
+    // const token = localStorage.getItem("token");
     const res = await axios.get('http://localhost:5105/api/user/getData', {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -36,7 +38,8 @@ async function fetchBankValue() {
 
 async function updateBankValue(sum) {
   try {
-    const token = await getToken();
+    // const token = await getToken();
+    // const token = localStorage.getItem("token");
     const body = { creditsToAdd: sum };
     await axios.post("http://localhost:5105/api/user/updateCredits", body, {
       headers: { Authorization: `Bearer ${token}` }
@@ -48,7 +51,8 @@ async function updateBankValue(sum) {
 
 async function getBet() {
   try {
-    const token = await getToken();
+    // const token = await getToken();
+    // const token = localStorage.getItem("token");
     const response = await fetch('http://localhost:5105/api/tripleguess/getBet', {
       method: 'GET',
       headers: {
@@ -67,7 +71,8 @@ async function getBet() {
 
 async function setBet(betAmount) {
   try {
-    const token = await getToken();
+    // const token = await getToken();
+    // const token = localStorage.getItem("token");
     const response = await fetch('http://localhost:5105/api/tripleguess/setBet', {
       method: 'POST',
       headers: {

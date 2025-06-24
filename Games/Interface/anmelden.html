@@ -73,7 +73,7 @@
         if (response.ok) {
           const data = await response.json(); // <-- hier
           const user = data.token; // <-- token aus dem JSON holen
-          localStorage.setItem("userID", user);
+          localStorage.setItem("token", user);
           window.location.href = 'index.html';
         } else {
           const errorText = await response.text();

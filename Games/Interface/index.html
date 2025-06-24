@@ -145,7 +145,7 @@
                     <!-- Tripple Guess -->
                     <div class="card bg-base-100 w-80 shadow-sm">
                         <figure class="px-10 pt-10">
-                            <img src="#"
+                            <img src="../../Picture/TripleGuess.jpg"
                                 alt="Triple Guess" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
@@ -175,7 +175,7 @@
     <!-- Script für Dropdown -->
     <script>
         window.addEventListener('DOMContentLoaded', async () => {
-            const username = localStorage.getItem('userID');
+            const username = localStorage.getItem('token');
             const token = username;
             try {
                 const userData = await axios.get('http://localhost:5105/api/user/getData', {

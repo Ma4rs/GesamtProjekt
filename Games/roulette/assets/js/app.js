@@ -1,18 +1,19 @@
-let token = null;
+let token = localStorage.getItem("token");
+;
 
-async function authorize() {
-	const body = {
-		"email": "string",
-		"password": "string"
-	}
-	const Login = await axios.post(`http://localhost:5105/api/user/login`, body);
-	token = Login.data.token; // Token global merken!
-	return token;
-}
+// async function authorize() {
+// 	const body = {
+// 		"email": "string",
+// 		"password": "string"
+// 	}
+// 	const Login = await axios.post(`http://localhost:5105/api/user/login`, body);
+// 	token = Login.data.token; // Token global merken!
+// 	return token;
+// }
 
 async function fetchBankValue() {
 	try {
-		if (!token) await authorize();
+		// if (!token) await authorize();
 		const userData = await axios.get('http://localhost:5105/api/user/getData', {
 			headers: {
 				Authorization: `Bearer ${token}`
@@ -27,7 +28,7 @@ async function fetchBankValue() {
 
 async function safeBankvalue(gameResultsum) {
 	try {
-		if (!token) await authorize();
+		// if (!token) await authorize();
 		const body = {
 			"creditsToAdd": gameResultsum
 		};

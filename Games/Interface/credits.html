@@ -186,7 +186,7 @@
     <!-- Script für Dropdown -->
     <script>
         window.addEventListener('DOMContentLoaded', async () => {
-            const username = localStorage.getItem('userID');
+            const username = localStorage.getItem('token');
             const token = username;
             try {
                 const userData = await axios.get('http://localhost:5105/api/user/getData', {
