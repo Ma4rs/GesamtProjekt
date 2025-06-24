@@ -108,7 +108,7 @@ function updateBankAndBet(bank, bet) {
 function clearCardImages() {
   for (let i = 1; i <= 3; i++) {
     const card = document.querySelector(`#card${i}`);
-    if (card) card.innerHTML = "";
+    if (card) card.innerHTML = `<img src="/Picture/Karten/Hinterseite.png" alt="">`;
   }
 }
 
@@ -138,6 +138,9 @@ function showNotification(msg, btnTxt, redirectUrl) {
   nBtn.setAttribute('class', 'nBtn');
   nBtn.innerText = btnTxt;
   nBtn.onclick = function () {
+    if (redirectUrl == "../Interface/credits.html") {
+      window.top.location.href = redirectUrl;
+    }
     window.location.href = redirectUrl;
   };
   let container = document.createElement('div');
@@ -255,7 +258,9 @@ class TripleGuessGame {
         if (this.redSuits.includes(card.art) === userChoice) {
           // richtig geraten
         } else {
-          this.endGame(false);
+          setTimeout(() => {
+            this.endGame(false);
+          }, 750)
           return;
         }
         document.querySelector("#auswahl1").innerHTML = "Higher";
@@ -264,7 +269,9 @@ class TripleGuessGame {
         if (userChoice === (this.cardValue1 <= card.wert)) {
           // richtig geraten
         } else {
-          this.endGame(false);
+          setTimeout(() => {
+            this.endGame(false);
+          }, 550)
           return;
         }
         this.cardValue2 = card.wert;
@@ -275,7 +282,9 @@ class TripleGuessGame {
         let lesser = Math.min(this.cardValue1, this.cardValue2);
         let isInside = card.wert > lesser && card.wert < greater;
         let isCorrect = (userChoice && isInside) || (!userChoice && !isInside);
-        this.endGame(isCorrect);
+        setTimeout(() => {
+          this.endGame(isCorrect);
+        }, 750)
       }
     } catch (e) {
       // Fehler schon angezeigt
