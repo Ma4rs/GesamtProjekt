@@ -11,7 +11,7 @@
   <!-- Tailwind -->
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="BlackJack.ts"></script>
+  <script src="BlackJack.js"></script>
   <style>
     .table-shape {
       border-radius: 50% / 30%;
@@ -99,14 +99,10 @@
     <div class="absolute top-16 w-full flex justify-center z-10">
       <div class="flex items-start gap-6 relative">
         <!-- Platzhalter z-index 0 -->
-        <div class="absolute -z-10 left-0 top-0 flex gap-6">
+        <div class="-z-10 left-0 top-0 flex gap-6">
           <div class="card-slot"></div>
           <div class="card-slot"></div>
         </div>
-
-        <!-- Karten -->
-        <img src="/Picture/Karten/10_of_clubs.png" alt="#" class="card">
-        <img src="/Picture/Karten/king_of_spades.png" alt="#" class="card">
 
         <!-- Stapel -->
         <div class="flex flex-col items-center">
@@ -117,27 +113,23 @@
     </div>
 
     <!-- Spieler Karten-Platzhalter (unten mittig) -->
-    <div class="absolute bottom-28 w-full flex justify-center gap-6 z-0">
+    <div id="player" class="absolute bottom-28 w-full flex justify-center gap-6 z-0">
       <div class="card-slot"></div>
       <div class="card-slot"></div>
     </div>
 
-        
+
 
     <!-- Spieler Karten -->
-    <!-- <div class="absolute bottom-28 w-full flex justify-center gap-6 z-10">
-      <img src="/Picture/Karten/10_of_clubs.png" alt="#" class="card">
-      <img src="/Picture/Karten/king_of_spades.png" alt="#" class="card">
-    </div> -->
     <div id="bet" class="bet-container">
-      <!-- <div class="einsatz-text"> Hier Wetten ablegen</div> -->
       <span class="einsatz-text">Bet</span>
+      <div id="einsatzWert" class="absolute bottom-2 text-white text-sm z-10">0</div>
       <div class="table-felt-pattern"></div>
     </div>
 
     <!-- Chips (unter Kartenbereich) mit Beschriftung -->
     <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 z-10">
-      <div class="flex gap-1">
+      <div id="chips" class="flex gap-1">
         <button
           class="w-8 h-8 mr-2 bg-red-600 rounded-full shadow-md border transition hover:-translate-y-1 border-white flex items-center justify-center text-white text-xs font-bold">
           1
