@@ -9,6 +9,8 @@ namespace C__Backend.Controllers
     [Route("api/tripleguess/")]
     public class TripleGuessController : ControllerBase
     {
+        static List<object> cardCache = new List<object>();
+
         private static readonly string[] Suits = { "hearts", "clubs", "spades", "diamonds" };
         private static readonly (string Name, int Value)[] Values = {
             ("ace", 14),
@@ -33,7 +35,7 @@ namespace C__Backend.Controllers
         }
 
         [HttpGet("newCard")]
-        public IActionResult GetRandomCard()
+        public IActionResult newCard()
         {
             var rnd = new Random();
             string suit = Suits[rnd.Next(Suits.Length)];
@@ -47,7 +49,11 @@ namespace C__Backend.Controllers
                 Art = suit,
                 Bild = imageUrl
             };
-
+            if (cardCache.Contains(card))
+            {
+                newCard();
+            }
+            cardCache.Add(card);
             return Ok(card);
         }
 
@@ -77,6 +83,13 @@ namespace C__Backend.Controllers
 
             Bets.TryGetValue(userId, out int betAmount);
             return Ok(new { bet = betAmount });
+        }
+
+        [HttpGet("GameOver")]
+        public IActionResult GameOver()
+        {
+            cardCache.Clear();
+            return Ok("Cache wieder leer");
         }
     }
 

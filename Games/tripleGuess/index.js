@@ -20,8 +20,8 @@
 //   // }
 //   return token;
 // }
+document.querySelector("#betSpan").innerHTML = "0";
 const token = localStorage.getItem("token");
-const cardCache = [];
 
 async function fetchBankValue() {
   try {
@@ -91,7 +91,6 @@ async function setBet(betAmount) {
 async function getCard() {
   try {
     const res = await axios.get("http://localhost:5105/api/tripleguess/newCard");
-    cardCache.push(res.data)
     return res.data;
   } catch (e) {
     showError("Fehler beim Laden der Karte.");
@@ -194,6 +193,7 @@ class TripleGuessGame {
 
   async refreshUI() {
     const bankValue = await fetchBankValue();
+    await setBet(0);
     const currentBet = await getBet();
     updateBankAndBet(bankValue, currentBet);
     clearCardImages();
@@ -261,6 +261,8 @@ class TripleGuessGame {
 
       let userChoice = (clickedId === "auswahl1");
       if (this.cardCount === 1) {
+        const clearBtn = document.getElementById('clear');
+        if (clearBtn) clearBtn.style.display = 'none';
         this.cardValue1 = card.wert;
         if (this.redSuits.includes(card.art) === userChoice) {
           // richtig geraten
@@ -273,7 +275,7 @@ class TripleGuessGame {
         document.querySelector("#auswahl1").innerHTML = "Higher";
         document.querySelector("#auswahl2").innerHTML = "Lower";
       } else if (this.cardCount === 2) {
-        if (userChoice === (this.cardValue1 <= card.wert)) {
+        if (userChoice === (this.cardValue1 < card.wert)) {
           // richtig geraten
         } else {
           setTimeout(() => {
@@ -299,6 +301,7 @@ class TripleGuessGame {
   }
 
   async endGame(won) {
+    await axios.get("http://127.0.0.1:5105/api/tripleguess/GameOver");
     this.gameActive = false;
     let einsatz = Number(document.querySelector("#betSpan").textContent) || 0;
     if (won) {
@@ -319,6 +322,10 @@ class TripleGuessGame {
   }
 }
 
+document.getElementById('clear').onclick = async function () {
+  const game = new TripleGuessGame();
+  game.init();
+};
 // === Initialisierung ===
 
 window.addEventListener("DOMContentLoaded", () => {

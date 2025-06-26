@@ -10,7 +10,7 @@
 
   <!-- Tailwind -->
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
     /* Notification - klein, zentriert, responsive */
     #container {
@@ -261,8 +261,10 @@
         <button class="chip-btn bg-red-600 text-white" data-value="1">1</button>
         <button class="chip-btn bg-blue-600 text-white" data-value="5">5</button>
         <button class="chip-btn bg-yellow-400 text-black" data-value="10">10</button>
-        <button class="chip-btn bg-green-500 text-white" data-value="100">100</button>
-        <button class="chip-btn bg-black text-yellow-400" data-value="ALL">ALL<br>IN</button>
+        <button class="chip-btn bg-green-600 text-white" data-value="100">100</button>
+        <button class="chip-btn bg-violet-900 text-white" data-value="1000">1000</button>
+        <button class="chip-btn bg-black text-yellow-400" style="font-size: 9px" data-value="ALL">ALL<br>IN</button>
+        <button id="clear" class="chip-btn bg-orange-700 text-white" style="font-size: 9px" data-value="CLEAR">CLEAR</button>
       </div>
     </div>
 
