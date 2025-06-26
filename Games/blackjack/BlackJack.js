@@ -44,7 +44,6 @@ const btnStand = controls.querySelector("button.btn-warning");
 const chipButtons = document.querySelectorAll("#chips button");
 const btnDel = document.getElementById("btnDel");
 
-// Buttons initial deaktivieren bis Spiel startet
 btnCard.disabled = true;
 btnStand.disabled = true;
 
@@ -74,7 +73,7 @@ async function initialize() {
 function updatePlayerMoneyDisplay() {
     const display = document.getElementById("playerMoneyDisplay");
     if (display) {
-        display.textContent = `Guthaben: ${playerMoney} €`;
+        display.textContent = `Guthaben: ${playerMoney}`;
     }
 }
 
@@ -111,28 +110,46 @@ function dealCard(hand, area, faceUp = true) {
     img.alt = `${card.rank} of ${card.suit}`;
     img.classList.add("card");
 
-    // Hol alle Slots im Zielbereich
-    const slots = area.querySelectorAll(".card-slot");
+    if (area === dealerArea) {
+        const placeholderContainer = dealerArea.querySelector("#dealerPlaceholders");
+        const stapelContainer = dealerArea.querySelector("#stapelContainer");
 
-    const cardIndex = hand.length - 1;
+        if (hand.length <= 2) {
+            const slots = placeholderContainer.querySelectorAll(".card-slot");
+            const cardIndex = hand.length - 1;
+            if (slots[cardIndex]) {
+                slots[cardIndex].innerHTML = "";
+                slots[cardIndex].appendChild(img);
+            }
+        } else {
 
-    if (slots[cardIndex]) {
-        slots[cardIndex].innerHTML = "";
-        slots[cardIndex].appendChild(img);
+            if (stapelContainer) {
+                stapelContainer.insertAdjacentElement("beforebegin", img);
+            } else {
+                area.appendChild(img);
+            }
+        }
     } else {
+        const slots = area.querySelectorAll(".card-slot");
+        const cardIndex = hand.length - 1;
 
-        area.appendChild(img);
+        if (slots[cardIndex]) {
+            slots[cardIndex].innerHTML = "";
+            slots[cardIndex].appendChild(img);
+        } else {
+            area.appendChild(img);
+        }
     }
 
     updateScores();
 }
 
+
+
 function clearCards() {
-    // Hände löschen
     dealerHand = [];
     playerHand = [];
 
-    // Spieler Slots leeren (und auf 2 Slots zurücksetzen)
     playerSlot.innerHTML = "";
     for (let i = 0; i < 2; i++) {
         const slot = document.createElement("div");
@@ -140,37 +157,32 @@ function clearCards() {
         playerSlot.appendChild(slot);
     }
 
-    // Dealer-Bereich komplett leeren
     while (dealerArea.firstChild) {
         dealerArea.removeChild(dealerArea.firstChild);
     }
 
-    // Dealer Platzhalter (2 Slots) neu anlegen
     const placeholderContainer = document.createElement("div");
-    placeholderContainer.className = "-z-10 left-0 top-0 flex gap-6";
+    placeholderContainer.id = "dealerPlaceholders";
+    placeholderContainer.className = "flex gap-6";
     for (let i = 0; i < 2; i++) {
         const slot = document.createElement("div");
         slot.className = "card-slot";
         placeholderContainer.appendChild(slot);
     }
 
-    // Stapel neu anlegen
     const stapelDiv = document.createElement("div");
+    stapelDiv.id = "stapelContainer";
     stapelDiv.className = "flex flex-col items-center";
     stapelDiv.innerHTML = `
       <img src="/Picture/Karten/Hinterseite.png" alt="#" class="card" />
       <div class="mt-1 text-center text-white text-xs opacity-70">Stapel</div>
     `;
 
-    // Platzhalter und Stapel anhängen
     dealerArea.appendChild(placeholderContainer);
     dealerArea.appendChild(stapelDiv);
 
     updateScores();
 }
-
-
-
 
 
 function calculateScore(hand) {
@@ -186,7 +198,6 @@ function calculateScore(hand) {
         score -= 10;
         aces--;
     }
-
     return score;
 }
 
@@ -196,22 +207,20 @@ function updateScores() {
 }
 
 function updateBetText() {
-    einsatzWert.textContent = `${betAmount} €`;
+    einsatzWert.textContent = `${betAmount}`;
     updatePlayerMoneyDisplay();
 }
 
 function startGame() {
     if (betAmount <= 0) {
-        alert("Bitte Einsatz wählen.");
-        return;
-    }
-    if (betAmount > playerMoney) {
-        alert("Nicht genug Guthaben!");
+        showNotification("Bitte Einsatz wählen.", "Okay", "");
         return;
     }
 
     playerMoney -= betAmount;
-
+    chipButtons.forEach((chips) => {
+        chips.disabled = true
+    });
     clearCards();
     createDeck();
 
@@ -232,51 +241,146 @@ function startGame() {
 
 function playerHit() {
     dealCard(playerHand, playerSlot, true);
-    if (playerScore > 21) endGame("Bust! Du verlierst.");
+    sleep(5000)
+    if (playerScore > 21) endGame("Du verlierst.");
 }
 
-function stand() {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function stand() {
     btnCard.disabled = true;
     btnStand.disabled = true;
 
     const dealerCards = dealerArea.querySelectorAll("img.card");
 
-    
     if (dealerCards.length > 1) {
         dealerCards[1].src = dealerHand[1].image;
     }
 
     updateScores();
 
-
     while (dealerScore < 17) {
+        await sleep(1000);
         dealCard(dealerHand, dealerArea, true);
-        updateScores(); // Score nach jeder Karte aktualisieren
+        updateScores();
     }
 
-    // Ergebnis auswerten
     if (dealerScore > 21) {
         endGame("Dealer bust! Du gewinnst.");
     } else if (dealerScore > playerScore) {
-        endGame("Dealer gewinnt.");
+        endGame("Du verlierst!");
     } else if (dealerScore < playerScore) {
         endGame("Du gewinnst!");
     } else {
         endGame("Unentschieden.");
     }
 }
+async function updateCredits(credits) {
+    try {
+        const response = await fetch("http://localhost:5105/api/user/updateCredits", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${player}`
+            },
+            body: JSON.stringify({
+                creditsToAdd: credits
+            })
+        });
 
-
-function endGame(msg) {
-    alert(msg);
-    if (msg.includes("gewinnst")) {
-        playerMoney += betAmount * 2;
-    } else if (msg.includes("Unentschieden")) {
-        playerMoney += betAmount;
+    } catch (error) {
+        console.error("Fehler beim POST an updateCredits:", error);
     }
+}
+
+function showNotification(msg, btnTxt, redirectUrl) {
+    let oldContainer = document.getElementById('notificationContainer');
+    if (oldContainer) oldContainer.remove();
+
+    let container = document.createElement('div');
+    container.id = 'notificationContainer';
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100vw';
+    container.style.height = '100vh';
+    container.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+    container.style.justifyContent = 'center';
+    container.style.zIndex = '9999';
+
+
+    let box = document.createElement('div');
+    box.style.backgroundColor = '#1f2937';
+    box.style.color = '#fff';
+    box.style.padding = '30px';
+    box.style.borderRadius = '12px';
+    box.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
+    box.style.textAlign = 'center';
+    box.style.maxWidth = '300px';
+
+
+    let text = document.createElement('p');
+    text.innerText = msg;
+    text.style.fontSize = '1.2rem';
+    text.style.marginBottom = '20px';
+
+    let button = document.createElement('button');
+    button.innerText = btnTxt;
+    button.style.backgroundColor = '#10b981';
+    button.style.color = '#fff';
+    button.style.border = 'none';
+    button.style.padding = '10px 20px';
+    button.style.borderRadius = '8px';
+    button.style.cursor = 'pointer';
+    button.style.fontWeight = 'bold';
+    button.onclick = () => {
+        if (redirectUrl == "../Interface/credits.html") {
+            window.top.location.href = redirectUrl;
+        } else {
+            window.location.href = redirectUrl;
+
+        }
+    };
+
+    box.appendChild(text);
+    box.appendChild(button);
+    container.appendChild(box);
+    document.body.appendChild(container);
+}
+
+
+async function endGame(msg) {
+    let won = msg.includes("gewinnst");
+    let draw = msg.includes("Unentschieden");
+    if (won) {
+        playerMoney += betAmount * 2;
+        await updateCredits(betAmount);
+        showNotification("Du hast gewonnen!", "Nochmal spielen", window.location.href);
+    } else if (draw) {
+        playerMoney += betAmount;
+        await updateCredits(0);
+        showNotification("Unentschieden!", "Nochmal spielen", window.location.href);
+    } else {
+        betAmount *= -1;
+        await updateCredits(betAmount);
+
+        if (playerMoney === 0) {
+            showNotification("Keine Credits mehr!", "Credits aufladen", "../Interface/credits.html");
+        } else {
+            showNotification("Leider verloren!", "Nochmal spielen", window.location.href);
+        }
+    }
+
     betAmount = 0;
     updateBetText();
     betContainer.style.pointerEvents = "auto";
+    chipButtons.forEach((chips) => {
+        chips.disabled = false;
+    });
     btnCard.disabled = true;
     btnStand.disabled = true;
     clearCards();
@@ -285,7 +389,7 @@ function endGame(msg) {
 chipButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const val = btn.textContent ? btn.textContent.replace(/\n/g, "").trim() : "";
-        if (val === "ALL" || val === "ALL IN") {
+        if (val === "ALL") {
             betAmount = playerMoney;
         } else {
             const amount = parseInt(val || "0");

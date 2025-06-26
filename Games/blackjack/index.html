@@ -33,17 +33,31 @@
     }
 
     .card-slot {
-      width: 64px;
-      height: 90px;
+      width: 70px;
+      height: 100px;
       border: 2px dashed rgba(255, 255, 255, 0.5);
       border-radius: 6px;
       background-color: rgba(255, 255, 255, 0.05);
       box-sizing: border-box;
     }
 
+    #dealerCardGroup {
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+      overflow: visible;
+      position: relative;
+      z-index: 10;
+    }
+
+    #dealerPlaceholders {
+      display: flex;
+      gap: 16px;
+    }
+
     .card {
-      width: 64px;
-      height: 90px;
+      width: 70px;
+      height: 100px;
       background: white;
       border-radius: 6px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
@@ -97,18 +111,18 @@
 
     <!-- Dealer Karten + Stapel als gemeinsame Gruppe -->
     <div class="absolute top-16 w-full flex justify-center z-10">
-      <div class="flex items-start gap-6 relative">
-        <!-- Platzhalter z-index 0 -->
-        <div id="dealerPlaceholders" class="-z-10 left-0 top-0 flex gap-6">
+      <div id="dealerCardGroup" class="flex items-start gap-6 relative">
+        <!-- Placeholder -->
+        <div id="dealerPlaceholders" class="flex gap-6">
           <div class="card-slot"></div>
           <div class="card-slot"></div>
         </div>
 
         <!-- Stapel -->
         <div id="stapelContainer" class="flex flex-col items-center">
-          <img src="/Picture/Karten/Hinterseite.png" alt="#" class="card">
+          <img src="/Picture/Karten/Hinterseite.png" alt="#" class="card" />
           <div class="mt-1 text-center text-white text-xs opacity-70">Stapel</div>
-        </div>        
+        </div>
       </div>
     </div>
 
@@ -117,8 +131,6 @@
       <div class="card-slot"></div>
       <div class="card-slot"></div>
     </div>
-
-
 
     <!-- Spieler Karten -->
     <div id="bet" class="bet-container">
@@ -152,8 +164,6 @@
         <button
           class="w-8 h-8 bg-black rounded-full shadow-md border border-white transition hover:-translate-y-1 flex items-center justify-center text-yellow-400 text-[10px] font-bold text-center leading-tight">
           ALL
-          <br>
-          IN
         </button>
         <button id="btnDel"
           class="w-12 h-8 bg-gray-700 rounded-md shadow-md border border-white transition hover:-translate-y-1 text-white font-bold">
