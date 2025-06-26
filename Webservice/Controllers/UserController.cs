@@ -134,6 +134,7 @@ public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest r
         {
             using var context = new OnlineCasinoContext();
 
+            // passwort in sql hinzufügen
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null || user.PasswordHash != request.Password)
             {

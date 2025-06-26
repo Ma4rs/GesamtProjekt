@@ -7,6 +7,8 @@ let bet = 0;
 let currentStep = 0;
 let maxStep = 0;
 let balance = 0;
+let gameStarted = false;
+
 const multipliers = [0, 1.0, 1.2, 1.5, 1.8, 2.2, 2.5];
 
 async function fetchBankValue() {
@@ -49,11 +51,20 @@ function renderLadder() {
     for (let i = 0; i < multipliers.length; i++) {
         const value = i === 0 ? 0 : Math.floor(bet * multipliers[i]);
         const step = document.createElement("div");
-        step.className = "ladder-step" + (i === currentStep ? " active" : "");
+        step.className = "ladder-step";
+
+        // Wenn Spiel gestartet ist, hebe aktuelle Stufe hervor
+        if (i === currentStep && gameStarted) {
+            step.classList.add("active");
+        } else if (!gameStarted) {
+            step.classList.add("inactive"); // grau, wenn Spiel nicht läuft
+        }
+
         step.innerText = `${value} Credits`;
         ladder.appendChild(step);
     }
 }
+
 
 async function addBet(amount) {
     if (balance >= amount) {
@@ -86,8 +97,12 @@ function startGame() {
     if (bet <= 0) return alert("Bitte Einsatz platzieren!");
     currentStep = 0;
     maxStep = Math.floor(Math.random() * (multipliers.length - 1)) + 1;
+    gameStarted = true;
     renderLadder();
+    document.getElementById("riskBtn").disabled = false;
+    document.getElementById("collectBtn").disabled = false;
 }
+
 
 async function risk() {
     if (bet === 0) return;
@@ -109,6 +124,9 @@ async function collect(won = true) {
     bet = 0;
     currentStep = 0;
 
+    gameStarted = false;
+    document.getElementById("riskBtn").disabled = true;
+    document.getElementById("collectBtn").disabled = true;
     if (won) {
         await updateCredits(win);
         showNotification(`Gewonnen: ${win} Credits!`, "Nochmal spielen", window.location.pathname);
