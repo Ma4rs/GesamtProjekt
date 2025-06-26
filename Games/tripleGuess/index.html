@@ -12,7 +12,11 @@
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
-    /* Notification - klein, zentriert, responsive */
+    .bet.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
     #container {
       position: fixed;
       left: 0;
@@ -166,7 +170,7 @@
     .card-slot {
       width: 90px;
       height: 140px;
-      border: 1px dashed #1a4d1a;
+      border: 2px solid #fdfdfd;
       border-radius: 8px;
       background-color: rgba(255, 255, 255, 0.05);
       box-sizing: border-box;
@@ -264,7 +268,8 @@
         <button class="chip-btn bg-green-600 text-white" data-value="100">100</button>
         <button class="chip-btn bg-violet-900 text-white" data-value="1000">1000</button>
         <button class="chip-btn bg-black text-yellow-400" style="font-size: 9px" data-value="ALL">ALL<br>IN</button>
-        <button id="clear" class="chip-btn bg-orange-700 text-white" style="font-size: 9px" data-value="CLEAR">CLEAR</button>
+        <button id="clear" class="chip-btn bg-orange-700 text-white" style="font-size: 9px"
+          data-value="CLEAR">CLEAR</button>
       </div>
     </div>
 

@@ -261,8 +261,7 @@ class TripleGuessGame {
 
       let userChoice = (clickedId === "auswahl1");
       if (this.cardCount === 1) {
-        const clearBtn = document.getElementById('clear');
-        if (clearBtn) clearBtn.style.display = 'none';
+        disableBetAndChips();
         this.cardValue1 = card.wert;
         if (this.redSuits.includes(card.art) === userChoice) {
           // richtig geraten
@@ -320,6 +319,18 @@ class TripleGuessGame {
     updateBankAndBet(await fetchBankValue(), 0);
     resetChipSelection();
   }
+}
+
+function disableBetAndChips() {
+  const betDiv = document.getElementById('bet');
+  if (betDiv) {
+    betDiv.style.pointerEvents = 'none';
+    betDiv.style.opacity = '0.5';
+  }
+  document.querySelectorAll('.chip-btn').forEach(btn => btn.disabled = true);
+  document.querySelectorAll('.chip-btn.active').forEach(btn => btn.classList.remove('active'));
+  const clearBtn = document.getElementById('clear');
+  if (clearBtn) clearBtn.style.display = 'none';
 }
 
 document.getElementById('clear').onclick = async function () {
