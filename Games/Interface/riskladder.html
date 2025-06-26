@@ -101,21 +101,21 @@
     </div>
     <!-- Script für Dropdown -->
     <script>
-        window.addEventListener('DOMContentLoaded', async () => {
-            const username = localStorage.getItem('token');
-            const token = username;
-            try {
-                const userData = await axios.get('http://localhost:5105/api/user/getData', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                document.querySelector("#credits").innerHTML = userData.data.credits;;
-            } catch (error) {
-                console.log("Fehler beim Laden des Bankwerts: ", error);
-                return 0;
-            }
-        });
+        // window.addEventListener('DOMContentLoaded', async () => {
+        //     const username = localStorage.getItem('token');
+        //     const token = username;
+        //     try {
+        //         const userData = await axios.get('http://localhost:5105/api/user/getData', {
+        //             headers: {
+        //                 Authorization: `Bearer ${token}`
+        //             }
+        //         });
+        //         document.querySelector("#credits").innerHTML = userData.data.credits;
+        //     } catch (error) {
+        //         console.log("Fehler beim Laden des Bankwerts: ", error);
+        //         return 0;
+        //     }
+        // });
 
         document.addEventListener('DOMContentLoaded', function () {
             const button = document.getElementById('user-menu-button');
