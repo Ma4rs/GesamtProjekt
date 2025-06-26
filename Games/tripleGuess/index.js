@@ -21,6 +21,7 @@
 //   return token;
 // }
 const token = localStorage.getItem("token");
+const cardCache = [];
 
 async function fetchBankValue() {
   try {
@@ -90,6 +91,7 @@ async function setBet(betAmount) {
 async function getCard() {
   try {
     const res = await axios.get("http://localhost:5105/api/tripleguess/newCard");
+    cardCache.push(res.data)
     return res.data;
   } catch (e) {
     showError("Fehler beim Laden der Karte.");
