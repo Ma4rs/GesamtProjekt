@@ -101,8 +101,15 @@ function startGame() {
     renderLadder();
     document.getElementById("riskBtn").disabled = false;
     document.getElementById("collectBtn").disabled = false;
+    disableBetAndChips();
 }
 
+function disableBetAndChips() {    
+    document.querySelectorAll('.chip-btn').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.chip-btn.active').forEach(btn => btn.classList.remove('active'));
+    const clearBtn = document.getElementById('clear');
+    if (clearBtn) clearBtn.style.display = 'none';
+}
 
 async function risk() {
     if (bet === 0) return;
