@@ -12,6 +12,8 @@
     <!-- Tailwind -->
     <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=ARVGJ0SjwpB5UwLpxxvIRWKQJHVqrfQYIY1lxnR-BzWFqnqYPAaeGrSSJRCbDR3O2QemU69-Mow49CWu&currency=EUR"></script>
     <title>EDV-Royale-Webseite</title>
 </head>
 
@@ -83,9 +85,7 @@
                             <h2 class="card-title">100 Credits</h2>
                             <p>Ein Einsatz zum Warmwerden – ready für die erste Runde?</p>
                             <div class="card-actions">
-                                <button id="100" class="btn btn-primary"
-                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 100)">0,99€ Kaufe jetzt
-                                </button>
+                                <div id="paypal-button-100"><script type="module" src="./paypal.js"></script></div>
                             </div>
                         </div>
                     </div>
@@ -98,10 +98,7 @@
                             <h2 class="card-title">500 Credits</h2>
                             <p>Solider Stack – ideal für längere Abende am Tisch</p>
                             <div class="card-actions">
-                                <button id="500" class="btn btn-primary" onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 500)">
-                                    4,99€ Kaufe
-                                    jetzt
-                                </button>
+                                <div id="paypal-button-500"><script type="module" src="./paypal.js"></script></div>
                             </div>
                         </div>
                     </div>
@@ -114,9 +111,7 @@
                             <h2 class="card-title">750 Credits</h2>
                             <p>Du spielst mit Stil – mehr Chips, mehr Chancen</p>
                             <div class="card-actions">
-                                <button id="750" class="btn btn-primary"
-                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 750)">5,99€ Kaufe jetzt
-                                </button>
+                                <div id="paypal-button-750"><script type="module" src="./paypal.js"></script></div>
                             </div>
                         </div>
                     </div>
@@ -129,10 +124,7 @@
                             <h2 class="card-title">1.000 Credits</h2>
                             <p>Highroller-Feeling – steig ein ins große Spiel</p>
                             <div class="card-actions">
-                                <button id="1000" class="btn btn-primary"
-                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 1000)">9,99€ Kaufe
-                                    jetzt
-                                </button>
+                                <div id="paypal-button-1000"><script type="module" src="./paypal.js"></script></div>
                             </div>
                         </div>
                     </div>
@@ -145,10 +137,7 @@
                             <h2 class="card-title">2.500 Credits</h2>
                             <p>Das Spielfeld gehört dir – mach den großen Wurf</p>
                             <div class="card-actions">
-                                <button id="2500" class="btn btn-primary"
-                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 2500)">19,99€ Kaufe
-                                    jetzt
-                                </button>
+                                <div id="paypal-button-2500"><script type="module" src="./paypal.js"></script></div>
                             </div>
                         </div>
                     </div>
@@ -161,15 +150,12 @@
                             <h2 class="card-title">5.000 Credits</h2>
                             <p>VIP-Lounge geöffnet – zeig, was du drauf hast</p>
                             <div class="card-actions">
-                                <button id="5000" class="btn btn-primary"
-                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 5000)">44,99€ Kaufe
-                                    jetzt
-                                </button>
+                                <div id="paypal-button-5000"><script type="module" src="./paypal.js"></script></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card bg-base-100 w-80 shadow-sm">
+                    <!-- <div class="card bg-base-100 w-80 shadow-sm">
                         <figure class="px-10 pt-10">
                             <img src="/Picture/Credits/Haufen.jpg" alt="Blackjack" class="rounded-xl" />
                         </figure>
@@ -180,6 +166,18 @@
                                 <button id="10000" class="btn btn-primary"
                                     onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 10000)">90,99€
                                     Kaufe jetzt</button>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="card bg-base-100 w-80 shadow-sm">
+                        <figure class="px-10 pt-10">
+                            <img src="/Picture/Credits/Haufen.jpg" alt="Blackjack" class="rounded-xl" />
+                        </figure>
+                        <div class="card-body items-center text-center">
+                            <h2 class="card-title">10.000 Credits</h2>
+                            <p>All-In-Mode aktiviert – nur für wahre Gambler</p>
+                            <div class="card-actions">                               
+                                <div id="paypal-button-10000"><script type="module" src="./paypal.js"></script></div>
                             </div>
                         </div>
                     </div>

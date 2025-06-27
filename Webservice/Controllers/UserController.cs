@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using BCrypt.Net;
 
 namespace C__Backend.Controllers
 {
@@ -16,37 +17,61 @@ namespace C__Backend.Controllers
     [Route("api/user")]
     public class UserController : ControllerBase
     {
-        
-[Authorize]
-[HttpGet("getData")]
-public async Task<IActionResult> GetData()
-{
-    var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    if (username == null)
-    {
-        return Unauthorized(new { message = "Kein Username im Token gefunden." });
-    }
-
-    using (var context = new OnlineCasinoContext())
-    {
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
-
-        if (user == null)
+        [Authorize]
+        [HttpGet("getData")]
+        public async Task<IActionResult> GetData()
         {
-            return NotFound(new { message = "User nicht gefunden." });
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (username == null)
+            {
+                return Unauthorized(new { message = "Kein Username im Token gefunden." });
+            }
+
+            using (var context = new OnlineCasinoContext())
+            {
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+                if (user == null)
+                {
+                    return NotFound(new { message = "User nicht gefunden." });
+                }
+
+                return Ok(new
+                {
+                    Email = user.Email,
+                    Credits = user.Credits
+                });
+            }
         }
 
-        return Ok(new
-        {
-            Email = user.Email,
-            Credits = user.Credits
-        });
-    }
-}
 
 
 
+        // [HttpPost("registerUser")]
+        // public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
+        // {
+        //     using (var context = new OnlineCasinoContext())
+        //     {
+        //         var exists = await context.Users.AnyAsync(u => u.Email == data.Email);
+        //         if (exists)
+        //             return Conflict(new { message = "User existiert bereits." });
+
+        //         var newUser = new User
+        //         {
+        //             Username = data.Username,
+        //             Email = data.Email,
+        //             PasswordHash = data.Password, // später: Hashed!
+        //             Credits = 100
+        //         };
+
+        //         context.Users.Add(newUser);
+        //         await context.SaveChangesAsync();
+
+        //         return Ok(new { message = "User erfolgreich registriert", credits = newUser.Credits });
+        //     }
+        // }
 
         [HttpPost("registerUser")]
         public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
@@ -57,11 +82,13 @@ public async Task<IActionResult> GetData()
                 if (exists)
                     return Conflict(new { message = "User existiert bereits." });
 
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(data.Password);
+
                 var newUser = new User
                 {
                     Username = data.Username,
                     Email = data.Email,
-                    PasswordHash = data.Password, // später: Hashed!
+                    PasswordHash = hashedPassword,
                     Credits = 100
                 };
 
@@ -72,36 +99,36 @@ public async Task<IActionResult> GetData()
             }
         }
 
-[Authorize]
-[HttpPost("updateCredits")]
-public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
-{
-    var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-    if (username == null)
-    {
-        return Unauthorized(new { message = "Kein Username im Token gefunden." });
-    }
-
-    using (var context = new OnlineCasinoContext())
-    {
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
-
-        if (user == null)
+        [Authorize]
+        [HttpPost("updateCredits")]
+        public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
         {
-            return NotFound(new { message = "User nicht gefunden." });
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (username == null)
+            {
+                return Unauthorized(new { message = "Kein Username im Token gefunden." });
+            }
+
+            using (var context = new OnlineCasinoContext())
+            {
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+                if (user == null)
+                {
+                    return NotFound(new { message = "User nicht gefunden." });
+                }
+
+                user.Credits += request.CreditsToAdd;
+                await context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Credits aktualisiert.",
+                    newCredits = user.Credits
+                });
+            }
         }
-
-        user.Credits += request.CreditsToAdd;
-        await context.SaveChangesAsync();
-
-        return Ok(new
-        {
-            message = "Credits aktualisiert.",
-            newCredits = user.Credits
-        });
-    }
-}
 
 
 
@@ -132,11 +159,19 @@ public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest r
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
+            // using var context = new OnlineCasinoContext();
+
+            // // passwort in sql hinzufügen
+            // var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            // if (user == null || user.PasswordHash != request.Password)
+            // {
+            //     return Unauthorized(new { message = "E-Mail oder Passwort falsch" });
+            // }
+
             using var context = new OnlineCasinoContext();
 
-            // passwort in sql hinzufügen
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (user == null || user.PasswordHash != request.Password)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 return Unauthorized(new { message = "E-Mail oder Passwort falsch" });
             }
