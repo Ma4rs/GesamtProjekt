@@ -1,14 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Concurrent;
+using System.Security.Claims;
 
 namespace C__Backend.Controllers
 {
     [ApiController]
-    [Route("api/casino/tripleguess/")]
+    [Route("api/tripleguess/")]
     public class TripleGuessController : ControllerBase
     {
-        private static readonly string[] Suits = { "Heart", "Clover", "Spade", "Diamond" };
+        static List<object> cardCache = new List<object>();
+
+        private static readonly string[] Suits = { "hearts", "clubs", "spades", "diamonds" };
         private static readonly (string Name, int Value)[] Values = {
-            ("A", 1),
+            ("ace", 14),
             ("2", 2),
             ("3", 3),
             ("4", 4),
@@ -17,31 +22,79 @@ namespace C__Backend.Controllers
             ("7", 7),
             ("8", 8),
             ("9", 9),
-            ("0", 10),
-            ("B", 11),
-            ("D", 12),
-            ("K", 13)
+            ("10", 10),
+            ("jack", 11),
+            ("queen", 12),
+            ("king", 13)
         };
-        // https://deckofcardsapi.com/static/img/AH.png -> Bilder => alle Kopieren und lokal speichern wenn man das selber machen will
-        // https://deckofcardsapi.com/api/deck/new/ -> create Deck => deck_id speichern
-        // https://deckofcardsapi.com/api/deck/t41lp9yeb2oe/draw/?count=1 -> eine Karte ziehen
-        // https://deckofcardsapi.com/api/deck/t41lp9yeb2oe/shuffle/ -> das Deck wieder shuffeln und anschließend kann man wieder spielen
+
+        private static ConcurrentDictionary<string, int> Bets = new();
+        private string? GetUserId()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
         [HttpGet("newCard")]
-        public IActionResult GetRandomCard()
+        public IActionResult newCard()
         {
             var rnd = new Random();
             string suit = Suits[rnd.Next(Suits.Length)];
             var valueTuple = Values[rnd.Next(Values.Length)];
-            string imageUrl = $"https://deckofcardsapi.com/static/img/{valueTuple.Name}{suit.First()}.png";
+            string imageUrl = $"/Picture/Karten/{valueTuple.Name}_of_{suit}.png";
 
             var card = new
             {
+                Name = valueTuple.Name,
                 Wert = valueTuple.Value,
                 Art = suit,
                 Bild = imageUrl
             };
-
+            if (cardCache.Contains(card))
+            {
+                newCard();
+            }
+            cardCache.Add(card);
             return Ok(card);
         }
+
+        [Authorize]
+        [HttpPost("setBet")]
+        public IActionResult SetBet([FromBody] SetBetRequest request)
+        {
+            var userId = GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "Kein Username im Token gefunden." });
+            }
+
+            Bets[userId] = request.BetAmount;
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("getBet")]
+        public IActionResult GetBet()
+        {
+            var userId = GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "Kein Username im Token gefunden." });
+            }
+
+            Bets.TryGetValue(userId, out int betAmount);
+            return Ok(new { bet = betAmount });
+        }
+
+        [HttpGet("GameOver")]
+        public IActionResult GameOver()
+        {
+            cardCache.Clear();
+            return Ok("Cache wieder leer");
+        }
+    }
+
+    public class SetBetRequest
+    {
+        public int BetAmount { get; set; }
     }
 }

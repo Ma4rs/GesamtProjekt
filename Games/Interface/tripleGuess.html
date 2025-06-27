@@ -11,7 +11,7 @@
 
     <!-- Tailwind -->
     <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Triple Guess</title>
 </head>
 
@@ -25,9 +25,9 @@
             </div>
             <div class=" bg-base-300 min-w-15 w-auto text-center h-auto m-1.5 rounded-md">
                 <div class="bg-white m-1.5 p-1.5 rounded-md">
-                    <span class="border-r-2 pr-2.5">150</span>
-                    <a class="pl-1.5" href="credits.html"><span
-                            class="font-bold text-gray-700 rounded-full bg-base-300 p-1  font-mono ">+</span></a>
+                    <!-- <span class="border-r-2 pr-2.5" id="credits"></span> -->
+                    <a href="credits.html"><span
+                        class="font-bold text-gray-700 rounded-full bg-base-300 p-1  font-mono ">+</span></a>
                 </div>
             </div>
             <div class="relative ml-3">
@@ -44,7 +44,8 @@
                 <div id="user-menu"
                     class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 hidden"
                     role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                    <a href="anmelden.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                    <a href="anmelden.html" onclick="(() => { localStorage.clear(); })()"
+                        class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                         id="user-menu-item-2">Sign out</a>
                 </div>
             </div>
@@ -60,8 +61,9 @@
                         </li>
                         <li class="bg-base-100 rounded mt-2"><a href="roulette.html">Roulette</a></li>
                         <li class="bg-base-100 rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
-                        <li class="bg-base-100 rounded mt-2"><a href="chickencross.html">Chicken Cross</a></li>
-                        <li class="bg-base-100 rounded mt-2"><a href="tripleGuess.html" class="menu-active">Triple Guess</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="riskladder.html">Ladder Of Risk</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="tripleGuess.html" class="menu-active">Triple
+                                Guess</a></li>
                     </ul>
                 </div>
 
@@ -80,8 +82,9 @@
 
                 <!-- Responsiver Videobereich -->
                 <div class="flex-grow flex items-center justify-center bg-base-100 rounded-lg shadow-md">
-                    <div class="w-full max-w-[960px] aspect-video">
-                        <iframe src="/Games/tripleGuess/index.html" class="w-full h-full rounded-lg" allowfullscreen></iframe>
+                    <div class="w-full h-full aspect-video">
+                        <iframe src="/Games/tripleGuess/index.html" class="w-full h-full rounded-lg"
+                            allowfullscreen></iframe>
                     </div>
                 </div>
 
@@ -99,6 +102,22 @@
     </div>
     <!-- Script für Dropdown -->
     <script>
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const username = localStorage.getItem('token');
+            const token = username;
+            try {
+                const userData = await axios.get('http://localhost:5105/api/user/getData', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                document.querySelector("#credits").innerHTML = userData.data.credits;;
+            } catch (error) {
+                console.log("Fehler beim Laden des Bankwerts: ", error);
+                return 0;
+            }
+        });
         document.addEventListener('DOMContentLoaded', function () {
             const button = document.getElementById('user-menu-button');
             const menu = document.getElementById('user-menu');

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace C__Backend.Controllers
 {
     [ApiController]
-    [Route("api/Casino/Blackjack")]
+    [Route("api/blackjack")]
     public class LuckyDiceController
     {
         

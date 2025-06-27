@@ -13,32 +13,42 @@ using Microsoft.AspNetCore.Authorization;
 namespace C__Backend.Controllers
 {
     [ApiController]
-    [Route("api/Casino/User")]
+    [Route("api/user")]
     public class UserController : ControllerBase
     {
+        
+[Authorize]
+[HttpGet("getData")]
+public async Task<IActionResult> GetData()
+{
+    var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        [HttpGet("GetData/{username}")]
-        public async Task<IActionResult> GetData(string username)
+    if (username == null)
+    {
+        return Unauthorized(new { message = "Kein Username im Token gefunden." });
+    }
+
+    using (var context = new OnlineCasinoContext())
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
         {
-            using (var context = new OnlineCasinoContext())
-            {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
-
-                if (user == null)
-                {
-                    return NotFound(new { message = "User nicht gefunden." });
-                }
-
-                return Ok(new
-                {
-                    Email = user.Email,
-                    Credits = user.Credits
-                });
-            }
+            return NotFound(new { message = "User nicht gefunden." });
         }
 
+        return Ok(new
+        {
+            Email = user.Email,
+            Credits = user.Credits
+        });
+    }
+}
 
-        [HttpPost("RegisterUser")]
+
+
+
+        [HttpPost("registerUser")]
         public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
         {
             using (var context = new OnlineCasinoContext())
@@ -62,28 +72,37 @@ namespace C__Backend.Controllers
             }
         }
 
-        [HttpPost("UpdateCredits")]
-        public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
+[Authorize]
+[HttpPost("updateCredits")]
+public async Task<IActionResult> UpdateCredits([FromBody] UpdateCreditsRequest request)
+{
+    var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    if (username == null)
+    {
+        return Unauthorized(new { message = "Kein Username im Token gefunden." });
+    }
+
+    using (var context = new OnlineCasinoContext())
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
         {
-            using (var context = new OnlineCasinoContext())
-            {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
-
-                if (user == null)
-                {
-                    return NotFound(new { message = "User nicht gefunden." });
-                }
-
-                user.Credits += request.CreditsToAdd;
-                await context.SaveChangesAsync();
-
-                return Ok(new
-                {
-                    message = "Credits aktualisiert.",
-                    newCredits = user.Credits
-                });
-            }
+            return NotFound(new { message = "User nicht gefunden." });
         }
+
+        user.Credits += request.CreditsToAdd;
+        await context.SaveChangesAsync();
+
+        return Ok(new
+        {
+            message = "Credits aktualisiert.",
+            newCredits = user.Credits
+        });
+    }
+}
+
 
 
         // [HttpPost("Login")]
@@ -110,11 +129,12 @@ namespace C__Backend.Controllers
         //     });
         // }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             using var context = new OnlineCasinoContext();
 
+            // passwort in sql hinzufügen
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null || user.PasswordHash != request.Password)
             {
@@ -129,8 +149,8 @@ namespace C__Backend.Controllers
 
             var claims = new[]
             {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim(JwtRegisteredClaimNames.Sub, user.Username!),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email!),
         new Claim("UserId", user.Id.ToString())
     };
 
@@ -160,12 +180,12 @@ namespace C__Backend.Controllers
             _configuration = configuration;
         }
 
-        [Authorize]
-        [HttpGet("SecretArea")]
-        public IActionResult Secret()
-        {
-            return Ok("Nur sichtbar mit gültigem Token!");
-        }
+        // [Authorize]
+        // [HttpGet("SecretArea")]
+        // public IActionResult Secret()
+        // {
+        //     return Ok("Nur sichtbar mit gültigem Token!");
+        // }
 
     }
 }

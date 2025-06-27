@@ -10,8 +10,84 @@
 
   <!-- Tailwind -->
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
+    .bet.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    #container {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      pointer-events: none;
+    }
+
+    #notification {
+      background: #ad0205;
+      border: 0.3em solid #d3b201;
+      border-radius: 0.8em;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+      min-width: 180px;
+      max-width: 90vw;
+      padding: 1em 1.5em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 9999;
+      pointer-events: auto;
+      top: 0;
+      left: 0;
+      transform: none;
+    }
+
+    .nSpan {
+      display: block;
+      font-size: 1.2em;
+      color: #ffe066;
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 0.7em;
+      text-shadow: 0 1px 4px #000c;
+      max-width: 70vw;
+      word-break: break-word;
+    }
+
+    .nBtn {
+      display: block;
+      background-color: #228b22;
+      color: #fff;
+      border-radius: 0.5em;
+      padding: 0.5em 1.2em;
+      font-size: 1em;
+      text-align: center;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 18%);
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 0.2em;
+    }
+
+    .nBtn:hover,
+    .nBtn:focus {
+      background: #176a13;
+      transform: scale(1.04);
+    }
+
+    .nBtn:active {
+      transform: scale(0.97);
+    }
+
+    /* Einsatz-Text */
     .einsatz-text {
       position: relative;
       color: #ffe066;
@@ -23,12 +99,14 @@
       user-select: none;
     }
 
+    /* Bank Container */
     .bankContainer {
       margin-top: 100px;
       margin-left: 250px;
       margin-right: 210px;
     }
 
+    /* Chip Button */
     .chip-btn {
       width: 2rem;
       height: 2rem;
@@ -53,7 +131,7 @@
       transform: scale(1.2);
     }
 
-
+    /* Bank und Bet */
     .bank,
     .bet {
       color: white;
@@ -68,6 +146,7 @@
       text-align: right;
     }
 
+    /* Tisch */
     .table-shape {
       border-radius: 50% / 30%;
       background: radial-gradient(circle at center, #1a4d1a 0%, #0a3d0a 70%, #062d06 100%);
@@ -87,10 +166,11 @@
       pointer-events: none;
     }
 
+    /* Karten-Slot */
     .card-slot {
       width: 90px;
       height: 140px;
-      border: 1px dashed #1a4d1a;
+      border: 2px solid #fdfdfd;
       border-radius: 8px;
       background-color: rgba(255, 255, 255, 0.05);
       box-sizing: border-box;
@@ -104,9 +184,10 @@
       display: block;
     }
 
+    /* Karte */
     .card {
-      width: 56px;
-      height: 80px;
+      width: 80px;
+      height: 56px;
       background: white;
       border-radius: 6px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
@@ -119,6 +200,7 @@
       user-select: none;
     }
 
+    /* Bet-Container */
     .bet-container {
       width: 100px;
       height: 100px;
@@ -140,6 +222,7 @@
       user-select: none;
     }
 
+    /* Klickbar */
     .canclick {
       cursor: pointer;
     }
@@ -182,8 +265,11 @@
         <button class="chip-btn bg-red-600 text-white" data-value="1">1</button>
         <button class="chip-btn bg-blue-600 text-white" data-value="5">5</button>
         <button class="chip-btn bg-yellow-400 text-black" data-value="10">10</button>
-        <button class="chip-btn bg-green-500 text-white" data-value="100">100</button>
-        <button class="chip-btn bg-black text-yellow-400" data-value="ALL">ALL<br>IN</button>
+        <button class="chip-btn bg-green-600 text-white" data-value="100">100</button>
+        <button class="chip-btn bg-violet-900 text-white" data-value="1000">1000</button>
+        <button class="chip-btn bg-black text-yellow-400" style="font-size: 9px" data-value="ALL">ALL<br>IN</button>
+        <button id="clear" class="chip-btn bg-orange-700 text-white" style="font-size: 9px"
+          data-value="CLEAR">CLEAR</button>
       </div>
     </div>
 

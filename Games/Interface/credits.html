@@ -11,7 +11,7 @@
 
     <!-- Tailwind -->
     <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>EDV-Royale-Webseite</title>
 </head>
 
@@ -25,8 +25,9 @@
             </div>
             <div class=" bg-base-300 min-w-15 w-auto text-center h-auto m-1.5 rounded-md">
                 <div class="bg-white m-1.5 p-1.5 rounded-md">
-                    <span class="border-r-2 pr-2.5">150</span> 
-                    <a class="pl-1.5" href="credits.html"><span class="font-bold text-gray-700 rounded-full bg-base-300 p-1  font-mono ">+</span></a>
+                    <span class="border-r-2 pr-2.5" id="credits"></span>
+                    <a class="pl-1.5" href="credits.html"><span
+                            class="font-bold text-gray-700 rounded-full bg-base-300 p-1  font-mono ">+</span></a>
                 </div>
             </div>
             <div class="relative ml-3">
@@ -43,7 +44,8 @@
                 <div id="user-menu"
                     class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 hidden"
                     role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                    <a href="anmelden.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                    <a href="anmelden.html" onclick="(() => { localStorage.clear(); })()"
+                        class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                         id="user-menu-item-2">Sign out</a>
                 </div>
             </div>
@@ -58,7 +60,9 @@
                         <li class="bg-base-100 rounded mt-2"><a href="index.html">Startseite</a></li>
                         <li class="bg-base-100 rounded mt-2"><a href="roulette.html">Roulette</a></li>
                         <li class="bg-base-100 rounded mt-2"><a href="blackjack.html">Blackjack</a></li>
-                        <li class="bg-base-100 rounded mt-2"><a>Chicken Road</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="riskladder.html">Ladder Of Risk</a></li>
+                        <li class="bg-base-100 rounded mt-2"><a href="tripleGuess.html">Triple Guess</a></li>
+
                     </ul>
                 </div>
                 <!-- <div>
@@ -79,7 +83,9 @@
                             <h2 class="card-title">100 Credits</h2>
                             <p>Ein Einsatz zum Warmwerden – ready für die erste Runde?</p>
                             <div class="card-actions">
-                                <button id="100" class="btn btn-primary" onclick="window.location.href='zahlung.html?credits=100'">0,99€ Kaufe jetzt</button>
+                                <button id="100" class="btn btn-primary"
+                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 100)">0,99€ Kaufe jetzt
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -92,7 +98,10 @@
                             <h2 class="card-title">500 Credits</h2>
                             <p>Solider Stack – ideal für längere Abende am Tisch</p>
                             <div class="card-actions">
-                                <button id="500" class="btn btn-primary" onclick="window.location.href='zahlung.html?credits=500'"> 4,99€ Kaufe jetzt</button>
+                                <button id="500" class="btn btn-primary" onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 500)">
+                                    4,99€ Kaufe
+                                    jetzt
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -105,20 +114,25 @@
                             <h2 class="card-title">750 Credits</h2>
                             <p>Du spielst mit Stil – mehr Chips, mehr Chancen</p>
                             <div class="card-actions">
-                                <button id="750" class="btn btn-primary" onclick="window.location.href='zahlung.html?credits=750'">5,99€ Kaufe jetzt</button>
+                                <button id="750" class="btn btn-primary"
+                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 750)">5,99€ Kaufe jetzt
+                                </button>
                             </div>
                         </div>
                     </div>
-                                                            
+
                     <div class="card bg-base-100 w-80 shadow-sm">
                         <figure class="px-10 pt-10">
-                            <img src="/Picture/Credits/barrel.jpg" alt="Chicken Cross" class="rounded-xl h-44" />
+                            <img src="/Picture/Credits/barrel.jpg" alt="Chicken Cross" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
                             <h2 class="card-title">1.000 Credits</h2>
                             <p>Highroller-Feeling – steig ein ins große Spiel</p>
                             <div class="card-actions">
-                                <button id="1000" class="btn btn-primary" onclick="window.location.href='zahlung.html?credits=1000'">9,99€ Kaufe jetzt</button>
+                                <button id="1000" class="btn btn-primary"
+                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 1000)">9,99€ Kaufe
+                                    jetzt
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -131,7 +145,10 @@
                             <h2 class="card-title">2.500 Credits</h2>
                             <p>Das Spielfeld gehört dir – mach den großen Wurf</p>
                             <div class="card-actions">
-                                <button id="2500" class="btn btn-primary" onclick="window.location.href='zahlung.html?credits=2500'">19,99€ Kaufe jetzt</button>
+                                <button id="2500" class="btn btn-primary"
+                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 2500)">19,99€ Kaufe
+                                    jetzt
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -144,7 +161,10 @@
                             <h2 class="card-title">5.000 Credits</h2>
                             <p>VIP-Lounge geöffnet – zeig, was du drauf hast</p>
                             <div class="card-actions">
-                                <button id="5000" class="btn btn-primary" onclick="window.location.href='zahlung.html?credits=5000'">44,99€ Kaufe jetzt</button>
+                                <button id="5000" class="btn btn-primary"
+                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 5000)">44,99€ Kaufe
+                                    jetzt
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -157,18 +177,37 @@
                             <h2 class="card-title">10.000 Credits</h2>
                             <p>All-In-Mode aktiviert – nur für wahre Gambler</p>
                             <div class="card-actions">
-                                <button id="10000" class="btn btn-primary" onclick="window.location.href='zahlung.html?credits=10000'">90,99€ Kaufe jetzt</button>
+                                <button id="10000" class="btn btn-primary"
+                                    onclick="window.location.href='zahlung.html', localStorage.setItem('credits', 10000)">90,99€
+                                    Kaufe jetzt</button>
                             </div>
                         </div>
                     </div>
 
                 </div>
                 <!-- Ende Creditmengeauswahl -->
+
             </div>
         </div>
     </div>
     <!-- Script für Dropdown -->
     <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+            const username = localStorage.getItem('token');
+            const token = username;
+            try {
+                const userData = await axios.get('http://localhost:5105/api/user/getData', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                document.querySelector("#credits").innerHTML = userData.data.credits;;
+            } catch (error) {
+                console.log("Fehler beim Laden des Bankwerts: ", error);
+                return 0;
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', function () {
             const button = document.getElementById('user-menu-button');
             const menu = document.getElementById('user-menu');

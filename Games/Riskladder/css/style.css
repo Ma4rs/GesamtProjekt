@@ -1,0 +1,189 @@
+body {
+  background: linear-gradient(to bottom, #1a2b38, #0f1d26);
+  font-family: Arial, sans-serif;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 30px;
+}
+.bet-panel {
+  background: #0c4e12;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+/* .chip-buttons button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  margin: 5px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.chip-buttons button:active {
+  transform: scale(0.9);
+}
+.chip-1    { background: red; }
+.chip-5    { background: #007bff; }
+.chip-10   { background: orange; }
+.chip-100  { background: gold; color: black; }
+.chip-all  { background: green; }
+.chip-clear{ background: darkred; } */
+
+.chip-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: 1px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.chip-btn:hover {
+  transform: scale(1.1);
+}
+
+.chip-btn.active {
+  box-shadow: 0 0 10px 4px rgba(255, 255, 0, 0.8);
+  transform: scale(1.2);
+}
+.balance-display {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.balance-display div {
+  background: black;
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 10px 20px;
+  min-width: 80px;
+  font-size: 16px;
+  text-align: center;
+}
+#startBtn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#startBtn:active {
+  transform: scale(0.96);
+}
+.ladder {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.ladder-step {
+  background: #3a3a3a;
+  color: white;
+  padding: 10px 20px;
+  margin: 6px 0;
+  border-radius: 5px;
+  width: 150px;
+  text-align: center;
+  font-weight: normal;
+  transition: background 0.3s;
+}
+
+.ladder-step.active {
+  background: #ffc107;
+  color: black;
+  font-weight: bold;
+}
+
+.ladder-step.inactive {
+  background-color: #ccc;
+  color: #666;
+}
+
+.action-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn-risk {
+  background: #f44336;
+  color: white;
+}
+.btn-collect {
+  background: #4CAF50;
+  color: white;
+}
+.btn-risk:active,
+.btn-collect:active {
+  transform: scale(0.95);
+}
+
+
+#container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+#notification {
+  background: #ad0205;
+  border: 0.3em solid #d3b201;
+  border-radius: 0.8em;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  min-width: 180px;
+  max-width: 90vw;
+  padding: 1em 1.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 9999;
+  pointer-events: auto;
+  top: 0;
+  left: 0;
+  transform: none;
+}
+
+.nBtn {
+  display: block;
+  background-color: #228b22;
+  color: #fff;
+  border-radius: 0.5em;
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 18%);
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: 0.2em;
+}
+

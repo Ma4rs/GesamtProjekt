@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Gewinnleiter</title>
+  <link href="./css/style.css" rel="stylesheet" type="text/css">
+
+  <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
+  <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
+
+  <!-- Tailwind -->
+  <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+  
+</head>
+
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="./js/app.js"></script>
+
+  <div class="bet-panel">
+    <!-- <div class="chip-buttons">
+      <button class="chip-1" onclick="addBet(1)">1</button>
+      <button class="chip-5" onclick="addBet(5)">5</button>
+      <button class="chip-10" onclick="addBet(10)">10</button>
+      <button class="chip-100" onclick="addBet(100)">100</button>
+      <button class="chip-all" onclick="betAll()">All</button>
+      <button class="chip-clear" onclick="clearBet()">Clear</button>
+    </div> -->
+
+    <div class=" left-1/2 transform flex flex-col items-center gap-1 z-10">
+      <div class="flex gap-1" id="chipContainer">
+        <button class="chip-btn bg-red-600 text-white" onclick="addBet(1)">1</button>
+        <button class="chip-btn bg-blue-600 text-white" onclick="addBet(5)">5</button>
+        <button class="chip-btn bg-yellow-400 text-black" onclick="addBet(10)">10</button>
+        <button class="chip-btn bg-green-600 text-white" onclick="addBet(100)">100</button>
+        <button class="chip-btn bg-violet-900 text-white" onclick="addBet(1000)">1000</button>
+        <button class="chip-btn bg-black text-yellow-400" style="font-size: 9px" onclick="betAll()">ALL<br>IN</button>
+        <button id="clear" class="chip-btn bg-orange-700 text-white" style="font-size: 9px" onclick="clearBet()">CLEAR</button>
+      </div>
+    </div>
+
+    <div class="balance-display">
+      <div id="balanceDisplay">0</div>
+      <div id="betDisplay">0</div>
+    </div>
+
+    <button id="startBtn" onclick="startGame()">Start</button>
+  </div>
+
+  <div class="ladder" id="ladder"></div>
+
+  <div class="action-buttons">
+    <button class="btn-risk" id="riskBtn" onclick="risk()" disabled>Risiko</button>
+    <button class="btn-collect" id="collectBtn" onclick="collect()" disabled>Auszahlen</button>
+  </div>
+</body>
+
+</html>

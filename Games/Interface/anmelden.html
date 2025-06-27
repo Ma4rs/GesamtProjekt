@@ -33,7 +33,8 @@
             <div class="flex items-center justify-between">
               <label for="password" class="block text-sm/6 font-medium text-yellow-400">Passwort</label>
               <div class="text-sm">
-                <a href="#" class="font-semibold text-yellow-600 hover:text-yellow-300 hover:animate-pulse">Passwort vergessen?</a>
+                <a href="#" class="font-semibold text-yellow-600 hover:text-yellow-300 hover:animate-pulse">Passwort
+                  vergessen?</a>
               </div>
             </div>
             <div class="mt-2">
@@ -61,7 +62,7 @@
       const password = document.getElementById('password').value;
 
       try {
-        const response = await fetch('http://localhost:5105/api/Casino/User/Login', {
+        const response = await fetch('http://localhost:5105/api/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -70,7 +71,9 @@
         });
 
         if (response.ok) {
-          // Weiterleitung z.B. zur Hauptseite
+          const data = await response.json(); // <-- hier
+          const user = data.token; // <-- token aus dem JSON holen
+          localStorage.setItem("token", user);
           window.location.href = 'index.html';
         } else {
           const errorText = await response.text();
