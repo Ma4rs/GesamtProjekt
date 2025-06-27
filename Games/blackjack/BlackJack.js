@@ -1,26 +1,8 @@
 let player = localStorage.getItem("token");
 
-const suits = ["clubs", "diamonds", "hearts", "spades"];
-const ranks = [
-    { rank: "2", value: 2 },
-    { rank: "3", value: 3 },
-    { rank: "4", value: 4 },
-    { rank: "5", value: 5 },
-    { rank: "6", value: 6 },
-    { rank: "7", value: 7 },
-    { rank: "8", value: 8 },
-    { rank: "9", value: 9 },
-    { rank: "10", value: 10 },
-    { rank: "jack", value: 10 },
-    { rank: "queen", value: 10 },
-    { rank: "king", value: 10 },
-    { rank: "ace", value: 11 }
-];
-
 let playerMoney = 0;
 let betAmount = 0;
 
-let deck = [];
 let playerHand = [];
 let dealerHand = [];
 
@@ -47,6 +29,20 @@ const btnDel = document.getElementById("btnDel");
 btnCard.disabled = true;
 btnStand.disabled = true;
 
+async function fetchStartCards() {
+    const res = await fetch("http://localhost:5105/api/blackjack/startCard");
+    return await res.json();
+}
+
+async function fetchDealCard() {
+    const res = await fetch("http://localhost:5105/api/blackjack/dealCard");
+    return await res.json();
+}
+
+async function resetBackendDeck() {
+    await fetch("http://localhost:5105/api/blackjack/GameOver");
+}
+
 async function getCredits() {
     try {
         const response = await fetch("http://localhost:5105/api/user/getData", {
@@ -55,19 +51,35 @@ async function getCredits() {
                 Authorization: `Bearer ${player}`
             }
         });
+        if (!response.ok) throw new Error(`HTTP-Error: ${response.status}`);
         const userData = await response.json();
-        return userData.credits;
+        return userData.credits ?? 0;
     } catch (error) {
         console.error("Fehler beim Laden des Bankwerts:", error);
         return 0;
     }
 }
 
+async function updateCredits(amount) {
+    try {
+        await fetch("http://localhost:5105/api/user/updateCredits", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${player}`
+            },
+            body: JSON.stringify({ creditsToAdd: amount })
+        });
+    } catch (error) {
+        console.error("Fehler beim POST an updateCredits:", error);
+    }
+}
+
 async function initialize() {
     playerMoney = await getCredits();
     updateBetText();
-    createDeck();
     updatePlayerMoneyDisplay();
+    clearCards();
 }
 
 function updatePlayerMoneyDisplay() {
@@ -77,79 +89,104 @@ function updatePlayerMoneyDisplay() {
     }
 }
 
-function createDeck() {
-    deck = [];
-    for (const suit of suits) {
-        for (const r of ranks) {
-            deck.push({
-                suit: suit,
-                rank: r.rank,
-                value: r.value,
-                image: `/Picture/Karten/${r.rank}_of_${suit}.png`
-            });
-        }
-    }
-    shuffleDeck();
+function showNotification(msg, btnTxt, redirectUrl) {
+    let oldContainer = document.getElementById('notificationContainer');
+    if (oldContainer) oldContainer.remove();
+    let container = document.createElement('div');
+    container.id = 'notificationContainer';
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100vw';
+    container.style.height = '100vh';
+    container.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+    container.style.justifyContent = 'center';
+    container.style.zIndex = '9999';
+
+    let box = document.createElement('div');
+    box.style.backgroundColor = '#1f2937';
+    box.style.color = '#fff';
+    box.style.padding = '30px';
+    box.style.borderRadius = '12px';
+    box.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
+    box.style.textAlign = 'center';
+    box.style.maxWidth = '300px';
+
+    let text = document.createElement('p');
+    text.innerText = msg;
+    text.style.fontSize = '1.2rem';
+    text.style.marginBottom = '20px';
+
+    let button = document.createElement('button');
+    button.innerText = btnTxt;
+    button.style.backgroundColor = '#10b981';
+    button.style.color = '#fff';
+    button.style.border = 'none';
+    button.style.padding = '10px 20px';
+    button.style.borderRadius = '8px';
+    button.style.cursor = 'pointer';
+    button.style.fontWeight = 'bold';
+    button.onclick = () => {
+        window.location.href = redirectUrl;
+    };
+
+    box.appendChild(text);
+    box.appendChild(button);
+    container.appendChild(box);
+    document.body.appendChild(container);
 }
 
-function shuffleDeck() {
-    for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-}
-
-function dealCard(hand, area, faceUp = true) {
-    if (deck.length === 0) createDeck();
-
-    const card = deck.pop();
-    hand.push(card);
-
+function renderCard(card, area, faceUp = true) {
     const img = document.createElement("img");
     img.src = faceUp ? card.image : "/Picture/Karten/Hinterseite.png";
     img.alt = `${card.rank} of ${card.suit}`;
     img.classList.add("card");
 
     if (area === dealerArea) {
+        // Hole die Container
         const placeholderContainer = dealerArea.querySelector("#dealerPlaceholders");
         const stapelContainer = dealerArea.querySelector("#stapelContainer");
 
-        if (hand.length <= 2) {
+        const slotIndex = dealerHand.length - 1; // Index der Karte in der Hand
+
+        // Wenn es einer der ersten zwei Karten ist, lege sie in die Placeholder-Slots
+        if (slotIndex < 2 && placeholderContainer) {
             const slots = placeholderContainer.querySelectorAll(".card-slot");
-            const cardIndex = hand.length - 1;
-            if (slots[cardIndex]) {
-                slots[cardIndex].innerHTML = "";
-                slots[cardIndex].appendChild(img);
+            if (slots[slotIndex]) {
+                slots[slotIndex].innerHTML = "";
+                slots[slotIndex].appendChild(img);
             }
         } else {
-
-            if (stapelContainer) {
-                stapelContainer.insertAdjacentElement("beforebegin", img);
-            } else {
-                area.appendChild(img);
+            // Für Karten ab Index 2: extra Container anlegen, wenn nicht vorhanden
+            let extra = document.getElementById("dealerExtraCards");
+            if (!extra) {
+                extra = document.createElement("div");
+                extra.id = "dealerExtraCards";
+                extra.className = "flex gap-2 ml-2";
+                stapelContainer.insertAdjacentElement("beforebegin", extra);
             }
+            extra.appendChild(img);
         }
     } else {
+        // Spieler-Karten (playerArea) werden ebenfalls in feste Slots gesetzt oder hinzugefügt
         const slots = area.querySelectorAll(".card-slot");
-        const cardIndex = hand.length - 1;
-
-        if (slots[cardIndex]) {
-            slots[cardIndex].innerHTML = "";
-            slots[cardIndex].appendChild(img);
+        const slotIndex = playerHand.length - 1;
+        if (slots[slotIndex]) {
+            slots[slotIndex].innerHTML = "";
+            slots[slotIndex].appendChild(img);
         } else {
             area.appendChild(img);
         }
     }
-
-    updateScores();
 }
-
-
 
 function clearCards() {
     dealerHand = [];
     playerHand = [];
 
+    // Spieler Slots erzeugen
     playerSlot.innerHTML = "";
     for (let i = 0; i < 2; i++) {
         const slot = document.createElement("div");
@@ -157,10 +194,16 @@ function clearCards() {
         playerSlot.appendChild(slot);
     }
 
+    // Dealer Area leeren
     while (dealerArea.firstChild) {
         dealerArea.removeChild(dealerArea.firstChild);
     }
 
+    // Zusätzlicher Container für extra Dealer-Karten entfernen
+    const extra = document.getElementById("dealerExtraCards");
+    if (extra) extra.remove();
+
+    // Placeholder-Container mit 2 Slots anlegen
     const placeholderContainer = document.createElement("div");
     placeholderContainer.id = "dealerPlaceholders";
     placeholderContainer.className = "flex gap-6";
@@ -170,12 +213,13 @@ function clearCards() {
         placeholderContainer.appendChild(slot);
     }
 
+    // Stapel-Container mit verdeckter Karte (Rückseite)
     const stapelDiv = document.createElement("div");
     stapelDiv.id = "stapelContainer";
     stapelDiv.className = "flex flex-col items-center";
     stapelDiv.innerHTML = `
-      <img src="/Picture/Karten/Hinterseite.png" alt="#" class="card" />
-      <div class="mt-1 text-center text-white text-xs opacity-70">Stapel</div>
+        <img src="/Picture/Karten/Hinterseite.png" alt="#" class="card" />
+        <div class="mt-1 text-center text-white text-xs opacity-70">Stapel</div>
     `;
 
     dealerArea.appendChild(placeholderContainer);
@@ -198,6 +242,7 @@ function calculateScore(hand) {
         score -= 10;
         aces--;
     }
+
     return score;
 }
 
@@ -211,42 +256,52 @@ function updateBetText() {
     updatePlayerMoneyDisplay();
 }
 
-function startGame() {
+async function startGame() {
     if (betAmount <= 0) {
         showNotification("Bitte Einsatz wählen.", "Okay", "");
         return;
     }
 
+    if (betAmount > playerMoney) {
+        showNotification("Du hast nicht genug Guthaben!", "Okay", "");
+        return;
+    }
+
     playerMoney -= betAmount;
-    chipButtons.forEach((chips) => {
-        chips.disabled = true
-    });
+    updatePlayerMoneyDisplay();
+    chipButtons.forEach(c => c.disabled = true);
+    betContainer.style.pointerEvents = "none";
+
     clearCards();
-    createDeck();
+    await resetBackendDeck();
 
-    dealCard(playerHand, playerSlot, true);
-    dealCard(playerHand, playerSlot, true);
+    const cards = await fetchStartCards();
+    playerHand = [cards[0], cards[1]];
+    dealerHand = [cards[2], cards[3]];
 
-    dealCard(dealerHand, dealerArea, true);
-    dealCard(dealerHand, dealerArea, false);
+    renderCard(playerHand[0], playerSlot, true);
+    renderCard(playerHand[1], playerSlot, true);
+    renderCard(dealerHand[0], dealerArea, true);
+    renderCard(dealerHand[1], dealerArea, false);
 
-    updateBetText();
+    updateScores();
 
     btnCard.disabled = false;
     btnStand.disabled = false;
-    betContainer.style.pointerEvents = "none";
 
-    if (playerScore === 21) stand();
+    if (playerScore === 21) await stand();
 }
 
-function playerHit() {
-    dealCard(playerHand, playerSlot, true);
-    sleep(5000)
-    if (playerScore > 21) endGame("Du verlierst.");
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+async function playerHit() {
+    const card = await fetchDealCard();
+    playerHand.push(card);
+    renderCard(card, playerSlot, true);
+    updateScores();
+    await sleep(1000);
+    if (playerScore > 21) {
+        await sleep(500);
+        await endGame("Du verlierst.");
+    }
 }
 
 async function stand() {
@@ -254,108 +309,38 @@ async function stand() {
     btnStand.disabled = true;
 
     const dealerCards = dealerArea.querySelectorAll("img.card");
-
     if (dealerCards.length > 1) {
         dealerCards[1].src = dealerHand[1].image;
+        await sleep(800);
     }
 
     updateScores();
 
     while (dealerScore < 17) {
         await sleep(1000);
-        dealCard(dealerHand, dealerArea, true);
+        const card = await fetchDealCard();
+        dealerHand.push(card);
+        renderCard(card, dealerArea, true);
         updateScores();
     }
 
+    await sleep(1000);
+
     if (dealerScore > 21) {
-        endGame("Dealer bust! Du gewinnst.");
+        await endGame("Dealer bust! Du gewinnst.");
     } else if (dealerScore > playerScore) {
-        endGame("Du verlierst!");
+        await endGame("Du verlierst!");
     } else if (dealerScore < playerScore) {
-        endGame("Du gewinnst!");
+        await endGame("Du gewinnst!");
     } else {
-        endGame("Unentschieden.");
+        await endGame("Unentschieden.");
     }
 }
-async function updateCredits(credits) {
-    try {
-        const response = await fetch("http://localhost:5105/api/user/updateCredits", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${player}`
-            },
-            body: JSON.stringify({
-                creditsToAdd: credits
-            })
-        });
-
-    } catch (error) {
-        console.error("Fehler beim POST an updateCredits:", error);
-    }
-}
-
-function showNotification(msg, btnTxt, redirectUrl) {
-    let oldContainer = document.getElementById('notificationContainer');
-    if (oldContainer) oldContainer.remove();
-
-    let container = document.createElement('div');
-    container.id = 'notificationContainer';
-    container.style.position = 'fixed';
-    container.style.top = '0';
-    container.style.left = '0';
-    container.style.width = '100vw';
-    container.style.height = '100vh';
-    container.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
-    container.style.display = 'flex';
-    container.style.alignItems = 'center';
-    container.style.justifyContent = 'center';
-    container.style.zIndex = '9999';
-
-
-    let box = document.createElement('div');
-    box.style.backgroundColor = '#1f2937';
-    box.style.color = '#fff';
-    box.style.padding = '30px';
-    box.style.borderRadius = '12px';
-    box.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
-    box.style.textAlign = 'center';
-    box.style.maxWidth = '300px';
-
-
-    let text = document.createElement('p');
-    text.innerText = msg;
-    text.style.fontSize = '1.2rem';
-    text.style.marginBottom = '20px';
-
-    let button = document.createElement('button');
-    button.innerText = btnTxt;
-    button.style.backgroundColor = '#10b981';
-    button.style.color = '#fff';
-    button.style.border = 'none';
-    button.style.padding = '10px 20px';
-    button.style.borderRadius = '8px';
-    button.style.cursor = 'pointer';
-    button.style.fontWeight = 'bold';
-    button.onclick = () => {
-        if (redirectUrl == "../Interface/credits.html") {
-            window.top.location.href = redirectUrl;
-        } else {
-            window.location.href = redirectUrl;
-
-        }
-    };
-
-    box.appendChild(text);
-    box.appendChild(button);
-    container.appendChild(box);
-    document.body.appendChild(container);
-}
-
 
 async function endGame(msg) {
-    let won = msg.includes("gewinnst");
-    let draw = msg.includes("Unentschieden");
+    const won = msg.includes("gewinnst");
+    const draw = msg.includes("Unentschieden");
+
     if (won) {
         playerMoney += betAmount * 2;
         await updateCredits(betAmount);
@@ -365,10 +350,9 @@ async function endGame(msg) {
         await updateCredits(0);
         showNotification("Unentschieden!", "Nochmal spielen", window.location.href);
     } else {
-        betAmount *= -1;
-        await updateCredits(betAmount);
-
-        if (playerMoney === 0) {
+        await updateCredits(-betAmount);
+        if (playerMoney <= 0) {
+            playerMoney = 0;
             showNotification("Keine Credits mehr!", "Credits aufladen", "../Interface/credits.html");
         } else {
             showNotification("Leider verloren!", "Nochmal spielen", window.location.href);
@@ -377,13 +361,15 @@ async function endGame(msg) {
 
     betAmount = 0;
     updateBetText();
+    chipButtons.forEach((chips) => { chips.disabled = false; });
     betContainer.style.pointerEvents = "auto";
-    chipButtons.forEach((chips) => {
-        chips.disabled = false;
-    });
     btnCard.disabled = true;
     btnStand.disabled = true;
     clearCards();
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 chipButtons.forEach(btn => {
@@ -393,8 +379,8 @@ chipButtons.forEach(btn => {
             betAmount = playerMoney;
         } else {
             const amount = parseInt(val || "0");
-            if (!isNaN(amount)) {
-                betAmount = Math.min(playerMoney, betAmount + amount);
+            if (!isNaN(amount) && betAmount + amount <= playerMoney) {
+                betAmount += amount;
             }
         }
         updateBetText();
@@ -406,8 +392,7 @@ btnDel.addEventListener("click", () => {
     updateBetText();
 });
 
-betContainer.addEventListener("click", startGame);
-
+betContainer.addEventListener("click", () => startGame());
 btnCard.addEventListener("click", playerHit);
 btnStand.addEventListener("click", stand);
 

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace C__Backend.Controllers
 {
@@ -6,12 +8,10 @@ namespace C__Backend.Controllers
     [Route("api/blackjack")]
     public class BlackjackController : ControllerBase
     {
-
-        static List<Object> cacheCards = new List<object>();
-
+        private static readonly object locker = new object();
         private static readonly string[] suits = { "hearts", "clubs", "spades", "diamonds" };
         private static readonly (string Name, int Value)[] ranks = {
-            ("ace", 10),
+            ("ace", 11),
             ("2", 2),
             ("3", 3),
             ("4", 4),
@@ -26,61 +26,78 @@ namespace C__Backend.Controllers
             ("king", 10)
         };
 
-        [HttpGet("dealCard")]
-        public IActionResult DealCard()
-        {
-            // Beispiel: Karten austeilen
-            var rnd = new Random();
-            string suit = suits[rnd.Next(suits.Length)];
-            var valueTuple = ranks[rnd.Next(ranks.Length)];
-            string imageUrl = $"/Picture/Karten/{valueTuple.Name}_of_{suit}.png";
+        private static readonly Random rnd = new Random();
+        private static List<string> usedCards = new List<string>();
 
-            var card = new
+        private object CreateUniqueCard()
+        {
+            lock (locker)
             {
-                Name = valueTuple.Name,
-                Wert = valueTuple.Value,
-                Art = suit,
-                Bild = imageUrl
-            };
-            if (cacheCards.Contains(card))
-            {
-                DealCard();
+                if (usedCards.Count >= 52)
+                {
+                    // Alle Karten benutzt, Reset erzwingen
+                    usedCards.Clear();
+                }
+
+                int attempts = 0;
+                while (attempts < 100)
+                {
+                    string suit = suits[rnd.Next(suits.Length)];
+                    var rank = ranks[rnd.Next(ranks.Length)];
+                    string identifier = $"{rank.Name}_of_{suit}";
+
+                    if (!usedCards.Contains(identifier))
+                    {
+                        usedCards.Add(identifier);
+                        return new
+                        {
+                            rank = rank.Name,
+                            value = rank.Value,
+                            suit = suit,
+                            image = $"/Picture/Karten/{identifier}.png"
+                        };
+                    }
+                    attempts++;
+                }
+
+                throw new Exception("Keine neuen Karten verfügbar.");
             }
-            cacheCards.Add(card);
-            return Ok(card);
         }
 
         [HttpGet("startCard")]
-        public IActionResult startCard()
+        public IActionResult StartCard()
         {
-            var rnd = new Random();
-            for (int i = 0; i < 2; i++)
+            lock (locker)
             {
-                string suit = suits[rnd.Next(suits.Length)];
-                var valueTuple = ranks[rnd.Next(ranks.Length)];
-                string imageUrl = $"/Picture/Karten/{valueTuple.Name}_of_{suit}.png";
-
-                var card = new
-                {
-                    Name = valueTuple.Name,
-                    Wert = valueTuple.Value,
-                    Art = suit,
-                    Bild = imageUrl
-                };
-                if (cacheCards.Contains(card))
-                {
-                    startCard();
-                }
-                cacheCards.Add(card);
+                usedCards.Clear(); // Reset deck beim Spielstart
             }
-            return Ok(cacheCards);
+
+            var cards = new List<object>
+            {
+                CreateUniqueCard(), // Spielerkarte 1
+                CreateUniqueCard(), // Spielerkarte 2
+                CreateUniqueCard(), // Dealerkarte 1
+                CreateUniqueCard()  // Dealerkarte 2 verdeckt
+            };
+
+            return Ok(cards);
+        }
+
+        [HttpGet("dealCard")]
+        public IActionResult DealCard()
+        {
+            var card = CreateUniqueCard();
+            return Ok(card);
         }
 
         [HttpGet("GameOver")]
         public IActionResult GameOver()
         {
-            cacheCards.Clear();
-            return Ok("Cache wieder leer");
+            lock (locker)
+            {
+                usedCards.Clear();
+            }
+            return Ok(new { message = "Spiel beendet, Deck zurückgesetzt." });
         }
     }
 }
