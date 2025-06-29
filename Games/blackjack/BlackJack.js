@@ -29,18 +29,34 @@ const btnDel = document.getElementById("btnDel");
 btnCard.disabled = true;
 btnStand.disabled = true;
 
+
 async function fetchStartCards() {
-    const res = await fetch("http://localhost:5105/api/blackjack/startCard");
+    const res = await fetch("http://localhost:5105/api/blackjack/startCard", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${player}`
+        }
+    });
     return await res.json();
 }
 
 async function fetchDealCard() {
-    const res = await fetch("http://localhost:5105/api/blackjack/dealCard");
+    const res = await fetch("http://localhost:5105/api/blackjack/dealCard", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${player}`
+        }
+    });
     return await res.json();
 }
 
 async function resetBackendDeck() {
-    await fetch("http://localhost:5105/api/blackjack/GameOver");
+    await fetch("http://localhost:5105/api/blackjack/GameOver", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${player}`
+        }
+    });
 }
 
 async function getCredits() {
