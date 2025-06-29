@@ -48,9 +48,9 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- Probleme bei using deswegen so -->
   <script type="module">
 
-
+    // alert("test")
+    // alert(localStorage.getItem('credits'))
     const ws = axios.create({ baseURL: "http://localhost:5105" });
-    const urlParams = new URLSearchParams(window.location.search);
     const credits = parseInt(localStorage.getItem('credits'));
     localStorage.removeItem('credits')
 

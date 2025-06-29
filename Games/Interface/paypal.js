@@ -31,8 +31,8 @@ function renderAllPaypalButtons() {
                 onApprove: function (data, actions) {
                     return actions.order.capture().then(function (details) {
                         // Nach erfolgreicher Zahlung: Weiterleiten mit Credits & Username als GET-Parameter
-                        const username = getUsername();
-                        localStorage.setItem('credits', offer.credits);
+                        // const username = getUsername();
+                        localStorage.setItem('credits', offer.credits);  
                         window.location.href = `zahlung.html`;
                     });
                 }
