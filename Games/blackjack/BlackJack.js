@@ -161,21 +161,17 @@ function renderCard(card, area, faceUp = true) {
     img.classList.add("card");
 
     if (area === dealerArea) {
-        // Hole die Container
         const placeholderContainer = dealerArea.querySelector("#dealerPlaceholders");
         const stapelContainer = dealerArea.querySelector("#stapelContainer");
+        const slots = placeholderContainer?.querySelectorAll(".card-slot") ?? [];
+        const currentCards = placeholderContainer?.querySelectorAll("img.card").length ?? 0;
 
-        const slotIndex = dealerHand.length - 1; // Index der Karte in der Hand
-
-        // Wenn es einer der ersten zwei Karten ist, lege sie in die Placeholder-Slots
-        if (slotIndex < 2 && placeholderContainer) {
-            const slots = placeholderContainer.querySelectorAll(".card-slot");
-            if (slots[slotIndex]) {
-                slots[slotIndex].innerHTML = "";
-                slots[slotIndex].appendChild(img);
-            }
+        if (currentCards < 2 && slots[currentCards]) {
+            // In einen freien Slot einfügen
+            slots[currentCards].innerHTML = "";
+            slots[currentCards].appendChild(img);
         } else {
-            // Für Karten ab Index 2: extra Container anlegen, wenn nicht vorhanden
+            // Danach in Extra-Container einfügen
             let extra = document.getElementById("dealerExtraCards");
             if (!extra) {
                 extra = document.createElement("div");
@@ -185,14 +181,18 @@ function renderCard(card, area, faceUp = true) {
             }
             extra.appendChild(img);
         }
-    } else {
-        // Spieler-Karten (playerArea) werden ebenfalls in feste Slots gesetzt oder hinzugefügt
+    }
+    else {
+        // Spielerbereich
         const slots = area.querySelectorAll(".card-slot");
-        const slotIndex = playerHand.length - 1;
-        if (slots[slotIndex]) {
-            slots[slotIndex].innerHTML = "";
-            slots[slotIndex].appendChild(img);
+        const currentCards = area.querySelectorAll("img.card").length;
+
+        if (currentCards < 2 && slots[currentCards]) {
+            // In die ersten beiden Slots einfügen
+            slots[currentCards].innerHTML = "";
+            slots[currentCards].appendChild(img);
         } else {
+            // Danach anhängen
             area.appendChild(img);
         }
     }
@@ -210,39 +210,24 @@ function clearCards() {
         playerSlot.appendChild(slot);
     }
 
-    // Dealer Area leeren
-    while (dealerArea.firstChild) {
-        dealerArea.removeChild(dealerArea.firstChild);
+    // Dealer Placeholder zurücksetzen
+    const placeholderContainer = dealerArea.querySelector("#dealerPlaceholders");
+    if (placeholderContainer) {
+        placeholderContainer.innerHTML = "";
+        for (let i = 0; i < 2; i++) {
+            const slot = document.createElement("div");
+            slot.className = "card-slot";
+            placeholderContainer.appendChild(slot);
+        }
     }
 
-    // Zusätzlicher Container für extra Dealer-Karten entfernen
-    const extra = document.getElementById("dealerExtraCards");
-    if (extra) extra.remove();
-
-    // Placeholder-Container mit 2 Slots anlegen
-    const placeholderContainer = document.createElement("div");
-    placeholderContainer.id = "dealerPlaceholders";
-    placeholderContainer.className = "flex gap-6";
-    for (let i = 0; i < 2; i++) {
-        const slot = document.createElement("div");
-        slot.className = "card-slot";
-        placeholderContainer.appendChild(slot);
+    // Eventuell vorhandene Extra-Karten entfernen
+    const extraDealerCards = document.getElementById("dealerExtraCards");
+    if (extraDealerCards) {
+        extraDealerCards.remove();
     }
-
-    // Stapel-Container mit verdeckter Karte (Rückseite)
-    const stapelDiv = document.createElement("div");
-    stapelDiv.id = "stapelContainer";
-    stapelDiv.className = "flex flex-col items-center";
-    stapelDiv.innerHTML = `
-        <img src="/Picture/Karten/Hinterseite.png" alt="#" class="card" />
-        <div class="mt-1 text-center text-white text-xs opacity-70">Stapel</div>
-    `;
-
-    dealerArea.appendChild(placeholderContainer);
-    dealerArea.appendChild(stapelDiv);
-
-    updateScores();
 }
+
 
 
 function calculateScore(hand) {

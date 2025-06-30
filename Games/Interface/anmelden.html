@@ -112,7 +112,7 @@
       const email = document.getElementById('resetEmail').value;
 
       try {
-        const response = await fetch('http://localhost:5105/api/user/forgot-password', {
+        const response = await fetch('http://localhost:5105/api/user/forgotPassword', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
