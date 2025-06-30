@@ -145,6 +145,9 @@ function showNotification(msg, btnTxt, redirectUrl) {
     button.style.cursor = 'pointer';
     button.style.fontWeight = 'bold';
     button.onclick = () => {
+        if (redirectUrl == "../Interface/credits.html") {
+            window.top.location.href = redirectUrl;
+        }
         window.location.href = redirectUrl;
     };
 
