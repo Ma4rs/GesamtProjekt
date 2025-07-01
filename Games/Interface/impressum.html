@@ -47,6 +47,8 @@
                     <a href="anmelden.html" onclick="(() => { localStorage.clear(); })()"
                         class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                         id="user-menu-item-2">Sign out</a>
+                    <a href="passwort.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                        id="user-menu-item-3">Passwort ändern</a>
                 </div>
             </div>
         </div>
@@ -124,7 +126,7 @@
     <!-- Script für Dropdown -->
     <script>
 
-window.addEventListener('DOMContentLoaded', async () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             const username = localStorage.getItem('token');
             const token = username;
             try {

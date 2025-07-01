@@ -27,7 +27,7 @@
                 <div class="bg-white m-1.5 p-1.5 rounded-md">
                     <!-- <span class="border-r-2 pr-2.5" id="credits"></span> -->
                     <a href="credits.html"><span
-                        class="font-bold text-gray-700 rounded-full bg-base-300 p-1  font-mono ">+</span></a>
+                            class="font-bold text-gray-700 rounded-full bg-base-300 p-1  font-mono ">+</span></a>
                 </div>
             </div>
             <div class="relative ml-3">
@@ -47,6 +47,8 @@
                     <a href="anmelden.html" onclick="(() => { localStorage.clear(); })()"
                         class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                         id="user-menu-item-2">Sign out</a>
+                    <a href="passwort.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                        id="user-menu-item-3">Passwort ändern</a>
                 </div>
             </div>
         </div>
@@ -85,7 +87,8 @@
                 <div
                     class="flex-grow flex items-center justify-center bg-base-100 rounded-lg m-5 bg-green-800 shadow-md">
                     <div class="w-full max-w-[1060px] aspect-video">
-                        <iframe src="/Games/roulette/index.html" class="w-full h-full rounded-lg" allowfullscreen></iframe>
+                        <iframe src="/Games/roulette/index.html" class="w-full h-full rounded-lg"
+                            allowfullscreen></iframe>
                     </div>
                 </div>
 
@@ -105,7 +108,7 @@
     <script>
 
 
-window.addEventListener('DOMContentLoaded', async () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             const username = localStorage.getItem('token');
             const token = username;
             try {
