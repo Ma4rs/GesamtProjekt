@@ -69,7 +69,7 @@ async function getCredits() {
         });
         if (!response.ok) throw new Error(`HTTP-Error: ${response.status}`);
         const userData = await response.json();
-        return userData.credits.toLocaleString('de-DE') ?? 0;
+        return userData.credits ?? 0;
     } catch (error) {
         console.error("Fehler beim Laden des Bankwerts:", error);
         return 0;
