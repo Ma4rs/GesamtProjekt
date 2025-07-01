@@ -206,7 +206,7 @@
                         Authorization: `Bearer ${token}`
                     }
                 });
-                document.querySelector("#credits").innerHTML = userData.data.credits;;
+                document.querySelector("#credits").innerHTML = userData.data.credits.toLocaleString('de-DE');;
             } catch (error) {
                 console.log("Fehler beim Laden des Bankwerts: ", error);
                 return 0;
