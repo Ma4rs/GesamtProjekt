@@ -222,5 +222,39 @@ namespace C__Backend.Controllers
         //     return Ok("Nur sichtbar mit gültigem Token!");
         // }
 
+        // Passwort ändern
+        [Authorize]
+        [HttpPost("changePwd")]
+        public async Task<IActionResult> ChangePwd([FromBody] ChangePasswordRequest request)
+        {
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (username == null)
+            {
+                return Unauthorized(new { message = "Kein Username im Token gefunden." });
+            }
+
+            using (var context = new OnlineCasinoContext())
+            {
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+                if (user == null)
+                {
+                    return NotFound(new { message = "User nicht gefunden." });
+                }
+
+                // Altes Passwort prüfen
+                if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, user.PasswordHash))
+                {
+                    return BadRequest(new { message = "Das alte Passwort ist nicht korrekt." });
+                }
+
+                // Neues Passwort hashen und speichern
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+                await context.SaveChangesAsync();
+
+                return Ok(new { message = "Passwort erfolgreich geändert." });
+            }
+        }
     }
 }
