@@ -46,8 +46,31 @@ namespace C__Backend.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet("getUsername")]
+        public async Task<IActionResult> GetName()
+        {
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (username == null)
+            {
+                return Unauthorized(new { message = "Kein Username im Token gefunden." });
+            }
 
+            using (var context = new OnlineCasinoContext())
+            {
+                var user = context.Users.FirstOrDefault(t => t.Username == username);
 
+                if (user == null)
+                {
+                    return NotFound(new { message = "User nicht gefunden. "});
+                }
+
+                return Ok(new
+                {
+                    Username = user.Username
+                });
+            }
+        }
 
         // [HttpPost("registerUser")]
         // public async Task<IActionResult> RegisterUser([FromBody] Userdata data)

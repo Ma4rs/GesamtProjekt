@@ -127,11 +127,11 @@
                     <!-- Ladder Of Risk -->
                     <div class="card bg-base-100 w-80 shadow-sm">
                         <figure class="px-10 pt-10">
-                            <img src="../../Picture/krone.png" alt="Ladder of Risk" class="rounded-xl" />
+                            <img src="../../Picture/Riskladder.png" alt="Ladder of Risk" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
                             <h2 class="card-title">Ladder Of Risk</h2>
-                            <p>Verdiene deine Credits an der Ladder Of Risk</p>
+                            <p>Kämpf dich die Leiter hinauf und hol dir die Gewinne deines Lebens!</p>
                             <div class="card-actions">
                                 <button
                                     class="btn btn-primary transition delay-150 duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
@@ -180,9 +180,25 @@
                         Authorization: `Bearer ${token}`
                     }
                 });
-                document.querySelector("#credits").innerHTML = userData.data.credits.toLocaleString('de-DE');
+                document.querySelector("#credits").innerHTML = userData.data.credits.toLocaleString('de-DE') + " ₵";
             } catch (error) {
                 console.log("Fehler beim Laden des Bankwerts: ", error);
+                return 0;
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const username = localStorage.getItem('token');
+            const token = username;
+            try {
+                const userData = await axios.get('http://localhost:5105/api/user/getUsername', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                document.querySelector("#user-menu-item-2").innerHTML = "Ausloggen" + ` (${userData.data.username})`;
+            } catch (error) {
+                console.log("Fehler beim Laden des Usernames: ", error);
                 return 0;
             }
         });
