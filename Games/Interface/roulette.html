@@ -106,20 +106,18 @@
     </div>
     <!-- Script für Dropdown -->
     <script>
-
-
         window.addEventListener('DOMContentLoaded', async () => {
             const username = localStorage.getItem('token');
             const token = username;
             try {
-                const userData = await axios.get('http://localhost:5105/api/user/getData', {
+                const userData = await axios.get('http://localhost:5105/api/user/getUsername', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                document.querySelector("#credits").innerHTML = userData.data.credits;;
+                document.querySelector("#user-menu-item-2").innerHTML = "Ausloggen" + ` (${userData.data.username})`;
             } catch (error) {
-                console.log("Fehler beim Laden des Bankwerts: ", error);
+                console.log("Fehler beim Laden des Usernames: ", error);
                 return 0;
             }
         });

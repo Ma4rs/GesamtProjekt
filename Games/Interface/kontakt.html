@@ -82,28 +82,28 @@
 
                 <!-- Kontaktformular -->
                 <div class="text-base-200 m-8">
-                    <form class="space-y-6 max-w-xl">
+                    <form class="space-y-6 max-w-xl" id="frmMail">
                         <div>
                             <label class="block text-lg mb-1">Name:</label>
-                            <input type="text" placeholder="Ihr Name"
+                            <input id="name" name="name" type="text" placeholder="Ihr Name"
                                 class="input input-bordered w-full bg-base-100 text-black" required>
                         </div>
 
                         <div>
                             <label class="block text-lg mb-1">E-Mail:</label>
-                            <input type="email" placeholder="Ihre E-Mail"
+                            <input id="email" name="email" type="email" placeholder="Ihre E-Mail"
                                 class="input input-bordered w-full bg-base-100 text-black" required>
                         </div>
 
                         <div>
                             <label class="block text-lg mb-1">Nachricht:</label>
-                            <textarea placeholder="Ihre Nachricht"
+                            <textarea id="text" name="text" placeholder="Ihre Nachricht"
                                 class="textarea textarea-bordered w-full h-40 bg-base-100 text-black"
                                 required></textarea>
                         </div>
 
                         <div>
-                            <button type="submit" class="btn btn-primary">Absenden</button>
+                            <button type="submit" id="mailSenden" class="btn btn-primary">Absenden</button>
                         </div>
                     </form>
                 </div>
@@ -126,12 +126,28 @@
             const username = localStorage.getItem('token');
             const token = username;
             try {
+                const userData = await axios.get('http://localhost:5105/api/user/getUsername', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                document.querySelector("#user-menu-item-2").innerHTML = "Ausloggen" + ` (${userData.data.username})`;
+            } catch (error) {
+                console.log("Fehler beim Laden des Usernames: ", error);
+                return 0;
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const username = localStorage.getItem('token');
+            const token = username;
+            try {
                 const userData = await axios.get('http://localhost:5105/api/user/getData', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                document.querySelector("#credits").innerHTML = userData.data.credits.toLocaleString('de-DE');;
+                document.querySelector("#credits").innerHTML = userData.data.credits.toLocaleString('de-DE') + " ₵";
             } catch (error) {
                 console.log("Fehler beim Laden des Bankwerts: ", error);
                 return 0;
@@ -153,6 +169,7 @@
                 }
             });
         });
+
     </script>
 </body>
 

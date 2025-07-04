@@ -84,8 +84,9 @@
                             <img src="/Picture/Credits/small.jpg" alt="Roulette" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
-                            <h2 class="card-title">100 Credits<div style="font-size: small;">1,99€</div>
-                            </h2>
+                            <h2 class="card-title">100 Credits</h2>
+                            <div style="font-size: small;">1,99€</div>
+
                             <p>Ein Einsatz zum Warmwerden – ready für die erste Runde?</p>
                             <div class="card-actions">
                                 <div id="paypal-button-100">
@@ -100,8 +101,9 @@
                             <img src="/Picture/Credits/medium.jpg" alt="Blackjack" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
-                            <h2 class="card-title">500 Credits<div style="font-size: small;">8,99€</div>
-                            </h2>
+                            <h2 class="card-title">500 Credits</h2>
+                            <div style="font-size: small;">8,99€</div>
+
                             <p>Solider Stack – ideal für längere Abende am Tisch</p>
                             <div class="card-actions">
                                 <div id="paypal-button-500">
@@ -116,8 +118,9 @@
                             <img src="/Picture/Credits/medium-large.jpg" alt="Blackjack" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
-                            <h2 class="card-title">750 Credits<div style="font-size: small;">12,99€</div>
-                            </h2>
+                            <h2 class="card-title">750 Credits</h2>
+                            <div style="font-size: small;">12,99€</div>
+
                             <p>Du spielst mit Stil – mehr Chips, mehr Chancen</p>
                             <div class="card-actions">
                                 <div id="paypal-button-750">
@@ -132,8 +135,8 @@
                             <img src="/Picture/Credits/barrel.jpg" alt="Chicken Cross" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
-                            <h2 class="card-title">1.000 Credits<div style="font-size: small;">16,99€</div>
-                            </h2>
+                            <h2 class="card-title">1.000 Credits</h2>
+                            <div style="font-size: small;">16,99€</div>
                             <p>Highroller-Feeling – steig ein ins große Spiel</p>
                             <div class="card-actions">
                                 <div id="paypal-button-1000">
@@ -148,8 +151,9 @@
                             <img src="/Picture/Credits/treasureChest.jpg" alt="Blackjack" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
-                            <h2 class="card-title">2.500 Credits<div style="font-size: small;">39,99€</div>
-                            </h2>
+                            <h2 class="card-title">2.500 Credits</h2>
+                            <div style="font-size: small;">39,99€</div>
+
                             <p>Das Spielfeld gehört dir – mach den großen Wurf</p>
                             <div class="card-actions">
                                 <div id="paypal-button-2500">
@@ -164,8 +168,9 @@
                             <img src="/Picture/Credits/Table.jpg" alt="Blackjack" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
-                            <h2 class="card-title">5.000 Credits<div style="font-size: small;">69,99€</div>
-                            </h2>
+                            <h2 class="card-title">5.000 Credits</h2>
+                            <div style="font-size: small;">69,99€</div>
+
                             <p>VIP-Lounge geöffnet – zeig, was du drauf hast</p>
                             <div class="card-actions">
                                 <div id="paypal-button-5000">
@@ -180,8 +185,8 @@
                             <img src="/Picture/Credits/Haufen.jpg" alt="Blackjack" class="rounded-xl" />
                         </figure>
                         <div class="card-body items-center text-center">
-                            <h2 class="card-title">10.000 Credits<div style="font-size: small;">90,99€</div>
-                            </h2>
+                            <h2 class="card-title">10.000 Credits</h2>
+                            <div style="font-size: small;">90,99€</div>
                             <p>All-In-Mode aktiviert – nur für wahre Gambler</p>
                             <div class="card-actions">
                                 <div id="paypal-button-10000">
@@ -203,12 +208,28 @@
             const username = localStorage.getItem('token');
             const token = username;
             try {
+                const userData = await axios.get('http://localhost:5105/api/user/getUsername', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                document.querySelector("#user-menu-item-2").innerHTML = "Ausloggen" + ` (${userData.data.username})`;
+            } catch (error) {
+                console.log("Fehler beim Laden des Usernames: ", error);
+                return 0;
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const username = localStorage.getItem('token');
+            const token = username;
+            try {
                 const userData = await axios.get('http://localhost:5105/api/user/getData', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                document.querySelector("#credits").innerHTML = userData.data.credits.toLocaleString('de-DE');;
+                document.querySelector("#credits").innerHTML = userData.data.credits.toLocaleString('de-DE') + " ₵";
             } catch (error) {
                 console.log("Fehler beim Laden des Bankwerts: ", error);
                 return 0;
