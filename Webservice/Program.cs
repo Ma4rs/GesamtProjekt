@@ -11,12 +11,12 @@ var jwtConfig = builder.Configuration.GetSection("Jwt");
 // ➕ CORS-Regel für dein Frontend
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost",
+    options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.WithOrigins("http://127.0.0.1:5500") // deine Frontend-URL
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            policy.AllowAnyOrigin()  // deine Frontend-URL
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
         });
 });
 
@@ -82,7 +82,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // ⚙️ HTTP-Pipeline konfigurieren
-app.UseCors("AllowLocalhost"); // CORS vor Auth
+app.UseCors("AllowAll"); // CORS vor Auth
 
 app.UseAuthentication(); // 🔐 Muss vor Authorization
 app.UseAuthorization();
