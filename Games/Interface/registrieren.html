@@ -79,7 +79,7 @@
       const email = document.getElementById('email').value;
 
       try {
-        const response = await fetch('http://localhost:5105/api/user/registerUser', {
+        const response = await fetch(`http://${window.location.hostname}:5105/api/user/registerUser`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

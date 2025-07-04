@@ -14,7 +14,7 @@ const multipliers = [0, 1.0, 1.2, 1.5, 1.8, 2.2, 2.5];
 async function fetchBankValue() {
     const token = localStorage.getItem("token");
     try {
-        const response = await axios.get('http://localhost:5105/api/user/getData', {
+        const response = await axios.get(`http://${window.location.hostname}:5105/api/user/getData`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         balance = Number(response.data.credits);
@@ -29,7 +29,7 @@ async function fetchBankValue() {
 async function updateCredits(amount) {
     const token = localStorage.getItem("token");
     try {
-        const response = await axios.post('http://localhost:5105/api/user/updateCredits', {
+        const response = await axios.post(`http://${window.location.hostname}:5105/api/user/updateCredits`, {
             creditsToAdd: amount
         }, {
             headers: { Authorization: `Bearer ${token}` }

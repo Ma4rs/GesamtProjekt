@@ -130,7 +130,7 @@
             const username = localStorage.getItem('token');
             const token = username;
             try {
-                const userData = await axios.get('http://localhost:5105/api/user/getUsername', {
+                const userData = await axios.get(`http://${window.location.hostname}:5105/api/user/getUsername`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -146,7 +146,7 @@
             const username = localStorage.getItem('token');
             const token = username;
             try {
-                const userData = await axios.get('http://localhost:5105/api/user/getData', {
+                const userData = await axios.get(`http://${window.location.hostname}:5105/api/user/getData`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

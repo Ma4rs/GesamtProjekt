@@ -50,7 +50,7 @@
 
     // alert("test")
     // alert(localStorage.getItem('credits'))
-    const ws = axios.create({ baseURL: "http://localhost:5105" });
+    const ws = axios.create({ baseURL: `http://${window.location.hostname}:5105` });
     const credits = parseInt(localStorage.getItem('credits'));
     localStorage.removeItem('credits')
 

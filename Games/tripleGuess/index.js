@@ -27,7 +27,7 @@ async function fetchBankValue() {
   try {
     // const token = await getToken();
     // const token = localStorage.getItem("token");
-    const res = await axios.get('http://localhost:5105/api/user/getData', {
+    const res = await axios.get(`http://${window.location.hostname}:5105/api/user/getData`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return Number(res.data.credits);
@@ -42,7 +42,7 @@ async function updateBankValue(sum) {
     // const token = await getToken();
     // const token = localStorage.getItem("token");
     const body = { creditsToAdd: sum };
-    await axios.post("http://localhost:5105/api/user/updateCredits", body, {
+    await axios.post(`http://${window.location.hostname}:5105/api/user/updateCredits`, body, {
       headers: { Authorization: `Bearer ${token}` }
     });
   } catch (e) {
@@ -54,7 +54,7 @@ async function getBet() {
   try {
     // const token = await getToken();
     // const token = localStorage.getItem("token");
-    const response = await fetch('http://localhost:5105/api/tripleguess/getBet', {
+    const response = await fetch(`http://${window.location.hostname}:5105/api/tripleguess/getBet`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -74,7 +74,7 @@ async function setBet(betAmount) {
   try {
     // const token = await getToken();
     // const token = localStorage.getItem("token");
-    const response = await fetch('http://localhost:5105/api/tripleguess/setBet', {
+    const response = await fetch(`http://${window.location.hostname}:5105/api/tripleguess/setBet`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ async function setBet(betAmount) {
 
 async function getCard() {
   try {
-    const res = await axios.get("http://localhost:5105/api/tripleguess/newCard");
+    const res = await axios.get(`http://${window.location.hostname}:5105/api/tripleguess/newCard`);
     return res.data;
   } catch (e) {
     showError("Fehler beim Laden der Karte.");
@@ -300,7 +300,7 @@ class TripleGuessGame {
   }
 
   async endGame(won) {
-    await axios.get("http://127.0.0.1:5105/api/tripleguess/GameOver");
+    await axios.get(`http://${window.location.hostname}:5105/api/tripleguess/GameOver`);
     this.gameActive = false;
     let einsatz = Number(document.querySelector("#betSpan").textContent) || 0;
     if (won) {

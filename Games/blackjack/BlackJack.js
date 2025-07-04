@@ -31,7 +31,7 @@ btnStand.disabled = true;
 
 
 async function fetchStartCards() {
-    const res = await fetch("http://localhost:5105/api/blackjack/startCard", {
+    const res = await fetch(`http://${window.location.hostname}:5105/api/blackjack/startCard`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${player}`
@@ -41,7 +41,7 @@ async function fetchStartCards() {
 }
 
 async function fetchDealCard() {
-    const res = await fetch("http://localhost:5105/api/blackjack/dealCard", {
+    const res = await fetch(`http://${window.location.hostname}:5105/api/blackjack/dealCard`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${player}`
@@ -51,7 +51,7 @@ async function fetchDealCard() {
 }
 
 async function resetBackendDeck() {
-    await fetch("http://localhost:5105/api/blackjack/GameOver", {
+    await fetch(`http://${window.location.hostname}:5105/api/blackjack/GameOver`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${player}`
@@ -61,7 +61,7 @@ async function resetBackendDeck() {
 
 async function getCredits() {
     try {
-        const response = await fetch("http://localhost:5105/api/user/getData", {
+        const response = await fetch(`http://${window.location.hostname}:5105/api/user/getData`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${player}`
@@ -78,7 +78,7 @@ async function getCredits() {
 
 async function updateCredits(amount) {
     try {
-        await fetch("http://localhost:5105/api/user/updateCredits", {
+        await fetch(`http://${window.location.hostname}:5105/api/user/updateCredits`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

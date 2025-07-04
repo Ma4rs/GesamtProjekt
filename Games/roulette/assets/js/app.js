@@ -14,7 +14,7 @@ let token = localStorage.getItem("token");
 async function fetchBankValue() {
 	try {
 		// if (!token) await authorize();
-		const userData = await axios.get('http://localhost:5105/api/user/getData', {
+		const userData = await axios.get(`http://${window.location.hostname}:5105/api/user/getData`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -33,7 +33,7 @@ async function safeBankvalue(gameResultsum) {
 			"creditsToAdd": gameResultsum
 		};
 		console.log("Es werden " + gameResultsum + " Credits hinzugefügt")
-		const response = await axios.post("http://127.0.0.1:5105/api/user/updateCredits", body, {
+		const response = await axios.post(`http://${window.location.hostname}:5105/api/user/updateCredits`, body, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -51,7 +51,7 @@ async function safeBankvalue(gameResultsum) {
 
 async function GetSpin() {
 	try {
-		const response = await axios.get("http://localhost:5105/api/roulette/spin");
+		const response = await axios.get(`http://${window.location.hostname}:5105/api/roulette/spin`);
 		return Number(response.data);
 	} catch (error) {
 		console.log("Fehler beim Laden des Spins: ", error);
