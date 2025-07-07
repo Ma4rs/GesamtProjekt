@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
   <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <title>Anmelden EDV-Casino</title>
 </head>
 
@@ -34,7 +35,8 @@
               <label for="password" class="block text-sm/6 font-medium text-yellow-400">Passwort</label>
               <div class="text-sm">
                 <a href="#" onclick="openModal()"
-                  class="font-semibold text-yellow-600 hover:text-yellow-300 hover:animate-pulse">Passwort vergessen?</a>
+                  class="font-semibold text-yellow-600 hover:text-yellow-300 hover:animate-pulse">Passwort
+                  vergessen?</a>
               </div>
             </div>
             <div class="mt-2">
@@ -55,8 +57,7 @@
   </div>
 
   <!-- Modal: Passwort vergessen -->
-  <div id="forgotPasswordModal"
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+  <div id="forgotPasswordModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
     <div class="bg-red-900 rounded-lg shadow-lg p-6 w-full max-w-sm mx-auto">
       <h2 class="text-lg font-semibold text-white mb-4">Passwort zurücksetzen</h2>
       <label for="resetEmail" class="block text-sm font-medium text-white mb-1">Email-Adresse</label>
@@ -108,8 +109,16 @@
       document.getElementById('forgotPasswordModal').classList.add('hidden');
     }
 
+    emailjs.init("Yu6gs3PxXVe8LU0BE"); // z.B. WFGX9... aus deinem 
+
     async function sendResetEmail() {
-      const email = document.getElementById('resetEmail').value;
+
+      const email = document.getElementById('resetEmail').value.trim();
+      if (!email || !email.includes('@')) {
+        alert("Bitte eine gültige E-Mail-Adresse eingeben.");
+        return;
+      }
+
 
       try {
         const response = await fetch(`http://${window.location.hostname}:5105/api/user/forgotPassword`, {
@@ -121,13 +130,23 @@
         });
 
         if (response.ok) {
-          alert('E-Mail zum Zurücksetzen des Passworts wurde gesendet.');
+          const data = await response.json(); // enthält newPassword und email
+
+          // EmailJS versenden
+          await emailjs.send("service_7l6erbj", "template_3ggfn3d", {
+            user_email: data.email,
+            new_password: data.newPassword
+          });
+
+          alert('Neues Passwort wurde an deine E-Mail-Adresse gesendet.');
           closeModal();
           window.location.href = 'anmelden.html';
+
         } else {
           const err = await response.text();
-          alert('Fehler beim Senden: ' + err);
+          alert('Fehler beim Zurücksetzen: ' + err);
         }
+
       } catch (error) {
         alert('Verbindungsfehler: ' + error.message);
       }

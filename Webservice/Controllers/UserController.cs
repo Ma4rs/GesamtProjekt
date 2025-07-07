@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace C__Backend.Controllers
 {
@@ -62,7 +63,7 @@ namespace C__Backend.Controllers
 
                 if (user == null)
                 {
-                    return NotFound(new { message = "User nicht gefunden. "});
+                    return NotFound(new { message = "User nicht gefunden. " });
                 }
 
                 return Ok(new
@@ -180,7 +181,7 @@ namespace C__Backend.Controllers
         // }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginAnfrage request)
         {
             // using var context = new OnlineCasinoContext();
 
@@ -278,6 +279,43 @@ namespace C__Backend.Controllers
 
                 return Ok(new { message = "Passwort erfolgreich geändert." });
             }
+        }
+
+        private string GenerateRandomPassword(int length)
+        {
+            const string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*";
+            var random = new Random();
+            return new string(Enumerable.Repeat(validChars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+
+        [HttpPost("forgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            using var context = new OnlineCasinoContext();
+
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            if (user == null)
+            {
+                return NotFound(new { message = "Benutzer mit dieser E-Mail wurde nicht gefunden." });
+            }
+
+            // Neues Passwort generieren
+            var newPassword = GenerateRandomPassword(10); // 10 Zeichen
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            // Passwort speichern
+            user.PasswordHash = hashedPassword;
+            await context.SaveChangesAsync();
+
+            // Gebe neues Passwort ans Frontend zurück (für EmailJS)
+            return Ok(new
+            {
+                message = "Ein neues Passwort wurde generiert.",
+                email = request.Email,
+                newPassword = newPassword
+            });
         }
     }
 }
