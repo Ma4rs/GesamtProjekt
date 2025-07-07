@@ -78,26 +78,27 @@
                 <!-- Titel -->
                 <div class="text-7xl text-base-200 p-5">
                     Kontakt
+                    <hr>
                 </div>
 
                 <!-- Kontaktformular -->
                 <div class="text-base-200 m-8">
-                    <form class="space-y-6 max-w-xl" id="frmMail">
+                    <form class="space-y-6 max-w-xl" id="frmMail" onsubmit="sendMail(event)">
                         <div>
                             <label class="block text-lg mb-1">Name:</label>
-                            <input id="name" name="name" type="text" placeholder="Ihr Name"
+                            <input id="name" name="from_name" type="text" placeholder="Ihr Name"
                                 class="input input-bordered w-full bg-base-100 text-black" required>
                         </div>
 
                         <div>
                             <label class="block text-lg mb-1">E-Mail:</label>
-                            <input id="email" name="email" type="email" placeholder="Ihre E-Mail"
+                            <input id="email" name="from_email" type="email" placeholder="Ihre E-Mail"
                                 class="input input-bordered w-full bg-base-100 text-black" required>
                         </div>
 
                         <div>
                             <label class="block text-lg mb-1">Nachricht:</label>
-                            <textarea id="text" name="text" placeholder="Ihre Nachricht"
+                            <textarea id="text" name="message" placeholder="Ihre Nachricht"
                                 class="textarea textarea-bordered w-full h-40 bg-base-100 text-black"
                                 required></textarea>
                         </div>
@@ -121,6 +122,8 @@
         </div>
     </div>
     <!-- Script für Dropdown -->
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         window.addEventListener('DOMContentLoaded', async () => {
             const username = localStorage.getItem('token');
@@ -169,6 +172,36 @@
                 }
             });
         });
+
+
+        emailjs.init("Yu6gs3PxXVe8LU0BE");
+        function sendMail(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById("mailSenden");
+            btn.disabled = true;
+            btn.innerText = "Senden...";
+
+            emailjs.sendForm("service_7l6erbj", "template_u8vksu2", "#frmMail")
+                .then(() => {
+                    Swal.fire({
+                        title: 'Erfolgreich',
+                        text: 'Nachricht wurde erfolgreich gesendet.',
+                        icon: 'success',
+                        confirmButtonText: 'Okay'
+                    }); 
+                    document.getElementById("frmMail").reset();
+                })
+                .catch((error) => {
+                    alert("Fehler beim Senden: " + JSON.stringify(error));
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerText = "Absenden";
+                });
+        }
+
+
 
     </script>
 </body>
