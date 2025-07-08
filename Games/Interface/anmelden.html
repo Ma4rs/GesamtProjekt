@@ -109,48 +109,48 @@
       document.getElementById('forgotPasswordModal').classList.add('hidden');
     }
 
-    emailjs.init("Yu6gs3PxXVe8LU0BE"); // z.B. WFGX9... aus deinem 
+    emailjs.init("Yu6gs3PxXVe8LU0BE"); // Public Key
 
-    async function sendResetEmail() {
+async function sendResetEmail() {
+  const email = document.getElementById('resetEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    alert("Bitte eine gültige E-Mail-Adresse eingeben.");
+    return;
+  }
 
-      const email = document.getElementById('resetEmail').value.trim();
-      if (!email || !email.includes('@')) {
-        alert("Bitte eine gültige E-Mail-Adresse eingeben.");
-        return;
-      }
+  try {
+    const response = await fetch(`http://${window.location.hostname}:5105/api/user/forgotPassword`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
 
-
-      try {
-        const response = await fetch(`http://${window.location.hostname}:5105/api/user/forgotPassword`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
-        });
-
-        if (response.ok) {
-          const data = await response.json(); // enthält newPassword und email
-
-          // EmailJS versenden
-          await emailjs.send("service_7l6erbj", "template_3ggfn3d", {
-            user_email: data.email,
-            new_password: data.newPassword
-          });
-
-          alert('Neues Passwort wurde an deine E-Mail-Adresse gesendet.');
-          closeModal();
-          window.location.href = 'anmelden.html';
-
-        } else {
-          const err = await response.text();
-          alert('Fehler beim Zurücksetzen: ' + err);
-        }
-
-      } catch (error) {
-        alert('Verbindungsfehler: ' + error.message);
-      }
+    if (!response.ok) {
+      const err = await response.text();
+      alert('Fehler beim Zurücksetzen: ' + err);
+      return;
     }
+
+    const data = await response.json(); // { email, newPassword }
+
+    // Email versenden über EmailJS
+    const result = await emailjs.send("service_7l6erbj", "template_3ggfn3d", {
+      user_email: data.data.email,
+      new_password: data.newPassword
+    });
+
+    if (result.status === 200) {
+      alert('Neues Passwort wurde per E-Mail gesendet.');
+      closeModal();
+      window.location.href = 'anmelden.html';
+    } else {
+      alert('Fehler beim E-Mail-Versand.');
+    }
+
+  } catch (error) {
+    alert('Verbindungsfehler: ' + error.message);
+  }
+}
   </script>
 </body>
 

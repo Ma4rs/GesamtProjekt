@@ -291,7 +291,7 @@ namespace C__Backend.Controllers
 
 
         [HttpPost("forgotPassword")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordAnfrage request)
         {
             using var context = new OnlineCasinoContext();
 
@@ -310,12 +310,15 @@ namespace C__Backend.Controllers
             await context.SaveChangesAsync();
 
             // Gebe neues Passwort ans Frontend zurück (für EmailJS)
-            return Ok(new
-            {
-                message = "Ein neues Passwort wurde generiert.",
-                email = request.Email,
-                newPassword = newPassword
-            });
+            // return Ok(new
+            // {
+            //     message = "Ein neues Passwort wurde generiert.",
+            //     email = request.Email,
+            //     newPassword = newPassword
+            // });
+
+            return Ok(new { message = "Ein neues Passwort wurde generiert.", request.Email, newPassword });
+
         }
     }
 }
