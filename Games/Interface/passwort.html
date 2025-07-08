@@ -61,6 +61,7 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         async function checkPasswordAndRedirect() {
             const oldPw = document.getElementById('oldPassword');
@@ -90,7 +91,17 @@
                     });
 
                     if (response.ok) {
-                        window.location.href = "index.html";
+                        Swal.fire({
+                            title: 'Erfolgreich',
+                            text: 'Passwort wurde erfolgreich geändert.',
+                            icon: 'success',
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                closeModal();
+                                window.location.href = 'anmelden.html';
+                            }
+                        });
                     } else {
                         oldPw.style.borderColor = "red";
                         newPw.style.borderColor = "red";
