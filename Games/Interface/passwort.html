@@ -97,17 +97,16 @@
                             icon: 'success',
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.isConfirmed) {
-                                closeModal();
-                                window.location.href = 'anmelden.html';
+                            if (result.isConfirmed) {                                
+                                window.location.href = 'index.html';
                             }
                         });
                     } else {
                         oldPw.style.borderColor = "red";
                         newPw.style.borderColor = "red";
                         confirmPw.style.borderColor = "red";
-                        const data = await response.json();
-                        errorMsg.textContent = data.message || "Passwort stimmt nicht";
+                        const data = await response.json();                        
+                        errorMsg.textContent = "Die Passwörter stimmen nicht überein oder das alte Passwort ist falsch";
                         errorMsg.style.display = "block";
                     }
                 } catch (err) {
