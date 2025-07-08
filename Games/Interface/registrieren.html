@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
 
-<head>    
-    <meta charset="UTF-8">
+<head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css">
   <link rel="stylesheet" href="/node_modules/daisyui/themes.css">
@@ -88,8 +88,17 @@
         });
 
         if (response.ok) {
-          alert('Registrierung erfolgreich!');
-          window.location.href = 'anmelden.html';
+          Swal.fire({
+            title: 'Erfolgreich',
+            text: 'Email wurde erfolgreich gesendet.',
+            icon: 'success',
+            confirmButtonText: 'Okay'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              closeModal();
+              window.location.href = 'anmelden.html';
+            }
+          });
         } else {
           const errorText = await response.text();
           alert('Fehler bei der Registrierung: ' + errorText);
