@@ -59,7 +59,7 @@ namespace C__Backend.Controllers
 
             using (var context = new OnlineCasinoContext())
             {
-                var user = context.Users.FirstOrDefault(t => t.Username == username);
+                var user =  context.Users.FirstOrDefault(t => t.Username == username);
 
                 if (user == null)
                 {
