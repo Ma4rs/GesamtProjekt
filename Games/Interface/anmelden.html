@@ -7,8 +7,13 @@
   <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
   <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
   <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <title>Anmelden EDV-Casino</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script>
+    (function () {
+      emailjs.init("Yu6gs3PxXVe8LU0BE");
+    })();
+  </script>
 </head>
 
 <body>
@@ -70,7 +75,7 @@
       </div>
     </div>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     async function handleLogin(event) {
       event.preventDefault();
@@ -109,48 +114,60 @@
       document.getElementById('forgotPasswordModal').classList.add('hidden');
     }
 
-    emailjs.init("Yu6gs3PxXVe8LU0BE"); // Public Key
+    async function sendResetEmail() {
+      const email = document.getElementById('resetEmail').value.trim();
+      if (!email || !email.includes('@')) {
+        alert("Bitte eine gültige E-Mail-Adresse eingeben.");
+        return;
+      }
 
-async function sendResetEmail() {
-  const email = document.getElementById('resetEmail').value.trim();
-  if (!email || !email.includes('@')) {
-    alert("Bitte eine gültige E-Mail-Adresse eingeben.");
-    return;
-  }
+      try {
+        const response = await fetch(`http://${window.location.hostname}:5105/api/user/forgotPassword`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
 
-  try {
-    const response = await fetch(`http://${window.location.hostname}:5105/api/user/forgotPassword`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
+        if (!response.ok) {
+          const err = await response.text();
+          alert('Fehler beim Zurücksetzen: ' + err);
+          return;
+        }
 
-    if (!response.ok) {
-      const err = await response.text();
-      alert('Fehler beim Zurücksetzen: ' + err);
-      return;
+        const data = await response.json(); // { email, newPassword, message }
+
+        // EmailJS send, mit Fehler-Logging
+        try {
+          const result = await emailjs.send("service_7l6erbj", "template_3ggfn3d", {
+            user_email: data.email,
+            new_password: data.newPassword
+          });
+
+          if (result.status === 200) {
+            Swal.fire({
+              title: 'Erfolgreich',
+              text: 'Email wurde erfolgreich gesendet.',
+              icon: 'success',
+              confirmButtonText: 'Okay'
+            }).then((result) =>{
+              if (result.isConfirmed) {
+                closeModal();
+                window.location.href = 'anmelden.html';
+              }
+            });
+          } else {
+            alert('Fehler beim E-Mail-Versand.');
+          }
+        } catch (emailError) {
+          console.error("EmailJS send Error:", emailError);
+          alert('Fehler beim E-Mail-Versand: ' + (emailError.text || emailError.message || emailError));
+        }
+
+      } catch (error) {
+        alert('Verbindungsfehler: ' + (error?.message || JSON.stringify(error) || 'Unbekannter Fehler'));
+      }
     }
 
-    const data = await response.json(); // { email, newPassword }
-
-    // Email versenden über EmailJS
-    const result = await emailjs.send("service_7l6erbj", "template_3ggfn3d", {
-      user_email: data.data.email,
-      new_password: data.newPassword
-    });
-
-    if (result.status === 200) {
-      alert('Neues Passwort wurde per E-Mail gesendet.');
-      closeModal();
-      window.location.href = 'anmelden.html';
-    } else {
-      alert('Fehler beim E-Mail-Versand.');
-    }
-
-  } catch (error) {
-    alert('Verbindungsfehler: ' + error.message);
-  }
-}
   </script>
 </body>
 
