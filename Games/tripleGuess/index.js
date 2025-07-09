@@ -1,25 +1,3 @@
-// tripleGuess.js
-// Neu strukturiert für Übersichtlichkeit, Wiederverwendbarkeit und Fehlerrobustheit
-
-// === Hilfsfunktionen für Token und API ===
-
-// async function authorize() {
-//   const body = {
-//     email: "string", // TODO: Echte Werte verwenden!
-//     password: "string"
-//   };
-//   const response = await axios.post("http://localhost:5105/api/user/login", body);
-//   localStorage.setItem("token", response.data.token);
-//   return response.data.token;
-// }
-
-// async function getToken() {
-//   let token = localStorage.getItem("token");
-//   // if (!token) {
-//   //   token = await authorize();
-//   // }
-//   return token;
-// }
 document.querySelector("#betSpan").innerHTML = "0";
 const token = localStorage.getItem("token");
 
@@ -80,7 +58,7 @@ async function setBet(betAmount) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ betAmount })
+      body: JSON.stringify({ betAmount }) // Wandelt das betAmount-Objekt in einen JSON-String um, damit es im Request-Body gesendet werden kann
     });
     if (!response.ok) throw new Error();
   } catch (e) {
@@ -104,6 +82,7 @@ function showError(msg) {
   alert(msg);
 }
 
+// Aktualisiert die Anzeige der Werte auf der Benutzeroberfläche
 function updateBankAndBet(bank, bet) {
   const bankSpan = document.querySelector("#bankSpan");
   const betSpan = document.querySelector("#betSpan");
@@ -111,6 +90,7 @@ function updateBankAndBet(bank, bet) {
   if (betSpan) betSpan.textContent = bet;
 }
 
+// Setzt die Kartenbilder zurück auf die Rückseite.
 function clearCardImages() {
   for (let i = 1; i <= 3; i++) {
     const card = document.querySelector(`#card${i}`);
@@ -118,6 +98,7 @@ function clearCardImages() {
   }
 }
 
+// Setzt die Textwerte der Auswahlfelder auf die Standardfarben zurück.
 function resetChoices() {
   const ausw1 = document.querySelector("#auswahl1");
   const ausw2 = document.querySelector("#auswahl2");
@@ -125,49 +106,53 @@ function resetChoices() {
   if (ausw2) ausw2.textContent = "Black";
 }
 
+// Entfernt die Markierung ("active") von allen Chip-Buttons.
 function resetChipSelection() {
   document.querySelectorAll(".chip-btn.active").forEach(btn => btn.classList.remove("active"));
 }
 
 function showNotification(msg, btnTxt, redirectUrl) {
-  let oldContainer = document.getElementById('container');
-  if (oldContainer) oldContainer.remove();
+  let oldContainer = document.getElementById('container'); // Sucht
+  if (oldContainer) oldContainer.remove();  // Entfernt das gefundene "container"-Element, falls es existiert
 
-  let notification = document.createElement('div');
-  notification.setAttribute('id', 'notification');
-  let nSpan = document.createElement('span');
-  nSpan.setAttribute('class', 'nSpan');
-  nSpan.innerText = msg;
-  notification.append(nSpan);
+  let notification = document.createElement('div'); // Erstellt neues div-Element
+  notification.setAttribute('id', 'notification'); // gibt ID "notification"
+  let nSpan = document.createElement('span'); // Erstellt neues span-Element
+  nSpan.setAttribute('class', 'nSpan'); // gibt class nSpan 
+  nSpan.innerText = msg;  // Inhalt setzen
+  notification.append(nSpan); // Fügt das span zur Benachrichtigung hinzu
 
   let nBtn = document.createElement('div');
   nBtn.setAttribute('class', 'nBtn');
-  nBtn.innerText = btnTxt;
+  nBtn.innerText = btnTxt; // button Text zugewiesen
+  // Definiert, was beim Klicken auf den Button passiert:
+  // -> Bei einem Verweis auf die credits Seite wird das Top-Level-Fenster aufgerufen -> sonst wäre es in der Fläche vom Spiel offen
   nBtn.onclick = function () {
     if (redirectUrl == "../Interface/credits.html") {
       window.top.location.href = redirectUrl;
     }
     window.location.href = redirectUrl;
   };
-  let container = document.createElement('div');
-  container.setAttribute('id', 'container');
-  document.body.append(container);
-  notification.append(nBtn);
-  container.prepend(notification);
+  let container = document.createElement('div'); // Erstellt neues div-Element
+  container.setAttribute('id', 'container'); // Gibt dem Container die ID "container"
+  document.body.append(container); // Fügt den Container dem Dokumenten-Body hinzu
+  notification.append(nBtn); // Fügt den Button zur Benachrichtigung hinzu
+  container.prepend(notification); // Fügt die Benachrichtigung als erstes Kind in den Container ein
 }
 
 // === Hauptlogik ===
 
 class TripleGuessGame {
   constructor() {
-    this.cardCount = 0;
-    this.cardValue1 = 0;
-    this.cardValue2 = 0;
-    this.redSuits = ["hearts", "diamonds"];
-    this.selectedChip = null;
-    this.gameActive = true;
+    this.cardCount = 0; // Anzahl gezogener Karten
+    this.cardValue1 = 0; // Wert der ersten gezogenen Karte -> Higher/Lower Vergleich
+    this.cardValue2 = 0; // Wert der zweiten gezogenen Karte -> Inside/Outside Vergleich
+    this.redSuits = ["hearts", "diamonds"]; // Rote Kartenfarben -> Für Red/Black Vergleich
+    this.selectedChip = null; // aktuell ausgewählter Chip
+    this.gameActive = true; // Status, ob das Spiel läuft
   }
 
+  // Initialisiert das Spiel
   async init() {
     await this.refreshUI();
 
@@ -191,6 +176,7 @@ class TripleGuessGame {
     }
   }
 
+  // Setzt das UI und interne Variablen auf den Anfangszustand zurück
   async refreshUI() {
     const bankValue = await fetchBankValue();
     await setBet(0);
@@ -205,12 +191,14 @@ class TripleGuessGame {
     this.gameActive = true;
   }
 
+  // Markiert den ausgewählten Chip
   selectChip(chip) {
     resetChipSelection();
     chip.classList.add("active");
     this.selectedChip = chip;
   }
 
+  // Setzt einen Einsatz und aktualisiert Bank- und Einsatzwerte
   async placeBet() {
     if (!this.gameActive) return;
     const bankSpan = document.querySelector("#bankSpan");
@@ -241,6 +229,7 @@ class TripleGuessGame {
     await setBet(currentBet);
   }
 
+  // Verarbeitet die Spielauswahl (Farbe, höher/niedriger, inside/outside)
   async handleChoice(event) {
     if (!this.gameActive) return;
     if (!event.target.classList.contains("card")) return;
@@ -299,6 +288,7 @@ class TripleGuessGame {
     }
   }
 
+  // Beendet das Spiel, wertet das Ergebnis aus und zeigt das Ergebnis an
   async endGame(won) {
     await axios.get(`http://${window.location.hostname}:5105/api/tripleguess/GameOver`);
     this.gameActive = false;
@@ -321,6 +311,7 @@ class TripleGuessGame {
   }
 }
 
+// Deaktiviert Einsatz-Button und Chips nach Spielstart
 function disableBetAndChips() {
   const betDiv = document.getElementById('bet');
   if (betDiv) {
@@ -332,13 +323,13 @@ function disableBetAndChips() {
   const clearBtn = document.getElementById('clear');
   if (clearBtn) clearBtn.style.display = 'none';
 }
-
+// Setzt das Spiel per Klick auf "clear" zurück
 document.getElementById('clear').onclick = async function () {
   const game = new TripleGuessGame();
   game.init();
 };
-// === Initialisierung ===
 
+// === Initialisierung ===
 window.addEventListener("DOMContentLoaded", () => {
   const game = new TripleGuessGame();
   game.init();
