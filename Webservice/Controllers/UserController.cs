@@ -208,7 +208,7 @@ namespace C__Backend.Controllers
                 }
 
                 // Neues Passwort hashen und speichern
-                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword); 
                 await context.SaveChangesAsync();
 
                 return Ok(new { message = "Passwort erfolgreich geändert." });

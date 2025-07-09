@@ -9,7 +9,7 @@ namespace C__Backend.Controllers
     [Route("api/tripleguess/")]
     public class TripleGuessController : ControllerBase
     {
-        static List<object> cardCache = new List<object>();
+        static List<object> cardCache = new List<object>(); // cache der vor doppelungen schützen soll
 
         private static readonly string[] Suits = { "hearts", "clubs", "spades", "diamonds" };
         private static readonly (string Name, int Value)[] Values = {
@@ -40,7 +40,7 @@ namespace C__Backend.Controllers
             var rnd = new Random();
             string suit = Suits[rnd.Next(Suits.Length)];
             var valueTuple = Values[rnd.Next(Values.Length)];
-            string imageUrl = $"/Picture/Karten/{valueTuple.Name}_of_{suit}.png";
+            string imageUrl = $"/Picture/Karten/{valueTuple.Name}_of_{suit}.png"; //Pfad für Karten generieren
 
             var card = new
             {
@@ -58,7 +58,7 @@ namespace C__Backend.Controllers
         }
 
         [Authorize]
-        [HttpPost("setBet")]
+        [HttpPost("setBet")] // Wette setzten 
         public IActionResult SetBet([FromBody] SetBetRequest request)
         {
             var userId = GetUserId();
@@ -72,7 +72,7 @@ namespace C__Backend.Controllers
         }
 
         [Authorize]
-        [HttpGet("getBet")]
+        [HttpGet("getBet")] // Wette aufrufen 
         public IActionResult GetBet()
         {
             var userId = GetUserId();
@@ -85,7 +85,7 @@ namespace C__Backend.Controllers
             return Ok(new { bet = betAmount });
         }
 
-        [HttpGet("GameOver")]
+        [HttpGet("GameOver")] //Card cache leeren
         public IActionResult GameOver()
         {
             cardCache.Clear();
@@ -93,7 +93,7 @@ namespace C__Backend.Controllers
         }
     }
 
-    public class SetBetRequest
+    public class SetBetRequest // klasse für Bet Amount
     {
         public int BetAmount { get; set; }
     }

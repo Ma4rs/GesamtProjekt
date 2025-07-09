@@ -8,17 +8,11 @@ const offers = [
     { id: "paypal-button-10000", credits: 10000, amount: "90.99" }
 ];
 
-// Optional: Username dynamisch holen
-function getUsername() {
-    // Ersetze das mit deinem Nutzer-Login-Mechanismus!
-    return "testuser";
-}
-
 // Erstellt für jedes Angebot den PayPal-Button am passenden Platz
 function renderAllPaypalButtons() {
     offers.forEach(offer => {
         const container = document.getElementById(offer.id);
-        if (container && window.paypal) {
+        if (container && window.paypal) { // hier suchen nach deklickten container
             // Render PayPal-Button in das entsprechende DIV
             window.paypal.Buttons({
                 createOrder: function (data, actions) {
@@ -30,9 +24,7 @@ function renderAllPaypalButtons() {
                 },
                 onApprove: function (data, actions) {
                     return actions.order.capture().then(function (details) {
-                        // Nach erfolgreicher Zahlung: Weiterleiten mit Credits & Username als GET-Parameter
-                        // const username = getUsername();
-                        localStorage.setItem('credits', offer.credits);  
+                        localStorage.setItem('credits', offer.credits);  // speichern für zahlung.html
                         window.location.href = `zahlung.html`;
                     });
                 }

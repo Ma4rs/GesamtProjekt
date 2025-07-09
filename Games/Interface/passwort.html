@@ -68,7 +68,7 @@
             const newPw = document.getElementById('newPassword');
             const confirmPw = document.getElementById('confirmPassword');
             const errorMsg = document.getElementById('errorMessage');
-
+            // alles speichern bzw. auslesen
             if (newPw.value === confirmPw.value && newPw.value.length > 0 && oldPw.value.length > 0) {
                 oldPw.style.borderColor = "";
                 newPw.style.borderColor = "";
@@ -97,7 +97,7 @@
                             icon: 'success',
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.isConfirmed) {                                
+                            if (result.isConfirmed) {
                                 window.location.href = 'index.html';
                             }
                         });
@@ -105,8 +105,10 @@
                         oldPw.style.borderColor = "red";
                         newPw.style.borderColor = "red";
                         confirmPw.style.borderColor = "red";
-                        const data = await response.json();                        
-                        errorMsg.textContent = "Die Passwörter stimmen nicht überein oder das alte Passwort ist falsch";
+                        const data = await response.json();
+                        errorMsg.textContent = "Die Passwörter stimmen nicht überein oder das alte Passwort ist falsch"; 
+                        // nicht sagen was das genau problem ist 
+                        // -> sonst könnte man brute Force machen bis bestätigt wird das man das Passwort geknckt hat
                         errorMsg.style.display = "block";
                     }
                 } catch (err) {

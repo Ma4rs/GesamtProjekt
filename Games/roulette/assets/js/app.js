@@ -317,18 +317,27 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			wl.append(wlttb);
 		}
 
+		// Es werden 11 Linienblöcke erzeugt, jeweils für die vertikalen Splits rechts von Zahlenfeldern (z. B. zwischen 2 & 5, 5 & 8).
 		for (c = 1; c < 12; c++) {
+			// Jeder Block wlrtl steht für eine Spalte mit 3 Splits.
 			let d = c;
 			var wlrtl = document.createElement('div');
 			wlrtl.setAttribute('id', 'wlrtl_' + c);
 			wlrtl.setAttribute('class', 'wlrtl');
+
+			// Jede dieser Spalten bekommt 3 Blöcke – einer für jede Split-Verbindung nach unten.
 			for (i = 1; i < 4; i++) {
 				let j = i;
 				var rtlbb = document.createElement('div');
 				rtlbb.setAttribute('class', 'rtlbb' + i);
+
+				// Hier werden zwei benachbarte Zahlen vertikal errechnet, z. B. (2,5), (5,8), etc.
 				var numA = (3 + (3 * (d - 1))) - (j - 1);
 				var numB = (6 + (3 * (d - 1))) - (j - 1);
 				let num = numA + ', ' + numB;
+
+				// Event - Handler setzen bzw.entfernen Split - Wetten(Quote 17).
+				// Am Ende wird jeder Linienblock dem Hauptfeld hinzugefügt.
 				rtlbb.onclick = function () {
 					setBet(this, num, 'split', 17);
 				};
@@ -341,21 +350,33 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			wl.append(wlrtl);
 		}
 
+		// Es gibt 2 Zeilen von Corner-Bet-Blöcken – oben und unten auf dem Spielbrett.
 		for (c = 1; c < 3; c++) {
 			var wlcb = document.createElement('div');
 			wlcb.setAttribute('id', 'wlcb_' + c);
 			wlcb.setAttribute('class', 'wlcb');
+
+			// In jeder Zeile entstehen 11 Corner-Bet-Blöck
 			for (i = 1; i < 12; i++) {
 				let count = (c == 1) ? i : i + 11;
 				var cbbb = document.createElement('div');
 				cbbb.setAttribute('id', 'cbbb_' + count);
 				cbbb.setAttribute('class', 'cbbb');
+
+				// Startwerte für die Ecken eines 2x2-Quadrats.
 				var numA = '2';
 				var numB = '3';
 				var numC = '5';
 				var numD = '6';
 				let num = (count >= 1 && count < 12) ? (parseInt(numA) + ((count - 1) * 3)) + ', ' + (parseInt(numB) + ((count - 1) * 3)) + ', ' + (parseInt(numC) + ((count - 1) * 3)) + ', ' + (parseInt(numD) + ((count - 1) * 3)) : ((parseInt(numA) - 1) + ((count - 12) * 3)) + ', ' + ((parseInt(numB) - 1) + ((count - 12) * 3)) + ', ' + ((parseInt(numC) - 1) + ((count - 12) * 3)) + ', ' + ((parseInt(numD) - 1) + ((count - 12) * 3));
-				var objType = 'corner_bet';
+				var objType = 'corner_bet'; //Diese Zeile erstellt eine Variable namens objType und weist ihr den Stringwert 'corner_bet' zu.
+				// Zweck im Kontext 
+				// -> Diese Variable wird anschließend verwendet, um bei Funktionsaufrufen wie setBet() oder removeBet() zu definieren
+				//  welcher Typ von Wette platziert oder entfernt werden soll.
+
+
+				// Event-Handler setzen bzw. entfernen Split-Wetten (Quote 17).
+				// Am Ende wird jeder Linienblock dem Hauptfeld hinzugefügt.
 				cbbb.onclick = function () {
 					setBet(this, num, objType, 8);
 				};
@@ -367,14 +388,19 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			}
 			wl.append(wlcb);
 		}
+		// ^Quote ist 8:1, Wetten per Klick, Löschen mit Rechtsklick.
 
+		// Fügt alle Linien (splits, streets, corners usw.) in das große Wettfeld ei
 		bettingBoard.append(wl);
 
+		// Zwei Outside-Wettbereiche am oberen Rand des Boards.
 		let bbtop = document.createElement('div');
 		bbtop.setAttribute('class', 'bbtop');
 		let bbtopBlocks = ['1 to 18', '19 to 36'];
+
+		// Die entsprechenden Zahlenbereiche werden definiert.
 		for (i = 0; i < bbtopBlocks.length; i++) {
-			let f = i;
+			let f = i;	// definiert Block -> wenn 0 ist es der linke Block bei 1 der Rechte
 			var bbtoptwo = document.createElement('div');
 			bbtoptwo.setAttribute('class', 'bbtoptwo');
 			let num = (f == 0) ? '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18' : '19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36';
@@ -564,6 +590,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		container.append(bettingBoard);
 	}
 
+	// leert die Wetten
 	function clearBet() {
 		bet = [];
 		numbersBet = [];
