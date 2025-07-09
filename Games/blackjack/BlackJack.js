@@ -3,6 +3,7 @@ let player = localStorage.getItem("token");
 let playerMoney = 0;
 let betAmount = 0;
 
+// Karten-Array
 let playerHand = [];
 let dealerHand = [];
 
@@ -30,6 +31,7 @@ btnCard.disabled = true;
 btnStand.disabled = true;
 
 
+// Start des Spieles, return ein Array mit den Daten für die Karte
 async function fetchStartCards() {
     const res = await fetch(`http://${window.location.hostname}:5105/api/blackjack/startCard`, {
         method: "GET",
@@ -40,6 +42,7 @@ async function fetchStartCards() {
     return await res.json();
 }
 
+// Neue Karte ziehen
 async function fetchDealCard() {
     const res = await fetch(`http://${window.location.hostname}:5105/api/blackjack/dealCard`, {
         method: "GET",
@@ -50,6 +53,7 @@ async function fetchDealCard() {
     return await res.json();
 }
 
+// Nach Spielschluss sollen die Karten im Backend sowie Frontend entfernt werden
 async function resetBackendDeck() {
     await fetch(`http://${window.location.hostname}:5105/api/blackjack/GameOver`, {
         method: "GET",
@@ -59,6 +63,7 @@ async function resetBackendDeck() {
     });
 }
 
+// Abrufen des Standes des Users, damit Guthaben angezeigt wird
 async function getCredits() {
     try {
         const response = await fetch(`http://${window.location.hostname}:5105/api/user/getData`, {
@@ -76,6 +81,7 @@ async function getCredits() {
     }
 }
 
+// Nach Spielende werden die Credits geposted
 async function updateCredits(amount) {
     try {
         await fetch(`http://${window.location.hostname}:5105/api/user/updateCredits`, {
@@ -91,6 +97,7 @@ async function updateCredits(amount) {
     }
 }
 
+// Beim Laden des Spiels wird der Token initialisiert
 async function initialize() {
     playerMoney = await getCredits();
     updateBetText();
@@ -98,6 +105,7 @@ async function initialize() {
     clearCards();
 }
 
+// Anzeige Updaten
 function updatePlayerMoneyDisplay() {
     const display = document.getElementById("playerMoneyDisplay");
     if (display) {
@@ -105,6 +113,7 @@ function updatePlayerMoneyDisplay() {
     }
 }
 
+// Alert fürs Gewinnen, Verlieren, Unentschieden oder Credits aufladen
 function showNotification(msg, btnTxt, redirectUrl) {
     let oldContainer = document.getElementById('notificationContainer');
     if (oldContainer) oldContainer.remove();
@@ -157,6 +166,7 @@ function showNotification(msg, btnTxt, redirectUrl) {
     document.body.appendChild(container);
 }
 
+// Umwandlung der Bekommen Karten passend zu den Namen der vorhandenen Bilder
 function renderCard(card, area, faceUp = true) {
     const img = document.createElement("img");
     img.src = faceUp ? card.image : "/Picture/Karten/Hinterseite.png";
@@ -201,6 +211,7 @@ function renderCard(card, area, faceUp = true) {
     }
 }
 
+// Karten werden auf dem Tisch geleert
 function clearCards() {
     dealerHand = [];
     playerHand = [];
@@ -231,8 +242,7 @@ function clearCards() {
     }
 }
 
-
-
+// Spiellogik: Zählen des Wertes der Karten
 function calculateScore(hand) {
     let score = 0;
     let aces = 0;
@@ -250,16 +260,19 @@ function calculateScore(hand) {
     return score;
 }
 
+// Nach jedem Karten ziehen werden die Werte aktualisiert
 function updateScores() {
     playerScore = calculateScore(playerHand);
     dealerScore = calculateScore(dealerHand);
 }
 
+// Nach drücken des Einsatzes z. B. 1000 Chip dann füg er es in die Guthaben anzeige hinzu
 function updateBetText() {
     einsatzWert.textContent = `${betAmount}`;
     updatePlayerMoneyDisplay();
 }
 
+// Spiellogik: Start des Spieles
 async function startGame() {
     if (betAmount <= 0) {
         showNotification("Bitte Einsatz wählen.", "Okay", "");
@@ -296,6 +309,7 @@ async function startGame() {
     if (playerScore === 21) await stand();
 }
 
+// Spieler zieht eine Karte
 async function playerHit() {
     const card = await fetchDealCard();
     playerHand.push(card);
@@ -308,6 +322,7 @@ async function playerHit() {
     }
 }
 
+// Spieler zieht keine Karte mehr, Vorgang des Dealers wird fortgesetzt
 async function stand() {
     btnCard.disabled = true;
     btnStand.disabled = true;
@@ -341,6 +356,7 @@ async function stand() {
     }
 }
 
+// Nachdem beide aufgehört haben karten zu ziehen, wird über diese Methode entschieden wer gewinnt
 async function endGame(msg) {
     const won = msg.includes("gewinnst");
     const draw = msg.includes("Unentschieden");
@@ -372,10 +388,12 @@ async function endGame(msg) {
     clearCards();
 }
 
+// Delay Methode
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Die Chips-Buttons
 chipButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const val = btn.textContent ? btn.textContent.replace(/\n/g, "").trim() : "";
@@ -391,13 +409,18 @@ chipButtons.forEach(btn => {
     });
 });
 
+// Delete-Button damit der Einsatz auf 0 gesetzt wird
 btnDel.addEventListener("click", () => {
     betAmount = 0;
     updateBetText();
 });
-
+// BET-Anzeige im Spiel
 betContainer.addEventListener("click", () => startGame());
+
+// Hit-Button
 btnCard.addEventListener("click", playerHit);
+
+// Stand-Button
 btnStand.addEventListener("click", stand);
 
 initialize();

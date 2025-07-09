@@ -2,36 +2,43 @@
 <html lang="de">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
-  <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
-  <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+  <meta charset="UTF-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1" >
   <title>Anmelden EDV-Casino</title>
+
+  <!-- Emailjs Modul, DaisyUI, Tailwind -->
+  <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css">
+  <link rel="stylesheet" href="/node_modules/daisyui/themes.css">
+  <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
+    // Emailjs - Initialisierung des Kontos, damit Services/Templates übernommen werden können
     (function () {
       emailjs.init("Yu6gs3PxXVe8LU0BE");
     })();
   </script>
+
 </head>
 
 <body>
   <div>
+    <!-- Box -->
     <div class="flex min-h-full h-screen flex-col justify-center bg-red-900 px-6 py-12 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-30 w-auto" src="/Picture/krone.png" alt="Your Company" />
+        <!-- Firmenlogo + Text -->
+        <img class="mx-auto h-30 w-auto" src="/Picture/krone.png" alt="Your Company">
         <h3 class="mt-2 text-center text-2xl/5 tracking-normal text-yellow-400">EDV-Royale-Casino</h3>
         <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-yellow-400">Sign in to your account</h2>
       </div>
 
+      <!-- Eingabe -> Email, Passwort -->
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" onsubmit="handleLogin(event)">
           <div>
             <label for="email" class="block text-sm/6 font-medium text-yellow-400">Email Adresse</label>
             <div class="mt-2">
               <input type="email" name="email" id="email" autocomplete="email" required
-                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" >
             </div>
           </div>
 
@@ -39,6 +46,7 @@
             <div class="flex items-center justify-between">
               <label for="password" class="block text-sm/6 font-medium text-yellow-400">Passwort</label>
               <div class="text-sm">
+                <!-- Passwort vergessen Funktion -->
                 <a href="#" onclick="openModal()"
                   class="font-semibold text-yellow-600 hover:text-yellow-300 hover:animate-pulse">Passwort
                   vergessen?</a>
@@ -46,11 +54,12 @@
             </div>
             <div class="mt-2">
               <input type="password" name="password" id="password" autocomplete="current-password" required
-                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" >
             </div>
           </div>
 
           <div>
+            <!-- Einloggen Registrieren -->
             <button type="submit"
               class="flex w-full justify-center rounded-md bg-yellow-400 px-3 py-1.5 text-sm/6 font-semibold text-red-900 shadow-xs hover:bg-cyan-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Anmelden</button>
             <a href="registrieren.html"
@@ -67,7 +76,7 @@
       <h2 class="text-lg font-semibold text-white mb-4">Passwort zurücksetzen</h2>
       <label for="resetEmail" class="block text-sm font-medium text-white mb-1">Email-Adresse</label>
       <input type="email" id="resetEmail" placeholder="name@example.com" required
-        class="block w-full rounded-md border bg-white border-gray-300 px-3 py-2 mb-4 " />
+        class="block w-full rounded-md border bg-white border-gray-300 px-3 py-2 mb-4 ">
       <div class="flex justify-end gap-2">
         <button onclick="closeModal()" class="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400">Abbrechen</button>
         <button onclick="sendResetEmail()"
@@ -75,8 +84,10 @@
       </div>
     </div>
   </div>
+  <!-- Modul für Alert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
+    // Einlogen Methode
     async function handleLogin(event) {
       event.preventDefault();
 
@@ -106,14 +117,17 @@
       }
     }
 
+    // öffnen benutzerdefinierter Alert
     function openModal() {
       document.getElementById('forgotPasswordModal').classList.remove('hidden');
     }
 
+    // schließen benutzerdefinierter Alert
     function closeModal() {
       document.getElementById('forgotPasswordModal').classList.add('hidden');
     }
 
+    // Passwort Vergessen Funktion
     async function sendResetEmail() {
       const email = document.getElementById('resetEmail').value.trim();
       if (!email || !email.includes('@')) {
@@ -121,6 +135,7 @@
         return;
       }
 
+      // POST Befehl für SQL
       try {
         const response = await fetch(`http://${window.location.hostname}:5105/api/user/forgotPassword`, {
           method: 'POST',
@@ -134,9 +149,9 @@
           return;
         }
 
-        const data = await response.json(); // { email, newPassword, message }
+        const data = await response.json(); // return email, newPassword
 
-        // EmailJS send, mit Fehler-Logging
+        // Email absenden an den User
         try {
           const result = await emailjs.send("service_7l6erbj", "template_3ggfn3d", {
             user_email: data.email,
