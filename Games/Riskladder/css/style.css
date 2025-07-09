@@ -16,26 +16,6 @@ body {
   text-align: center;
   margin-bottom: 30px;
 }
-/* .chip-buttons button {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  margin: 5px;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
-  transition: transform 0.1s;
-}
-.chip-buttons button:active {
-  transform: scale(0.9);
-}
-.chip-1    { background: red; }
-.chip-5    { background: #007bff; }
-.chip-10   { background: orange; }
-.chip-100  { background: gold; color: black; }
-.chip-all  { background: green; }
-.chip-clear{ background: darkred; } */
 
 .chip-btn {
   width: 2rem;

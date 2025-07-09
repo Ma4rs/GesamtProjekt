@@ -11,7 +11,7 @@ let token = localStorage.getItem("token");
 // 	return token;
 // }
 
-async function fetchBankValue() {
+async function fetchBankValue() { // holt sich Bankvalue
 	try {
 		// if (!token) await authorize();
 		const userData = await axios.get(`http://${window.location.hostname}:5105/api/user/getData`, {
@@ -26,7 +26,7 @@ async function fetchBankValue() {
 	}
 }
 
-async function safeBankvalue(gameResultsum) {
+async function safeBankvalue(gameResultsum) { //sichert Bankvalue
 	try {
 		// if (!token) await authorize();
 		const body = {
@@ -49,7 +49,7 @@ async function safeBankvalue(gameResultsum) {
 	}
 }
 
-async function GetSpin() {
+async function GetSpin() { // Holt sich das Feld welches Gewinnen wird
 	try {
 		const response = await axios.get(`http://${window.location.hostname}:5105/api/roulette/spin`);
 		return Number(response.data);
@@ -58,7 +58,7 @@ async function GetSpin() {
 	}
 }
 
-async function main() {
+async function main() { // große Verschachtelung für await damit der Webservice funktioniert
 	let bankValue = await fetchBankValue();
 	let currentBet = 0;
 	let wager = 5;
@@ -92,12 +92,12 @@ async function main() {
 
 	function startGame() {
 		buildWheel();
-		wheel = document.getElementsByClassName('wheel')[0];
-		ballTrack = document.getElementsByClassName('ballTrack')[0];
+		wheel = document.getElementsByClassName('wheel')[0]; // setzt startfeld auf 0
+		ballTrack = document.getElementsByClassName('ballTrack')[0]; // ball ist auf Feld 0
 		buildBettingBoard();
 	}
 
-	function gameOver() {
+	function gameOver() { //Meldung bei Spiel vorbei mit Verweis auf credits.html
 		let notification = document.createElement('div');
 		notification.setAttribute('id', 'notification');
 		let nSpan = document.createElement('span');
@@ -116,80 +116,118 @@ async function main() {
 	}
 
 	function buildWheel() {
+		// Erstelle das Haupt-Element für das Roulette-Rad
 		let wheelDiv = document.createElement('div');
 		wheelDiv.setAttribute('class', 'wheel');
 
+		// Erstelle den äußeren Rand des Rads
 		let outerRim = document.createElement('div');
 		outerRim.setAttribute('class', 'outerRim');
 		wheelDiv.append(outerRim);
 
+		// Zahlen in typischer Reihenfolge eines europäischen Roulette-Rads
 		let numbers = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+
+		// Schleife zum Erstellen aller Sektoren mit Zahlen
 		for (let i = 0; i < numbers.length; i++) {
-			let a = i + 1;
-			let spanClass = (numbers[i] < 10) ? 'single' : 'double';
+			let a = i + 1; // ID für den aktuellen Sektor (1-basiert)
+			let spanClass = (numbers[i] < 10) ? 'single' : 'double'; // Unterschiedliche Klassen je nach Zahlengröße
+
+			// Erstelle einen Sektor
 			let sect = document.createElement('div');
 			sect.setAttribute('id', 'sect' + a);
 			sect.setAttribute('class', 'sect');
+
+			// Erstelle das Zahlenelement im Sektor
 			let span = document.createElement('span');
-			span.setAttribute('class', spanClass);
-			span.innerText = numbers[i];
+			span.setAttribute('class', spanClass); // Für Styling je nach Zahl
+			span.innerText = numbers[i]; // Zeige die Zahl an
 			sect.append(span);
+
+			// Block im Sektor (z. B. visuelles Element, evtl. Trennung)
 			let block = document.createElement('div');
 			block.setAttribute('class', 'block');
 			sect.append(block);
+
+			// Hänge den Sektor ans Rad
 			wheelDiv.append(sect);
 		}
 
+		// Erstelle den inneren Rand der Zahlenfächer
 		let pocketsRim = document.createElement('div');
 		pocketsRim.setAttribute('class', 'pocketsRim');
 		wheelDiv.append(pocketsRim);
 
+		// Erstelle die Kugelbahn
 		let ballTrackDiv = document.createElement('div');
 		ballTrackDiv.setAttribute('class', 'ballTrack');
+
+		// Erstelle die Kugel selbst
 		let ball = document.createElement('div');
 		ball.setAttribute('class', 'ball');
 		ballTrackDiv.append(ball);
+
+		// Füge die Kugelbahn zum Rad hinzu
 		wheelDiv.append(ballTrackDiv);
 
+		// Erstelle die Taschen (Pockets), in denen die Kugel landet
 		let pockets = document.createElement('div');
 		pockets.setAttribute('class', 'pockets');
 		wheelDiv.append(pockets);
 
+		// Erstelle den Kegel in der Mitte des Rads
 		let cone = document.createElement('div');
 		cone.setAttribute('class', 'cone');
 		wheelDiv.append(cone);
 
+		// Erstelle den Turm (Zentralteil des Rads)
 		let turret = document.createElement('div');
 		turret.setAttribute('class', 'turret');
 		wheelDiv.append(turret);
 
+		// Erstelle den Griff am Turm
 		let turretHandle = document.createElement('div');
 		turretHandle.setAttribute('class', 'turretHandle');
+
+		// Erstelle die Enden des Turmgriffs
 		let thendOne = document.createElement('div');
 		thendOne.setAttribute('class', 'thendOne');
 		turretHandle.append(thendOne);
+
 		let thendTwo = document.createElement('div');
 		thendTwo.setAttribute('class', 'thendTwo');
 		turretHandle.append(thendTwo);
+
+		// Füge den Griff zum Rad hinzu
 		wheelDiv.append(turretHandle);
 
+		// Füge das komplette Rad in das Haupt-Container-Element ein
 		container.append(wheelDiv);
 	}
 
-	async function buildBettingBoard() {
+
+	async function buildBettingBoard() { // Board wird gebaut
+		// Haupt-Container für das Wettfeld erstellen
 		let bettingBoard = document.createElement('div');
 		bettingBoard.setAttribute('id', 'betting_board');
 
+		// Container für die Linien-Wettbereiche
 		let wl = document.createElement('div');
 		wl.setAttribute('class', 'winning_lines');
 
+		// Doppelte Straßen-Wetten (6 Zahlen pro Block)
+		// -> 11 Blöcke, decken 1–36 ab (immer 6 Zahlen pro Block: z.B. 1–6, 4–9, ..., 31–36)
 		var wlttb = document.createElement('div');
 		wlttb.setAttribute('id', 'wlttb_top');
 		wlttb.setAttribute('class', 'wlttb');
 		for (i = 0; i < 11; i++) {
 			let j = i;
+
+			// Ein Block für eine Double-Street-Wette
 			var ttbbetblock = document.createElement('div');
 			ttbbetblock.setAttribute('class', 'ttbbetblock');
+
+			// Die 6 Zahlen dieser Double-Street berechnen
 			var numA = (1 + (3 * j));
 			var numB = (2 + (3 * j));
 			var numC = (3 + (3 * j));
@@ -198,19 +236,29 @@ async function main() {
 			var numF = (6 + (3 * j));
 			let num = numA + ', ' + numB + ', ' + numC + ', ' + numD + ', ' + numE + ', ' + numF;
 			var objType = 'double_street';
+
+			// Linksklick zum Setzen der Wette
 			ttbbetblock.onclick = function () {
 				setBet(this, num, objType, 5);
 			};
+
+			// Rechtsklick zum Entfernen der Wette
 			ttbbetblock.oncontextmenu = function (e) {
 				e.preventDefault();
 				removeBet(this, num, objType, 5);
 			};
-			wlttb.append(ttbbetblock);
+			wlttb.append(ttbbetblock); // Block in den Liniencontainer einfügen
 		}
-		wl.append(wlttb);
+		wl.append(wlttb); // Liniencontainer in das Gesamt-Wettfeld einfügen
 
+
+		// Schleife für drei Typen von seitlichen Wetten:
+		// d == 1: linke Splits (horizontal)
+		// d == 2: rechte Splits (horizontal)
+		// d == 3: Streets (3 Zahlen vertikal)
 		for (c = 1; c < 4; c++) {
 			let d = c;
+			// Neuen Container für die jeweilige Wettlinie erzeugen
 			var wlttb = document.createElement('div');
 			wlttb.setAttribute('id', 'wlttb_' + c);
 			wlttb.setAttribute('class', 'wlttb');
@@ -218,13 +266,17 @@ async function main() {
 				let j = i;
 				var ttbbetblock = document.createElement('div');
 				ttbbetblock.setAttribute('class', 'ttbbetblock');
+
+				// Klick für Wette setzen
 				ttbbetblock.onclick = function () {
 					if (d == 1 || d == 2) {
+						// Horizontale Split-Wette (2 Zahlen nebeneinander)
 						var numA = ((2 - (d - 1)) + (3 * j));
 						var numB = ((3 - (d - 1)) + (3 * j));
 						var num = numA + ', ' + numB;
 					}
 					else {
+						//  Street-Wette (drei Zahlen in einer Reihe)
 						var numA = (1 + (3 * j));
 						var numB = (2 + (3 * j));
 						var numC = (3 + (3 * j));
@@ -234,25 +286,34 @@ async function main() {
 					var odd = (d == 3) ? 11 : 17;
 					setBet(this, num, objType, odd);
 				};
+				// Dem aktuellen Linienblock (wlttb) einen Klickbereich hinzufügen
 				ttbbetblock.oncontextmenu = function (e) {
+					// Standard-Kontextmenü im Browser unterdrücken (damit Rechtsklick funktioniert)
 					e.preventDefault();
+					//  Prüfen, ob es sich um eine horizontale Split-Wette handelt
 					if (d == 1 || d == 2) {
 						var numA = ((2 - (d - 1)) + (3 * j));
 						var numB = ((3 - (d - 1)) + (3 * j));
 						var num = numA + ', ' + numB;
 					}
 					else {
+						// Vertikale Dreierreihe (Street): z. B. 1,2,3 oder 4,5,6
 						var numA = (1 + (3 * j));
 						var numB = (2 + (3 * j));
 						var numC = (3 + (3 * j));
 						var num = numA + ', ' + numB + ', ' + numC;
 					}
+					// Wettart festlegen (split oder street)
 					var objType = (d == 3) ? 'street' : 'split';
+					// Quoten definieren (street = 11:1, split = 17:1)
 					var odd = (d == 3) ? 11 : 17;
+					// Wette entfernen
 					removeBet(this, num, objType, odd);
 				};
+				//  Wettblock zum Linienblock hinzufügen
 				wlttb.append(ttbbetblock);
 			}
+			// Nach Abschluss der inneren Schleife: Linienblock (wlttb) zur übergeordneten Fläche (wl) hinzufügen
 			wl.append(wlttb);
 		}
 

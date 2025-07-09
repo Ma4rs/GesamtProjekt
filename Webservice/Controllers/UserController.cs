@@ -59,7 +59,7 @@ namespace C__Backend.Controllers
 
             using (var context = new OnlineCasinoContext())
             {
-                var user =  context.Users.FirstOrDefault(t => t.Username == username);
+                var user = await context.Users.FirstOrDefaultAsync(t => t.Username == username);
 
                 if (user == null)
                 {
@@ -73,29 +73,6 @@ namespace C__Backend.Controllers
             }
         }
 
-        // [HttpPost("registerUser")]
-        // public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
-        // {
-        //     using (var context = new OnlineCasinoContext())
-        //     {
-        //         var exists = await context.Users.AnyAsync(u => u.Email == data.Email);
-        //         if (exists)
-        //             return Conflict(new { message = "User existiert bereits." });
-
-        //         var newUser = new User
-        //         {
-        //             Username = data.Username,
-        //             Email = data.Email,
-        //             PasswordHash = data.Password, // später: Hashed!
-        //             Credits = 100
-        //         };
-
-        //         context.Users.Add(newUser);
-        //         await context.SaveChangesAsync();
-
-        //         return Ok(new { message = "User erfolgreich registriert", credits = newUser.Credits });
-        //     }
-        // }
 
         [HttpPost("registerUser")]
         public async Task<IActionResult> RegisterUser([FromBody] Userdata data)
@@ -154,44 +131,9 @@ namespace C__Backend.Controllers
             }
         }
 
-
-
-        // [HttpPost("Login")]
-        // public async Task<IActionResult> Login([FromBody] LoginRequest request)
-        // {
-        //     using var context = new OnlineCasinoContext();
-
-        //     var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-        //     if (user == null)
-        //     {
-        //         return NotFound(new { message = "Benutzer nicht gefunden" });
-        //     }
-
-        //     if (user.PasswordHash != request.Password)
-        //     {
-        //         return Unauthorized(new { message = "Falsches Passwort" });
-        //     }
-
-        //     return Ok(new
-        //     {
-        //         message = "Login erfolgreich",
-        //         username = user.Username,
-        //         credits = user.Credits
-        //     });
-        // }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginAnfrage request)
         {
-            // using var context = new OnlineCasinoContext();
-
-            // // passwort in sql hinzufügen
-            // var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            // if (user == null || user.PasswordHash != request.Password)
-            // {
-            //     return Unauthorized(new { message = "E-Mail oder Passwort falsch" });
-            // }
-
             using var context = new OnlineCasinoContext();
 
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
@@ -239,14 +181,6 @@ namespace C__Backend.Controllers
             _configuration = configuration;
         }
 
-        // [Authorize]
-        // [HttpGet("SecretArea")]
-        // public IActionResult Secret()
-        // {
-        //     return Ok("Nur sichtbar mit gültigem Token!");
-        // }
-
-        // Passwort ändern
         [Authorize]
         [HttpPost("changePwd")]
         public async Task<IActionResult> ChangePwd([FromBody] ChangePasswordRequest request)
@@ -308,14 +242,6 @@ namespace C__Backend.Controllers
             // Passwort speichern
             user.PasswordHash = hashedPassword;
             await context.SaveChangesAsync();
-
-            // Gebe neues Passwort ans Frontend zurück (für EmailJS)
-            // return Ok(new
-            // {
-            //     message = "Ein neues Passwort wurde generiert.",
-            //     email = request.Email,
-            //     newPassword = newPassword
-            // });
 
             return Ok(new { message = "Ein neues Passwort wurde generiert.", request.Email, newPassword });
 
