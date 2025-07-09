@@ -24,7 +24,7 @@ Dieses Projekt ist ein Onlinecasino, das im Rahmen eines Schulprojektes entwicke
    ```bash
    git clone https://gl.edvschule-plattling.de/bfs2023ik/202425trfiaeb2/onlinecasino.git
 2. **Startskript**:
-    ausführen von der Datei start.sh macht alles notwendige. Es muss nur beim ersten Start einmal in der cmd bestätig werden (y drücken bei Frage)
+    ausführen von der Datei **start.sh** macht alles notwendige. Es muss nur beim ersten Start einmal in der cmd bestätig werden (y drücken bei Frage)
 
 ## Autoren
 
