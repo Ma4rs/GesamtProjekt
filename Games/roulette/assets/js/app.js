@@ -206,7 +206,19 @@ async function main() { // große Verschachtelung für await damit der Webservic
 	}
 
 
-	async function buildBettingBoard() { // Board wird gebaut
+	async function buildBettingBoard() {
+		// Der Code erstellt dynamisch das gesamte Wettfeld für ein Roulette-Spiel im Browser. 
+		// Alle Wettoptionen wie Zahlen, Farben, Drittel, Spalten und einfache Chancen werden per DOM aufgebaut, sind klickbar und mit Funktionen 
+		// zum Setzen und Entfernen von Einsätzen verknüpft. Zudem gibt es Chips zur Einsatzwahl, eine Bankanzeige und einen Verlauf der gezogenen Zahlen.
+		// Was wird alles gebaut?
+		// Obere Blöcke (1–18 & 19–36) → outside_low / outside_high
+		// Zahlenfeld mit 0–36 und „2 to 1“ Feldern → inside_whole / outside_column
+		// Drittel-Wetten (1–12, 13–24, 25–36) → outside_dozen
+		// EVEN, ODD, RED, BLACK → outside_oerb
+		// Chip-Auswahl (1, 5, 10, 100, All, clear) → Einsatzhöhe setzen oder löschen
+		// Bank- und Einsatzanzeige → Live-Update nach jeder Aktion
+		// Scrollbarer Bereich für Spielverlauf (pnBlock)
+		// Board wird gebaut
 		// Haupt-Container für das Wettfeld erstellen
 		let bettingBoard = document.createElement('div');
 		bettingBoard.setAttribute('id', 'betting_board');
@@ -596,6 +608,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		numbersBet = [];
 	}
 
+	// Setzt einen Einsatz, zieht den Betrag vom Konto ab, zeigt einen Chip auf dem Feld an und fügt die Wette der Liste hinzu (Erweiterung: Wie in Triple Guess den WettBetrag am Webservice speichern)
 	async function setBet(e, n, t, o) {
 		lastWager = wager;
 		// bankValue = await fetchBankValue();
@@ -654,7 +667,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		}
 	}
 
-	async function spin() {
+	async function spin() {  // hier findet der Spin selbst statt
 		// hier chip
 		// var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
 		blockiereKlicks();
@@ -708,7 +721,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			removeChips();
 			wager = lastWager;
 			bankValue = await fetchBankValue();
-			if (bankValue == 0 && currentBet == 0) {
+			if (bankValue == 0 && currentBet == 0) {	// wenn man verliert dann wird GameOver aufgerufen
 				gameOver();
 			}
 			if (clearBtn) clearBtn.style.display = '';
@@ -716,7 +729,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		}, 10000);
 	}
 
-	async function win(winningSpin, winValue, betTotal) {
+	async function win(winningSpin, winValue, betTotal) { // wenn man gewinnt das gewinn fenster (pop up)
 		if (winValue > 0) {
 			let notification = document.createElement('div');
 			notification.setAttribute('id', 'notification');
@@ -749,8 +762,8 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			nSpan.append(nsWin);
 			notification.append(nSpan);
 			container.prepend(notification);
-			//hier
-			await safeBankvalue(winValue)		// await optional glaub ich 
+			//hier wird das gesamte fenster zusammengebaut und anschließend der Gewinn am Webservice gespeichert
+			await safeBankvalue(winValue)
 			setTimeout(function () {
 				notification.style.cssText = 'opacity:0';
 			}, 3000);
@@ -760,7 +773,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		}
 		else {
 			let los = betTotal * -1;
-			await safeBankvalue(los); // hier auch aber unsicher 
+			await safeBankvalue(los);
 			console.log("Verloren")
 		}
 		// console.log("If verlassen")
@@ -768,7 +781,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		document.getElementById('bankSpan').innerText = '' + bankValue.toLocaleString("en-GB") + '';
 	}
 
-	function removeBet(e, n, t, o) {
+	function removeBet(e, n, t, o) { // setzt den Wettbetrag auf 0
 		wager = (wager == 0) ? 100 : wager;
 		for (i = 0; i < bet.length; i++) {
 			if (bet[i].numbers == n && bet[i].type == t) {
@@ -831,7 +844,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		}, 10000);
 	}
 
-	function removeChips() {
+	function removeChips() { //entfernt alle chips
 		var chips = document.getElementsByClassName('chip');
 		if (chips.length > 0) {
 			for (i = 0; i < chips.length; i++) {
