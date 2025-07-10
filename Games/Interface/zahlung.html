@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+
+<head>
+    <script src="auth-check.js"></script>
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zahlung wird verarbeitet...</title>
+  <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css">
+  <link rel="stylesheet" href="/node_modules/daisyui/themes.css">
+  <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+  <div class="flex flex-col min-h-screen bg-red-900">
+    <div class="navbar bg-base-100 shadow-sm flex-shrink-0 flex">
+      <div class="flex-1">
+        <a class="btn btn-ghost text-xl" href="index.html">
+          <img src="/Picture/krone.png" class="w-8" alt="Casino Logo">
+          EDV-Casino
+        </a>
+      </div>
+      <div class="relative ml-3">
+        <div>
+          <button type="button"
+            class="relative flex rounded-full bg-gray-800 text-xl focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+            id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+            <span class="absolute -inset-1.5"></span>
+            <span class="sr-only">Open user menu</span>
+            <img class="size-8 rounded-full" src="/Picture/R2-D2.jfif" alt="R2-D2">
+          </button>
+        </div>
+        <!-- <div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-hidden"
+            role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                id="user-menu-item-2">Sign out</a>
+        </div> -->
+
+      </div>
+    </div>
+    <div class="flex flex-1 items-center justify-center">
+      <div class="bg-base-100 rounded-lg shadow-lg p-10 flex flex-col items-center">
+        <span class="loading loading-spinner loading-lg text-red-700 mb-8" id="spinner"></span>
+        <p id="status" class="text-xl font-semibold text-center">Zahlung wird verarbeitet...</p>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- Probleme bei using deswegen so -->
+  <script type="module">
+
+    // alert("test")
+    // alert(localStorage.getItem('credits'))
+    const ws = axios.create({ baseURL: `http://${window.location.hostname}:5105` });
+    const credits = parseInt(localStorage.getItem('credits'));
+    localStorage.removeItem('credits')
+    // holt sich die credits ausm local Storage und löscht sie da sie sonst nicht gebraucht werden
+
+    const body = {
+      creditsToAdd: credits
+    };
+
+    const token = localStorage.getItem('token');
+
+    ws.post("/api/user/updateCredits", body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+      .then((res) => {
+        if (res.status >= 200 && res.status < 300) {
+          setTimeout(() => {
+            document.getElementById('status').innerText = `${credits} Credits wurden Ihrem User hinzugefügt.`;
+            document.getElementById('spinner').style.display = "none";
+          }, 1500);
+
+          setTimeout(() => {
+            window.location.href = './index.html';
+          }, 3000);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        alert(err.response?.data?.message || err.message || "Ein Fehler ist aufgetreten");
+      });
+      // hier Lade Screen
+  </script>
+
+</body>
+
+</html>

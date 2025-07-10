@@ -1,22 +1,20 @@
-# 🎰 Mein Online Casino
+# OnlineCasino – Schulprojekt
 
-Willkommen bei **Mein Online Casino**, einer modernen Webanwendung mit PayPal-Integration, dynamischem Wett-Board und zahlreichen Minigames für echtes Spielhallenfeeling – ganz ohne echtes Geld!
+## Projektbeschreibung
 
----
+Dieses Projekt ist ein Onlinecasino, das im Rahmen eines Schulprojektes entwickelt wurde. Ziel ist es, verschiedene Casinospiele digital anzubieten und dabei Programmierkenntnisse sowie Teamarbeit zu vertiefen.
 
-## 📌 Inhalt
+**Enthaltene Spiele:**
+- **Blackjack**
+- **Roulette**
+- **Triple Guess**
+- **Riskladder**
 
-- [Über das Projekt](#über-das-projekt)
-- [Starten der Anwendung](#starten-der-anwendung)
-- [Autoren](#autoren)
+## Verzeichnisstruktur
 
----
-
-## 📖 Über das Projekt
-
-**Unser Online Casino** ist ein webbasiertes Projek, das ein virtuelles Spielerlebnis bietet – mit Credits, Benutzerkonten und stylischen Minigames. 
-
-> ⚠️ Es handelt sich dabei **nicht um ein echtes Glücksspiel**. Es wird kein Echtgeld ausgezahlt oder verwendet – Zahlungen (z. B. PayPal) dienen ausschließlich dem Kauf virtueller Spielcredits.
+- `Games/` – Implementierungen der Casinospiele
+- `Webservice/` – Backend-Komponenten und Schnittstellen (.NET)
+- `Picture/` – Grafiken und Ressourcen
 
 ---
 
@@ -26,10 +24,10 @@ Willkommen bei **Mein Online Casino**, einer modernen Webanwendung mit PayPal-In
    ```bash
    git clone https://gl.edvschule-plattling.de/bfs2023ik/202425trfiaeb2/onlinecasino.git
 2. **Startskript**:
-    ausführen von der Datei start.sh macht alles notwendige. Es muss nur beim ersten Start einmal in der cmd bestätig werden (y drücken bei Frage)
+    ausführen von der Datei **start.sh** macht alles notwendige. Es muss nur beim ersten Start einmal in der cmd bestätig werden (y drücken bei Frage)
 
 ## Autoren
 
-Marcel Meiser
-Kilian Schellenberg
-Oskar Richert
+- **Marcel Meiser**
+- **Oskar Richert**
+- **Kilian Schellenberg**

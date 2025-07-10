@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Triple Guess</title>
+  <!-- DaisyUI -->
+  <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
+  <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
+
+  <!-- Tailwind -->
+  <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    .bet.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    #container {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      pointer-events: none;
+    }
+
+    #notification {
+      background: #ad0205;
+      border: 0.3em solid #d3b201;
+      border-radius: 0.8em;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+      min-width: 180px;
+      max-width: 90vw;
+      padding: 1em 1.5em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 9999;
+      pointer-events: auto;
+      top: 0;
+      left: 0;
+      transform: none;
+    }
+
+    .nSpan {
+      display: block;
+      font-size: 1.2em;
+      color: #ffe066;
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 0.7em;
+      text-shadow: 0 1px 4px #000c;
+      max-width: 70vw;
+      word-break: break-word;
+    }
+
+    .nBtn {
+      display: block;
+      background-color: #228b22;
+      color: #fff;
+      border-radius: 0.5em;
+      padding: 0.5em 1.2em;
+      font-size: 1em;
+      text-align: center;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 18%);
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 0.2em;
+    }
+
+    .nBtn:hover,
+    .nBtn:focus {
+      background: #176a13;
+      transform: scale(1.04);
+    }
+
+    .nBtn:active {
+      transform: scale(0.97);
+    }
+
+    /* Einsatz-Text */
+    .einsatz-text {
+      position: relative;
+      color: #ffe066;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 4px #000c;
+      z-index: 2;
+      user-select: none;
+    }
+
+    /* Bank Container */
+    .bankContainer {
+      margin-top: 100px;
+      margin-left: 250px;
+      margin-right: 210px;
+    }
+
+    /* Chip Button */
+    .chip-btn {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 9999px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      border: 1px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.75rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .chip-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .chip-btn.active {
+      box-shadow: 0 0 10px 4px rgba(255, 255, 0, 0.8);
+      transform: scale(1.2);
+    }
+
+    /* Bank und Bet */
+    .bank,
+    .bet {
+      color: white;
+      display: inline-block;
+      width: calc(50% - 28px);
+      background-color: #000;
+      font-size: 18px;
+      margin-left: 7px;
+      padding: 5px;
+      border: 4px solid silver;
+      border-radius: 7px;
+      text-align: right;
+    }
+
+    /* Tisch */
+    .table-shape {
+      border-radius: 50% / 30%;
+      background: radial-gradient(circle at center, #1a4d1a 0%, #0a3d0a 70%, #062d06 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .table-felt-pattern {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: repeating-linear-gradient(45deg,
+          rgba(255, 255, 255, 0.05) 0,
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 1px,
+          transparent 20px);
+      pointer-events: none;
+    }
+
+    /* Karten-Slot */
+    .card-slot {
+      width: 90px;
+      height: 140px;
+      border: 2px solid #fdfdfd;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.05);
+      box-sizing: border-box;
+    }
+
+    .card-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Bild füllt den Slot komplett aus, kann an den Rändern beschnitten werden */
+      display: block;
+    }
+
+    /* Karte */
+    .card {
+      width: 80px;
+      height: 56px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.25rem;
+      color: black;
+      user-select: none;
+    }
+
+    /* Bet-Container */
+    .bet-container {
+      width: 100px;
+      height: 100px;
+      border-radius: 50% / 30%;
+      background: radial-gradient(circle at center, #1a4d1a 0%, #0a3d0a 70%, #062d06 100%);
+      margin-top: 200px;
+      margin-left: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffe066;
+      font-weight: bold;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 6px 32px 0 #0008;
+      border: 4px solid #d2b48c;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Klickbar */
+    .canclick {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+
+  <div class="relative w-[800px] h-[470px] border-[10px] border-[#654321] shadow-2xl table-shape">
+    <div class="table-felt-pattern"></div>
+
+    <!-- Dealer Karten-Platzhalter (oben mittig) -->
+    <div class="absolute top-16 w-full flex justify-center gap-6 z-0">
+      <div id="card1" class="card-slot">
+        <img src="/Picture/Karten/Hinterseite.png" alt="">
+      </div>
+      <div id="card2" class="card-slot">
+        <img src="/Picture/Karten/Hinterseite.png" alt="">
+      </div>
+      <div id="card3" class="card-slot">
+        <img src="/Picture/Karten/Hinterseite.png" alt="">
+      </div>
+    </div>
+
+    <!-- Spieler Karten (Beispielkarten, liegen über den Platzhaltern) -->
+    <div id="GameChoice" class="absolute bottom-28 w-full flex justify-center gap-6 z-10">
+      <div id="auswahl1" class="card canclick" style="color: red;">Red</div>
+      <div id="auswahl2" class="card canclick">Black</div>
+    </div>
+
+    <div id="bet" class="bet-container">
+      <!-- <div class="einsatz-text"> Hier Wetten ablegen</div> -->
+      <span class="einsatz-text">Bet</span>
+      <div class="table-felt-pattern"></div>
+    </div>
+
+    <!-- Chips (unter Kartenbereich) mit Beschriftung -->
+    <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 z-10">
+      <div class="flex gap-1" id="chipContainer">
+        <button class="chip-btn bg-red-600 text-white" data-value="1">1</button>
+        <button class="chip-btn bg-blue-600 text-white" data-value="5">5</button>
+        <button class="chip-btn bg-yellow-400 text-black" data-value="10">10</button>
+        <button class="chip-btn bg-green-600 text-white" data-value="100">100</button>
+        <button class="chip-btn bg-violet-900 text-white" data-value="1000">1000</button>
+        <button class="chip-btn bg-black text-yellow-400" style="font-size: 9px" data-value="ALL">ALL<br>IN</button>
+        <button id="clear" class="chip-btn bg-orange-700 text-white" style="font-size: 9px"
+          data-value="CLEAR">CLEAR</button>
+      </div>
+    </div>
+
+    <div class="bankContainer">
+      <div class="bank"><span id="bankSpan">0</span></div>
+      <div class="bet"><span id="betSpan">0</span></div>
+    </div>
+  </div>
+  <!-- Lädt die Axios-Bibliothek für HTTP-Anfragen von einem CDN. -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="index.js"></script>
+</body>
+
+</html>

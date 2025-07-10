@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <script src="auth-check.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/node_modules/daisyui/daisyui.css" />
+    <link rel="stylesheet" href="/node_modules/daisyui/themes.css" />
+    <script src="/node_modules/@tailwindcss/browser/dist/index.global.js"></script>
+    <title>Passwort ändern</title>
+</head>
+
+<body>
+    <div>
+        <div class="flex min-h-full h-screen flex-col justify-center bg-red-900 px-6 py-12 lg:px-8">
+            <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+                <img class="mx-auto h-30 w-auto" src="/Picture/krone.png" alt="Your Company" />
+                <h3 class="mt-2 text-center text-2xl/5 tracking-normal text-yellow-400">EDV-Royale-Casino</h3>
+                <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-yellow-400">Passwort ändern</h2>
+            </div>
+
+            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <form class="space-y-6">
+                    <div>
+                        <label for="oldPassword" class="block text-sm/6 font-medium text-yellow-400">Altes
+                            Passwort</label>
+                        <div class="mt-2">
+                            <input type="password" name="oldPassword" id="oldPassword" autocomplete="current-password"
+                                required
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                        </div>
+                    </div>
+                    <div>
+                        <label for="newPassword" class="block text-sm/6 font-medium text-yellow-400">Neues
+                            Passwort</label>
+                        <div class="mt-2">
+                            <input type="password" name="newPassword" id="newPassword" autocomplete="new-password"
+                                required
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                        </div>
+                    </div>
+                    <div>
+                        <label for="confirmPassword" class="block text-sm/6 font-medium text-yellow-400">Neues Passwort
+                            wiederholen</label>
+                        <div class="mt-2">
+                            <input type="password" name="confirmPassword" id="confirmPassword"
+                                autocomplete="new-password" required
+                                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button"
+                            class="flex w-full justify-center rounded-md bg-yellow-400 px-3 py-1.5 text-sm/6 font-semibold text-red-900 shadow-xs hover:bg-cyan-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            onclick="checkPasswordAndRedirect()">Passwort ändern</button>
+                    </div>
+                    <div id="errorMessage" style="display:none; color:red; margin-top:10px; text-align:center;">
+                        Passwort stimmt nicht
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        async function checkPasswordAndRedirect() {
+            const oldPw = document.getElementById('oldPassword');
+            const newPw = document.getElementById('newPassword');
+            const confirmPw = document.getElementById('confirmPassword');
+            const errorMsg = document.getElementById('errorMessage');
+            // alles speichern bzw. auslesen
+            if (newPw.value === confirmPw.value && newPw.value.length > 0 && oldPw.value.length > 0) {
+                oldPw.style.borderColor = "";
+                newPw.style.borderColor = "";
+                confirmPw.style.borderColor = "";
+                errorMsg.style.display = "none";
+
+                const token = localStorage.getItem('token');
+
+                try {
+                    const response = await fetch(`http://${window.location.hostname}:5105/api/user/changePwd`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        },
+                        body: JSON.stringify({
+                            oldPassword: oldPw.value,
+                            newPassword: newPw.value
+                        })
+                    });
+
+                    if (response.ok) {
+                        Swal.fire({
+                            title: 'Erfolgreich',
+                            text: 'Passwort wurde erfolgreich geändert.',
+                            icon: 'success',
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'index.html';
+                            }
+                        });
+                    } else {
+                        oldPw.style.borderColor = "red";
+                        newPw.style.borderColor = "red";
+                        confirmPw.style.borderColor = "red";
+                        const data = await response.json();
+                        errorMsg.textContent = "Die Passwörter stimmen nicht überein oder das alte Passwort ist falsch"; 
+                        // nicht sagen was das genau problem ist 
+                        // -> sonst könnte man brute Force machen bis bestätigt wird das man das Passwort geknckt hat
+                        errorMsg.style.display = "block";
+                    }
+                } catch (err) {
+                    errorMsg.textContent = "Serverfehler. Bitte später erneut versuchen.";
+                    errorMsg.style.display = "block";
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
