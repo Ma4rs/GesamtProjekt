@@ -21,7 +21,6 @@
         <h3 class="mt-2 text-center text-2xl/5 tracking-normal text-yellow-400">EDV-Royale-Casino</h3>
         <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-yellow-400">Sign in to your account</h2>
       </div>
-      <!-- Ende -->
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <!-- Email Eingabe -->
@@ -33,7 +32,6 @@
                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
             </div>
           </div>
-          <!-- Ende -->
 
           <!-- Username Eingabe -->
           <div>
@@ -43,7 +41,6 @@
                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
             </div>
           </div>
-          <!-- Ende -->
 
           <!-- Passwort eingabe -->
           <div>
@@ -55,23 +52,22 @@
                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
             </div>
           </div>
-          <!-- Ende -->
 
           <!-- Registrieren Button -->
           <div>
             <button type="submit" id="registrieren"
               class="flex w-full mt-2 justify-center rounded-md bg-yellow-400 px-3 py-1.5 text-sm/6 font-semibold text-red-900 shadow-xs hover:bg-cyan-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrieren</button>
           </div>
-          <!-- Ende -->
         </form>
 
       </div>
     </div>
   </div>
 
-  <!-- JavaScript -->
+ <!-- Alert für Vorgänge -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
+    // registerUser -> Methode zum Registrieren von Usern in SQL
     async function handleRegister(event) {
       event.preventDefault();
 
@@ -91,7 +87,7 @@
         if (response.ok) {
           Swal.fire({
             title: 'Erfolgreich',
-            text: 'Email wurde erfolgreich gesendet.',
+            text: 'Registrieren erfolgt.',
             icon: 'success',
             confirmButtonText: 'Okay'
           }).then((result) => {

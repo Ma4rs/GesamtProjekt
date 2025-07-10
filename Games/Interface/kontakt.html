@@ -105,7 +105,7 @@
                     </form>
                 </div>
 
-                <!-- Footer -->
+                <!-- Impressum + Kontaktdaten (zentriert) -->
                 <div class="bg-red-900 mt-10 text-center py-6">
                     <hr class="h-px my-4 bg-gray-400 border-0">
                     <div class="space-x-6">
@@ -113,14 +113,16 @@
                         <a href="kontakt.html" class="text-white hover:underline">Kontakt</a>
                     </div>
                 </div>
-                <!-- Ende Footer -->
             </div>
         </div>
     </div>
     <!-- Script für Dropdown -->
+    <!-- Emailjs einbinden -> Email Service -->
+    <!-- Alert für Vorgänge -->
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Get Username Methode -> return username
         window.addEventListener('DOMContentLoaded', async () => {
             const username = localStorage.getItem('token');
             const token = username;
@@ -137,6 +139,7 @@
             }
         });
 
+        // getData -> return credits für Anzeige
         window.addEventListener('DOMContentLoaded', async () => {
             const username = localStorage.getItem('token');
             const token = username;
