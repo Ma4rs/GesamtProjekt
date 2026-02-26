@@ -1,33 +1,47 @@
-# OnlineCasino – Schulprojekt
+# OnlineCasino
 
 ## Projektbeschreibung
 
-Dieses Projekt ist ein Onlinecasino, das im Rahmen eines Schulprojektes entwickelt wurde. Ziel ist es, verschiedene Casinospiele digital anzubieten und dabei Programmierkenntnisse sowie Teamarbeit zu vertiefen.
+Dieses Projekt ist ein Onlinecasino, das urspruenglich im Rahmen eines Schulprojektes von drei Schuelern entwickelt wurde. Ziel war es, verschiedene klassische Casinospiele digital umzusetzen und dabei Programmierkenntnisse in Webentwicklung und Backend-Programmierung zu vertiefen.
 
-**Enthaltene Spiele:**
-- **Blackjack**
-- **Roulette**
-- **Triple Guess**
-- **Riskladder**
+Das Schulprojekt ist abgeschlossen, aber ab und zu werden kleinere Features oder Verbesserungen hinzugefuegt.
+
+## Spiele
+
+- **Blackjack** -- Erreiche 21 Punkte oder komme so nah wie moeglich dran, ohne drueber zu gehen.
+- **Roulette** -- Setze auf Zahlen, Farben oder Bereiche und hoffe, dass die Kugel richtig faellt.
+- **Triple Guess** -- Errate drei Karten hintereinander (Farbe, Hoeher/Niedriger, Inside/Outside).
+- **Ladder of Risk** -- Klettere die Gewinnleiter hinauf und entscheide, wann du auszahlst.
+
+## Tech-Stack
+
+**Frontend:** HTML, CSS, JavaScript, Tailwind CSS, DaisyUI
+
+**Backend:** .NET 8.0 (ASP.NET Core Web API), Entity Framework Core, SQL Server
+
+**Auth:** JWT-Authentifizierung, BCrypt Passwort-Hashing
 
 ## Verzeichnisstruktur
 
-- `Games/` – Implementierungen der Casinospiele
-- `Webservice/` – Backend-Komponenten und Schnittstellen (.NET)
-- `Picture/` – Grafiken und Ressourcen
+```
+Games/          Frontends der Casinospiele + Interface-Seiten
+Webservice/     .NET Backend (API-Controller, Datenbankmodelle)
+Picture/        Bilder, Kartensets, Logo, Willkommensvideo
+```
 
----
+## Starten der Anwendung
 
-## ⚙️ Starten der Anwendung
-
-1. **Repository klonen**:
+1. **Repository klonen:**
    ```bash
    git clone https://gl.edvschule-plattling.de/bfs2023ik/202425trfiaeb2/onlinecasino.git
-2. **Startskript**:
-    ausführen von der Datei **start.sh** macht alles notwendige. Es muss nur beim ersten Start einmal in der cmd bestätig werden (y drücken bei Frage)
+   ```
 
-## Autoren
+2. **Startskript ausfuehren:**
+   ```bash
+   ./start.sh
+   ```
+   Das Skript installiert alle Abhaengigkeiten und startet sowohl den Live-Server (Port 5500) als auch das Backend (Port 5105). Beim ersten Start muss einmal mit `y` bestaetigt werden.
 
-- **Marcel Meiser**
-- **Oskar Richert**
-- **Kilian Schellenberg**
+## Lizenz
+
+Dieses Projekt dient ausschliesslich zu Lernzwecken. Eine kommerzielle Nutzung ist ausgeschlossen.
