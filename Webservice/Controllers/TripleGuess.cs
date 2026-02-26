@@ -9,7 +9,8 @@ namespace C__Backend.Controllers
     [Route("api/tripleguess/")]
     public class TripleGuessController : ControllerBase
     {
-        static List<object> cardCache = new List<object>(); // cache der vor doppelungen schützen soll
+        private static readonly ConcurrentDictionary<string, List<string>> cardCaches = new();
+        private static readonly object cacheLock = new object();
 
         private static readonly string[] Suits = { "hearts", "clubs", "spades", "diamonds" };
         private static readonly (string Name, int Value)[] Values = {
@@ -29,71 +30,98 @@ namespace C__Backend.Controllers
         };
 
         private static ConcurrentDictionary<string, int> Bets = new();
+
         private string? GetUserId()
         {
             return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
+        [Authorize]
         [HttpGet("newCard")]
         public IActionResult newCard()
         {
-            var rnd = new Random();
-            string suit = Suits[rnd.Next(Suits.Length)];
-            var valueTuple = Values[rnd.Next(Values.Length)];
-            string imageUrl = $"/Picture/Karten/{valueTuple.Name}_of_{suit}.png"; //Pfad für Karten generieren
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized(new { message = "Kein Username im Token gefunden." });
 
-            var card = new
+            var cache = cardCaches.GetOrAdd(userId, _ => new List<string>());
+
+            lock (cacheLock)
             {
-                Name = valueTuple.Name,
-                Wert = valueTuple.Value,
-                Art = suit,
-                Bild = imageUrl
-            };
-            if (cardCache.Contains(card))
-            {
-                newCard();
+                if (cache.Count >= 52)
+                    cache.Clear();
+
+                int attempts = 0;
+                while (attempts < 200)
+                {
+                    string suit = Suits[Random.Shared.Next(Suits.Length)];
+                    var valueTuple = Values[Random.Shared.Next(Values.Length)];
+                    string identifier = $"{valueTuple.Name}_of_{suit}";
+
+                    if (!cache.Contains(identifier))
+                    {
+                        cache.Add(identifier);
+                        string imageUrl = $"/Picture/Karten/{identifier}.png";
+                        return Ok(new
+                        {
+                            Name = valueTuple.Name,
+                            Wert = valueTuple.Value,
+                            Art = suit,
+                            Bild = imageUrl
+                        });
+                    }
+                    attempts++;
+                }
             }
-            cardCache.Add(card);
-            return Ok(card);
+
+            return StatusCode(500, new { message = "Keine neuen Karten verfügbar." });
         }
 
         [Authorize]
-        [HttpPost("setBet")] // Wette setzten 
+        [HttpPost("setBet")]
         public IActionResult SetBet([FromBody] SetBetRequest request)
         {
             var userId = GetUserId();
             if (userId == null)
-            {
                 return Unauthorized(new { message = "Kein Username im Token gefunden." });
-            }
 
             Bets[userId] = request.BetAmount;
             return Ok();
         }
 
         [Authorize]
-        [HttpGet("getBet")] // Wette aufrufen 
+        [HttpGet("getBet")]
         public IActionResult GetBet()
         {
             var userId = GetUserId();
             if (userId == null)
-            {
                 return Unauthorized(new { message = "Kein Username im Token gefunden." });
-            }
 
             Bets.TryGetValue(userId, out int betAmount);
             return Ok(new { bet = betAmount });
         }
 
-        [HttpGet("GameOver")] //Card cache leeren
+        [Authorize]
+        [HttpGet("GameOver")]
         public IActionResult GameOver()
         {
-            cardCache.Clear();
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized(new { message = "Kein Username im Token gefunden." });
+
+            if (cardCaches.TryGetValue(userId, out var cache))
+            {
+                lock (cacheLock)
+                {
+                    cache.Clear();
+                }
+            }
+
             return Ok("Cache wieder leer");
         }
     }
 
-    public class SetBetRequest // klasse für Bet Amount
+    public class SetBetRequest
     {
         public int BetAmount { get; set; }
     }

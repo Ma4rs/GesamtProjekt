@@ -68,11 +68,13 @@ async function setBet(betAmount) {
 
 async function getCard() {
   try {
-    const res = await axios.get(`http://${window.location.hostname}:5105/api/tripleguess/newCard`);
+    const res = await axios.get(`http://${window.location.hostname}:5105/api/tripleguess/newCard`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     return res.data;
   } catch (e) {
     showError("Fehler beim Laden der Karte.");
-    throw e; // Spiel abbrechen
+    throw e;
   }
 }
 
@@ -128,8 +130,9 @@ function showNotification(msg, btnTxt, redirectUrl) {
   // Definiert, was beim Klicken auf den Button passiert:
   // -> Bei einem Verweis auf die credits Seite wird das Top-Level-Fenster aufgerufen -> sonst wäre es in der Fläche vom Spiel offen
   nBtn.onclick = function () {
-    if (redirectUrl == "../Interface/credits.html") {
+    if (redirectUrl === "../Interface/credits.html") {
       window.top.location.href = redirectUrl;
+      return;
     }
     window.location.href = redirectUrl;
   };
@@ -144,35 +147,36 @@ function showNotification(msg, btnTxt, redirectUrl) {
 
 class TripleGuessGame {
   constructor() {
-    this.cardCount = 0; // Anzahl gezogener Karten
-    this.cardValue1 = 0; // Wert der ersten gezogenen Karte -> Higher/Lower Vergleich
-    this.cardValue2 = 0; // Wert der zweiten gezogenen Karte -> Inside/Outside Vergleich
-    this.redSuits = ["hearts", "diamonds"]; // Rote Kartenfarben -> Für Red/Black Vergleich
-    this.selectedChip = null; // aktuell ausgewählter Chip
-    this.gameActive = true; // Status, ob das Spiel läuft
+    this.cardCount = 0;
+    this.cardValue1 = 0;
+    this.cardValue2 = 0;
+    this.redSuits = ["hearts", "diamonds"];
+    this.selectedChip = null;
+    this.gameActive = true;
+    this._listenersAttached = false;
   }
 
-  // Initialisiert das Spiel
   async init() {
     await this.refreshUI();
 
-    // Chip-Auswahl-Listener
-    document.querySelectorAll(".chip-btn").forEach(chip => {
-      chip.addEventListener("click", () => {
-        this.selectChip(chip);
+    if (!this._listenersAttached) {
+      this._listenersAttached = true;
+
+      document.querySelectorAll(".chip-btn").forEach(chip => {
+        chip.addEventListener("click", () => {
+          this.selectChip(chip);
+        });
       });
-    });
 
-    // Bet-Button
-    const betBtn = document.getElementById("bet");
-    if (betBtn) {
-      betBtn.addEventListener("click", () => this.placeBet());
-    }
+      const betBtn = document.getElementById("bet");
+      if (betBtn) {
+        betBtn.addEventListener("click", () => this.placeBet());
+      }
 
-    // Spielauswahl
-    const gameChoice = document.getElementById("GameChoice");
-    if (gameChoice) {
-      gameChoice.addEventListener("click", (event) => this.handleChoice(event));
+      const gameChoice = document.getElementById("GameChoice");
+      if (gameChoice) {
+        gameChoice.addEventListener("click", (event) => this.handleChoice(event));
+      }
     }
   }
 
@@ -226,6 +230,7 @@ class TripleGuessGame {
 
     if (isNaN(bank)) updateBankAndBet(0, currentBet);
 
+    await updateBankValue(-chipAmount);
     await setBet(currentBet);
   }
 
@@ -242,9 +247,9 @@ class TripleGuessGame {
       return;
     }
 
-    this.cardCount++;
     try {
       const card = await getCard();
+      this.cardCount++;
       const cardid = `#card${this.cardCount}`;
       document.querySelector(cardid).innerHTML = `<img src="${card.bild}" alt="">`;
 
@@ -263,7 +268,10 @@ class TripleGuessGame {
         document.querySelector("#auswahl1").innerHTML = "Higher";
         document.querySelector("#auswahl2").innerHTML = "Lower";
       } else if (this.cardCount === 2) {
-        if (userChoice === (this.cardValue1 < card.wert)) {
+        let isHigher = card.wert > this.cardValue1;
+        let isLower = card.wert < this.cardValue1;
+        let correct = (userChoice && isHigher) || (!userChoice && isLower);
+        if (correct) {
           // richtig geraten
         } else {
           setTimeout(() => {
@@ -277,8 +285,9 @@ class TripleGuessGame {
       } else if (this.cardCount === 3) {
         let greater = Math.max(this.cardValue1, this.cardValue2);
         let lesser = Math.min(this.cardValue1, this.cardValue2);
-        let isInside = card.wert > lesser && card.wert < greater;
-        let isCorrect = (userChoice && isInside) || (!userChoice && !isInside);
+        let isInside = (greater !== lesser) && card.wert > lesser && card.wert < greater;
+        let isOutside = card.wert < lesser || card.wert > greater;
+        let isCorrect = (userChoice && isInside) || (!userChoice && isOutside);
         setTimeout(() => {
           this.endGame(isCorrect);
         }, 750)
@@ -290,14 +299,15 @@ class TripleGuessGame {
 
   // Beendet das Spiel, wertet das Ergebnis aus und zeigt das Ergebnis an
   async endGame(won) {
-    await axios.get(`http://${window.location.hostname}:5105/api/tripleguess/GameOver`);
+    await axios.get(`http://${window.location.hostname}:5105/api/tripleguess/GameOver`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     this.gameActive = false;
     let einsatz = Number(document.querySelector("#betSpan").textContent) || 0;
     if (won) {
       await updateBankValue(einsatz * 8);
       showNotification("Gewonnen!", "Nochmal spielen", "../tripleGuess/index.html");
     } else {
-      await updateBankValue(-einsatz);
       let bankValue = await fetchBankValue();
       if (bankValue === 0) {
         showNotification("Keine Credits mehr", "Kaufe mehr Credits", "../Interface/credits.html");
@@ -323,14 +333,15 @@ function disableBetAndChips() {
   const clearBtn = document.getElementById('clear');
   if (clearBtn) clearBtn.style.display = 'none';
 }
-// Setzt das Spiel per Klick auf "clear" zurück
+let activeGame = null;
+
 document.getElementById('clear').onclick = async function () {
-  const game = new TripleGuessGame();
-  game.init();
+  if (activeGame) {
+    await activeGame.refreshUI();
+  }
 };
 
-// === Initialisierung ===
-window.addEventListener("DOMContentLoaded", () => {
-  const game = new TripleGuessGame();
-  game.init();
+document.addEventListener("DOMContentLoaded", () => {
+  activeGame = new TripleGuessGame();
+  activeGame.init();
 });

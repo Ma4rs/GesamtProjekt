@@ -61,7 +61,6 @@ function renderLadder() {
         const step = document.createElement("div");
         step.className = "ladder-step";
 
-        // Markiere aktive oder inaktive Stufen abhängig vom Spielstatus
         if (i === currentStep && gameStarted) {
             step.classList.add("active");
         } else if (!gameStarted) {

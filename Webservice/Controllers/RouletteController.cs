@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace C__Backend.Controllers
 {
     [ApiController]
     [Route("api/roulette/")]
-    public class RouletteController : ControllerBase 
-    {   
+    public class RouletteController : ControllerBase
+    {
         [HttpGet("spin")]
-        public int spin() // Random Zahl zurückgeben für Spin
+        public int spin()
         {
-            Random random = new Random();
-            return random.Next(37);
+            return Random.Shared.Next(37);
         }
     }
 }

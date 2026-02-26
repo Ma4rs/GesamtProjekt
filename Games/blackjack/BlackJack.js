@@ -35,30 +35,44 @@ btnStand.disabled = true;
 
 /* ----------- Server-Interaktionen ----------- */
 
-// Startkarten vom Backend holen (2 für Spieler, 2 für Dealer)
 async function fetchStartCards() {
     const res = await fetch(`http://${window.location.hostname}:5105/api/blackjack/startCard`, {
         method: "GET",
         headers: { "Authorization": `Bearer ${player}` }
     });
+    if (!res.ok) {
+        showNotification("Serverfehler beim Kartenverteilen.", "Okay", window.location.href);
+        return null;
+    }
     return await res.json();
 }
 
-// Eine neue Karte ziehen
 async function fetchDealCard() {
     const res = await fetch(`http://${window.location.hostname}:5105/api/blackjack/dealCard`, {
         method: "GET",
         headers: { "Authorization": `Bearer ${player}` }
     });
+    if (!res.ok) {
+        showNotification("Serverfehler beim Kartenziehen.", "Okay", window.location.href);
+        return null;
+    }
     return await res.json();
 }
 
-// Spiel beenden → Backend bereinigt den Kartenstapel
 async function resetBackendDeck() {
     await fetch(`http://${window.location.hostname}:5105/api/blackjack/GameOver`, {
         method: "GET",
         headers: { "Authorization": `Bearer ${player}` }
     });
+}
+
+async function fetchDealerHiddenCard() {
+    const res = await fetch(`http://${window.location.hostname}:5105/api/blackjack/revealDealerCard`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${player}` }
+    });
+    if (!res.ok) return null;
+    return await res.json();
 }
 
 // Credits des Spielers vom Server abrufen
@@ -156,8 +170,13 @@ function showNotification(msg, btnTxt, redirectUrl) {
         font-weight: bold;
     `;
     button.onclick = () => {
-        if (redirectUrl == "../Interface/credits.html") {
+        if (!redirectUrl) {
+            container.remove();
+            return;
+        }
+        if (redirectUrl === "../Interface/credits.html") {
             window.top.location.href = redirectUrl;
+            return;
         }
         window.location.href = redirectUrl;
     };
@@ -286,13 +305,22 @@ async function startGame() {
     await resetBackendDeck();
 
     const cards = await fetchStartCards();
+    if (!cards) {
+        playerMoney += betAmount;
+        updatePlayerMoneyDisplay();
+        chipButtons.forEach(c => c.disabled = false);
+        betContainer.style.pointerEvents = "auto";
+        betAmount = 0;
+        updateBetText();
+        return;
+    }
     playerHand = [cards[0], cards[1]];
-    dealerHand = [cards[2], cards[3]];
+    dealerHand = [cards[2]];
 
     renderCard(playerHand[0], playerSlot, true);
     renderCard(playerHand[1], playerSlot, true);
     renderCard(dealerHand[0], dealerArea, true);
-    renderCard(dealerHand[1], dealerArea, false);
+    renderCard({ image: "/Picture/Karten/Hinterseite.png", rank: "hidden", suit: "hidden", value: 0 }, dealerArea, false);
 
     updateScores();
 
@@ -302,9 +330,15 @@ async function startGame() {
     if (playerScore === 21) await stand(); // Sofortiger Blackjack
 }
 
-// Spieler zieht Karte
 async function playerHit() {
+    btnCard.disabled = true;
+    btnStand.disabled = true;
     const card = await fetchDealCard();
+    if (!card) {
+        btnCard.disabled = false;
+        btnStand.disabled = false;
+        return;
+    }
     playerHand.push(card);
     renderCard(card, playerSlot, true);
     updateScores();
@@ -312,25 +346,34 @@ async function playerHit() {
     if (playerScore > 21) {
         await sleep(500);
         await endGame("Du verlierst.");
+    } else if (playerScore === 21) {
+        await stand();
+    } else {
+        btnCard.disabled = false;
+        btnStand.disabled = false;
     }
 }
 
-// Spieler steht, jetzt ist der Dealer dran
 async function stand() {
     btnCard.disabled = true;
     btnStand.disabled = true;
 
-    const dealerCards = dealerArea.querySelectorAll("img.card");
-    if (dealerCards.length > 1) {
-        dealerCards[1].src = dealerHand[1].image;
-        await sleep(800);
+    const hiddenCard = await fetchDealerHiddenCard();
+    if (hiddenCard) {
+        dealerHand.push(hiddenCard);
+        const dealerCards = dealerArea.querySelectorAll("img.card");
+        if (dealerCards.length > 1) {
+            dealerCards[1].src = hiddenCard.image;
+        }
     }
+    await sleep(800);
 
     updateScores();
 
     while (dealerScore < 17) {
         await sleep(1000);
         const card = await fetchDealCard();
+        if (!card) break;
         dealerHand.push(card);
         renderCard(card, dealerArea, true);
         updateScores();

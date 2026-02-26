@@ -1,19 +1,7 @@
 let token = localStorage.getItem("token");
-;
 
-// async function authorize() {
-// 	const body = {
-// 		"email": "string",
-// 		"password": "string"
-// 	}
-// 	const Login = await axios.post(`http://localhost:5105/api/user/login`, body);
-// 	token = Login.data.token; // Token global merken!
-// 	return token;
-// }
-
-async function fetchBankValue() { // holt sich Bankvalue
+async function fetchBankValue() {
 	try {
-		// if (!token) await authorize();
 		const userData = await axios.get(`http://${window.location.hostname}:5105/api/user/getData`, {
 			headers: {
 				Authorization: `Bearer ${token}`
@@ -26,9 +14,8 @@ async function fetchBankValue() { // holt sich Bankvalue
 	}
 }
 
-async function safeBankvalue(gameResultsum) { //sichert Bankvalue
+async function safeBankvalue(gameResultsum) {
 	try {
-		// if (!token) await authorize();
 		const body = {
 			"creditsToAdd": gameResultsum
 		};
@@ -49,16 +36,17 @@ async function safeBankvalue(gameResultsum) { //sichert Bankvalue
 	}
 }
 
-async function GetSpin() { // Holt sich das Feld welches Gewinnen wird
+async function GetSpin() {
 	try {
 		const response = await axios.get(`http://${window.location.hostname}:5105/api/roulette/spin`);
 		return Number(response.data);
 	} catch (error) {
 		console.log("Fehler beim Laden des Spins: ", error);
+		return -1;
 	}
 }
 
-async function main() { // große Verschachtelung für await damit der Webservice funktioniert
+async function main() {
 	let bankValue = await fetchBankValue();
 	let currentBet = 0;
 	let wager = 5;
@@ -77,27 +65,14 @@ async function main() { // große Verschachtelung für await damit der Webservic
 	let wheel = null;
 	let ballTrack = null;
 
-	// function resetGame() {
-	// 	currentBet = 0;
-	// 	wager = 5;
-	// 	bet = [];
-	// 	numbersBet = [];
-	// 	previousNumbers = [];
-	// 	const bb = document.getElementById('betting_board');
-	// 	if (bb) bb.remove();
-	// 	const notif = document.getElementById('notification');
-	// 	if (notif) notif.remove();
-	// 	buildBettingBoard();
-	// }
-
 	function startGame() {
 		buildWheel();
-		wheel = document.getElementsByClassName('wheel')[0]; // setzt startfeld auf 0
-		ballTrack = document.getElementsByClassName('ballTrack')[0]; // ball ist auf Feld 0
+		wheel = document.getElementsByClassName('wheel')[0];
+		ballTrack = document.getElementsByClassName('ballTrack')[0];
 		buildBettingBoard();
 	}
 
-	function gameOver() { //Meldung bei Spiel vorbei mit Verweis auf credits.html
+	function gameOver() {
 		let notification = document.createElement('div');
 		notification.setAttribute('id', 'notification');
 		let nSpan = document.createElement('span');
@@ -116,80 +91,63 @@ async function main() { // große Verschachtelung für await damit der Webservic
 	}
 
 	function buildWheel() {
-		// Erstelle das Haupt-Element für das Roulette-Rad
 		let wheelDiv = document.createElement('div');
 		wheelDiv.setAttribute('class', 'wheel');
 
-		// Erstelle den äußeren Rand des Rads
 		let outerRim = document.createElement('div');
 		outerRim.setAttribute('class', 'outerRim');
 		wheelDiv.append(outerRim);
 
-		// Zahlen in typischer Reihenfolge eines europäischen Roulette-Rads
 		let numbers = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
 
-		// Schleife zum Erstellen aller Sektoren mit Zahlen
 		for (let i = 0; i < numbers.length; i++) {
-			let a = i + 1; // ID für den aktuellen Sektor (1-basiert)
-			let spanClass = (numbers[i] < 10) ? 'single' : 'double'; // Unterschiedliche Klassen je nach Zahlengröße
+			let a = i + 1;
+			let spanClass = (numbers[i] < 10) ? 'single' : 'double';
 
-			// Erstelle einen Sektor
 			let sect = document.createElement('div');
 			sect.setAttribute('id', 'sect' + a);
 			sect.setAttribute('class', 'sect');
 
-			// Erstelle das Zahlenelement im Sektor
 			let span = document.createElement('span');
-			span.setAttribute('class', spanClass); // Für Styling je nach Zahl
-			span.innerText = numbers[i]; // Zeige die Zahl an
+			span.setAttribute('class', spanClass);
+			span.innerText = numbers[i];
 			sect.append(span);
 
-			// Block im Sektor (z. B. visuelles Element, evtl. Trennung)
 			let block = document.createElement('div');
 			block.setAttribute('class', 'block');
 			sect.append(block);
 
-			// Hänge den Sektor ans Rad
 			wheelDiv.append(sect);
 		}
 
-		// Erstelle den inneren Rand der Zahlenfächer
 		let pocketsRim = document.createElement('div');
 		pocketsRim.setAttribute('class', 'pocketsRim');
 		wheelDiv.append(pocketsRim);
 
-		// Erstelle die Kugelbahn
 		let ballTrackDiv = document.createElement('div');
 		ballTrackDiv.setAttribute('class', 'ballTrack');
 
-		// Erstelle die Kugel selbst
 		let ball = document.createElement('div');
 		ball.setAttribute('class', 'ball');
 		ballTrackDiv.append(ball);
 
-		// Füge die Kugelbahn zum Rad hinzu
 		wheelDiv.append(ballTrackDiv);
 
-		// Erstelle die Taschen (Pockets), in denen die Kugel landet
 		let pockets = document.createElement('div');
 		pockets.setAttribute('class', 'pockets');
 		wheelDiv.append(pockets);
 
-		// Erstelle den Kegel in der Mitte des Rads
 		let cone = document.createElement('div');
 		cone.setAttribute('class', 'cone');
 		wheelDiv.append(cone);
 
-		// Erstelle den Turm (Zentralteil des Rads)
 		let turret = document.createElement('div');
 		turret.setAttribute('class', 'turret');
 		wheelDiv.append(turret);
 
-		// Erstelle den Griff am Turm
 		let turretHandle = document.createElement('div');
 		turretHandle.setAttribute('class', 'turretHandle');
 
-		// Erstelle die Enden des Turmgriffs
 		let thendOne = document.createElement('div');
 		thendOne.setAttribute('class', 'thendOne');
 		turretHandle.append(thendOne);
@@ -198,158 +156,118 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		thendTwo.setAttribute('class', 'thendTwo');
 		turretHandle.append(thendTwo);
 
-		// Füge den Griff zum Rad hinzu
 		wheelDiv.append(turretHandle);
 
-		// Füge das komplette Rad in das Haupt-Container-Element ein
 		container.append(wheelDiv);
 	}
 
 
 	async function buildBettingBoard() {
-		// Der Code erstellt dynamisch das gesamte Wettfeld für ein Roulette-Spiel im Browser. 
-		// Alle Wettoptionen wie Zahlen, Farben, Drittel, Spalten und einfache Chancen werden per DOM aufgebaut, sind klickbar und mit Funktionen 
-		// zum Setzen und Entfernen von Einsätzen verknüpft. Zudem gibt es Chips zur Einsatzwahl, eine Bankanzeige und einen Verlauf der gezogenen Zahlen.
-		// Was wird alles gebaut?
-		// Obere Blöcke (1–18 & 19–36) → outside_low / outside_high
-		// Zahlenfeld mit 0–36 und „2 to 1“ Feldern → inside_whole / outside_column
-		// Drittel-Wetten (1–12, 13–24, 25–36) → outside_dozen
-		// EVEN, ODD, RED, BLACK → outside_oerb
-		// Chip-Auswahl (1, 5, 10, 100, All, clear) → Einsatzhöhe setzen oder löschen
-		// Bank- und Einsatzanzeige → Live-Update nach jeder Aktion
-		// Scrollbarer Bereich für Spielverlauf (pnBlock)
-		// Board wird gebaut
-		// Haupt-Container für das Wettfeld erstellen
 		let bettingBoard = document.createElement('div');
 		bettingBoard.setAttribute('id', 'betting_board');
 
-		// Container für die Linien-Wettbereiche
 		let wl = document.createElement('div');
 		wl.setAttribute('class', 'winning_lines');
 
-		// Doppelte Straßen-Wetten (6 Zahlen pro Block)
-		// -> 11 Blöcke, decken 1–36 ab (immer 6 Zahlen pro Block: z.B. 1–6, 4–9, ..., 31–36)
-		var wlttb = document.createElement('div');
+		// Double street bets
+		let wlttb = document.createElement('div');
 		wlttb.setAttribute('id', 'wlttb_top');
 		wlttb.setAttribute('class', 'wlttb');
-		for (i = 0; i < 11; i++) {
+		for (let i = 0; i < 11; i++) {
 			let j = i;
 
-			// Ein Block für eine Double-Street-Wette
-			var ttbbetblock = document.createElement('div');
+			let ttbbetblock = document.createElement('div');
 			ttbbetblock.setAttribute('class', 'ttbbetblock');
 
-			// Die 6 Zahlen dieser Double-Street berechnen
-			var numA = (1 + (3 * j));
-			var numB = (2 + (3 * j));
-			var numC = (3 + (3 * j));
-			var numD = (4 + (3 * j));
-			var numE = (5 + (3 * j));
-			var numF = (6 + (3 * j));
+			let numA = (1 + (3 * j));
+			let numB = (2 + (3 * j));
+			let numC = (3 + (3 * j));
+			let numD = (4 + (3 * j));
+			let numE = (5 + (3 * j));
+			let numF = (6 + (3 * j));
 			let num = numA + ', ' + numB + ', ' + numC + ', ' + numD + ', ' + numE + ', ' + numF;
-			var objType = 'double_street';
+			let objType = 'double_street';
 
-			// Linksklick zum Setzen der Wette
 			ttbbetblock.onclick = function () {
 				setBet(this, num, objType, 5);
 			};
 
-			// Rechtsklick zum Entfernen der Wette
 			ttbbetblock.oncontextmenu = function (e) {
 				e.preventDefault();
 				removeBet(this, num, objType, 5);
 			};
-			wlttb.append(ttbbetblock); // Block in den Liniencontainer einfügen
+			wlttb.append(ttbbetblock);
 		}
-		wl.append(wlttb); // Liniencontainer in das Gesamt-Wettfeld einfügen
+		wl.append(wlttb);
 
 
-		// Schleife für drei Typen von seitlichen Wetten:
-		// d == 1: linke Splits (horizontal)
-		// d == 2: rechte Splits (horizontal)
-		// d == 3: Streets (3 Zahlen vertikal)
-		for (c = 1; c < 4; c++) {
+		// Splits and streets
+		for (let c = 1; c < 4; c++) {
 			let d = c;
-			// Neuen Container für die jeweilige Wettlinie erzeugen
-			var wlttb = document.createElement('div');
+			let wlttb = document.createElement('div');
 			wlttb.setAttribute('id', 'wlttb_' + c);
 			wlttb.setAttribute('class', 'wlttb');
-			for (i = 0; i < 12; i++) {
+			for (let i = 0; i < 12; i++) {
 				let j = i;
-				var ttbbetblock = document.createElement('div');
+				let ttbbetblock = document.createElement('div');
 				ttbbetblock.setAttribute('class', 'ttbbetblock');
 
-				// Klick für Wette setzen
 				ttbbetblock.onclick = function () {
+					let numA, numB, numC, num;
 					if (d == 1 || d == 2) {
-						// Horizontale Split-Wette (2 Zahlen nebeneinander)
-						var numA = ((2 - (d - 1)) + (3 * j));
-						var numB = ((3 - (d - 1)) + (3 * j));
-						var num = numA + ', ' + numB;
+						numA = ((2 - (d - 1)) + (3 * j));
+						numB = ((3 - (d - 1)) + (3 * j));
+						num = numA + ', ' + numB;
 					}
 					else {
-						//  Street-Wette (drei Zahlen in einer Reihe)
-						var numA = (1 + (3 * j));
-						var numB = (2 + (3 * j));
-						var numC = (3 + (3 * j));
-						var num = numA + ', ' + numB + ', ' + numC;
+						numA = (1 + (3 * j));
+						numB = (2 + (3 * j));
+						numC = (3 + (3 * j));
+						num = numA + ', ' + numB + ', ' + numC;
 					}
-					var objType = (d == 3) ? 'street' : 'split';
-					var odd = (d == 3) ? 11 : 17;
+					let objType = (d == 3) ? 'street' : 'split';
+					let odd = (d == 3) ? 11 : 17;
 					setBet(this, num, objType, odd);
 				};
-				// Dem aktuellen Linienblock (wlttb) einen Klickbereich hinzufügen
 				ttbbetblock.oncontextmenu = function (e) {
-					// Standard-Kontextmenü im Browser unterdrücken (damit Rechtsklick funktioniert)
 					e.preventDefault();
-					//  Prüfen, ob es sich um eine horizontale Split-Wette handelt
+					let numA, numB, numC, num;
 					if (d == 1 || d == 2) {
-						var numA = ((2 - (d - 1)) + (3 * j));
-						var numB = ((3 - (d - 1)) + (3 * j));
-						var num = numA + ', ' + numB;
+						numA = ((2 - (d - 1)) + (3 * j));
+						numB = ((3 - (d - 1)) + (3 * j));
+						num = numA + ', ' + numB;
 					}
 					else {
-						// Vertikale Dreierreihe (Street): z. B. 1,2,3 oder 4,5,6
-						var numA = (1 + (3 * j));
-						var numB = (2 + (3 * j));
-						var numC = (3 + (3 * j));
-						var num = numA + ', ' + numB + ', ' + numC;
+						numA = (1 + (3 * j));
+						numB = (2 + (3 * j));
+						numC = (3 + (3 * j));
+						num = numA + ', ' + numB + ', ' + numC;
 					}
-					// Wettart festlegen (split oder street)
-					var objType = (d == 3) ? 'street' : 'split';
-					// Quoten definieren (street = 11:1, split = 17:1)
-					var odd = (d == 3) ? 11 : 17;
-					// Wette entfernen
+					let objType = (d == 3) ? 'street' : 'split';
+					let odd = (d == 3) ? 11 : 17;
 					removeBet(this, num, objType, odd);
 				};
-				//  Wettblock zum Linienblock hinzufügen
 				wlttb.append(ttbbetblock);
 			}
-			// Nach Abschluss der inneren Schleife: Linienblock (wlttb) zur übergeordneten Fläche (wl) hinzufügen
 			wl.append(wlttb);
 		}
 
-		// Es werden 11 Linienblöcke erzeugt, jeweils für die vertikalen Splits rechts von Zahlenfeldern (z. B. zwischen 2 & 5, 5 & 8).
-		for (c = 1; c < 12; c++) {
-			// Jeder Block wlrtl steht für eine Spalte mit 3 Splits.
+		// Vertical splits
+		for (let c = 1; c < 12; c++) {
 			let d = c;
-			var wlrtl = document.createElement('div');
+			let wlrtl = document.createElement('div');
 			wlrtl.setAttribute('id', 'wlrtl_' + c);
 			wlrtl.setAttribute('class', 'wlrtl');
 
-			// Jede dieser Spalten bekommt 3 Blöcke – einer für jede Split-Verbindung nach unten.
-			for (i = 1; i < 4; i++) {
+			for (let i = 1; i < 4; i++) {
 				let j = i;
-				var rtlbb = document.createElement('div');
+				let rtlbb = document.createElement('div');
 				rtlbb.setAttribute('class', 'rtlbb' + i);
 
-				// Hier werden zwei benachbarte Zahlen vertikal errechnet, z. B. (2,5), (5,8), etc.
-				var numA = (3 + (3 * (d - 1))) - (j - 1);
-				var numB = (6 + (3 * (d - 1))) - (j - 1);
+				let numA = (3 + (3 * (d - 1))) - (j - 1);
+				let numB = (6 + (3 * (d - 1))) - (j - 1);
 				let num = numA + ', ' + numB;
 
-				// Event - Handler setzen bzw.entfernen Split - Wetten(Quote 17).
-				// Am Ende wird jeder Linienblock dem Hauptfeld hinzugefügt.
 				rtlbb.onclick = function () {
 					setBet(this, num, 'split', 17);
 				};
@@ -362,33 +280,25 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			wl.append(wlrtl);
 		}
 
-		// Es gibt 2 Zeilen von Corner-Bet-Blöcken – oben und unten auf dem Spielbrett.
-		for (c = 1; c < 3; c++) {
-			var wlcb = document.createElement('div');
+		// Corner bets
+		for (let c = 1; c < 3; c++) {
+			let wlcb = document.createElement('div');
 			wlcb.setAttribute('id', 'wlcb_' + c);
 			wlcb.setAttribute('class', 'wlcb');
 
-			// In jeder Zeile entstehen 11 Corner-Bet-Blöck
-			for (i = 1; i < 12; i++) {
+			for (let i = 1; i < 12; i++) {
 				let count = (c == 1) ? i : i + 11;
-				var cbbb = document.createElement('div');
+				let cbbb = document.createElement('div');
 				cbbb.setAttribute('id', 'cbbb_' + count);
 				cbbb.setAttribute('class', 'cbbb');
 
-				// Startwerte für die Ecken eines 2x2-Quadrats.
-				var numA = '2';
-				var numB = '3';
-				var numC = '5';
-				var numD = '6';
+				let numA = '2';
+				let numB = '3';
+				let numC = '5';
+				let numD = '6';
 				let num = (count >= 1 && count < 12) ? (parseInt(numA) + ((count - 1) * 3)) + ', ' + (parseInt(numB) + ((count - 1) * 3)) + ', ' + (parseInt(numC) + ((count - 1) * 3)) + ', ' + (parseInt(numD) + ((count - 1) * 3)) : ((parseInt(numA) - 1) + ((count - 12) * 3)) + ', ' + ((parseInt(numB) - 1) + ((count - 12) * 3)) + ', ' + ((parseInt(numC) - 1) + ((count - 12) * 3)) + ', ' + ((parseInt(numD) - 1) + ((count - 12) * 3));
-				var objType = 'corner_bet'; //Diese Zeile erstellt eine Variable namens objType und weist ihr den Stringwert 'corner_bet' zu.
-				// Zweck im Kontext 
-				// -> Diese Variable wird anschließend verwendet, um bei Funktionsaufrufen wie setBet() oder removeBet() zu definieren
-				//  welcher Typ von Wette platziert oder entfernt werden soll.
+				let objType = 'corner_bet';
 
-
-				// Event-Handler setzen bzw. entfernen Split-Wetten (Quote 17).
-				// Am Ende wird jeder Linienblock dem Hauptfeld hinzugefügt.
 				cbbb.onclick = function () {
 					setBet(this, num, objType, 8);
 				};
@@ -400,23 +310,20 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			}
 			wl.append(wlcb);
 		}
-		// ^Quote ist 8:1, Wetten per Klick, Löschen mit Rechtsklick.
 
-		// Fügt alle Linien (splits, streets, corners usw.) in das große Wettfeld ei
 		bettingBoard.append(wl);
 
-		// Zwei Outside-Wettbereiche am oberen Rand des Boards.
+		// Outside bets: 1-18 and 19-36
 		let bbtop = document.createElement('div');
 		bbtop.setAttribute('class', 'bbtop');
 		let bbtopBlocks = ['1 to 18', '19 to 36'];
 
-		// Die entsprechenden Zahlenbereiche werden definiert.
-		for (i = 0; i < bbtopBlocks.length; i++) {
-			let f = i;	// definiert Block -> wenn 0 ist es der linke Block bei 1 der Rechte
-			var bbtoptwo = document.createElement('div');
+		for (let i = 0; i < bbtopBlocks.length; i++) {
+			let f = i;
+			let bbtoptwo = document.createElement('div');
 			bbtoptwo.setAttribute('class', 'bbtoptwo');
 			let num = (f == 0) ? '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18' : '19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36';
-			var objType = (f == 0) ? 'outside_low' : 'outside_high';
+			let objType = (f == 0) ? 'outside_low' : 'outside_high';
 			bbtoptwo.onclick = function () {
 				setBet(this, num, objType, 1);
 			};
@@ -434,14 +341,14 @@ async function main() { // große Verschachtelung für await damit der Webservic
 
 		let zero = document.createElement('div');
 		zero.setAttribute('class', 'number_0');
-		var objType = 'zero';
-		var odds = 35;
+		let zeroType = 'zero';
+		let zeroOdds = 35;
 		zero.onclick = function () {
-			setBet(this, '0', objType, odds);
+			setBet(this, '0', zeroType, zeroOdds);
 		};
 		zero.oncontextmenu = function (e) {
 			e.preventDefault();
-			removeBet(this, '0', objType, odds);
+			removeBet(this, '0', zeroType, zeroOdds);
 		};
 		let nbnz = document.createElement('div');
 		nbnz.setAttribute('class', 'nbn');
@@ -449,19 +356,19 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		zero.append(nbnz);
 		numberBoard.append(zero);
 
-		var numberBlocks = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, '2 to 1', 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, '2 to 1', 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34, '2 to 1'];
-		var redBlocks = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
-		for (i = 0; i < numberBlocks.length; i++) {
+		let numberBlocks = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, '2 to 1', 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, '2 to 1', 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34, '2 to 1'];
+		let redBlocks = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+		for (let i = 0; i < numberBlocks.length; i++) {
 			let a = i;
-			var nbClass = (numberBlocks[i] == '2 to 1') ? 'tt1_block' : 'number_block';
-			var colourClass = (redBlocks.includes(numberBlocks[i])) ? ' redNum' : ((nbClass == 'number_block') ? ' blackNum' : '');
-			var numberBlock = document.createElement('div');
+			let nbClass = (numberBlocks[i] == '2 to 1') ? 'tt1_block' : 'number_block';
+			let colourClass = (redBlocks.includes(numberBlocks[i])) ? ' redNum' : ((nbClass == 'number_block') ? ' blackNum' : '');
+			let numberBlock = document.createElement('div');
 			numberBlock.setAttribute('class', nbClass + colourClass);
 			numberBlock.onclick = function () {
 				if (numberBlocks[a] != '2 to 1') {
 					setBet(this, '' + numberBlocks[a] + '', 'inside_whole', 35);
 				} else {
-					num = (a == 12) ? '3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36' : ((a == 25) ? '2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35' : '1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34');
+					let num = (a == 12) ? '3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36' : ((a == 25) ? '2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35' : '1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34');
 					setBet(this, num, 'outside_column', 2);
 				}
 			};
@@ -470,11 +377,11 @@ async function main() { // große Verschachtelung für await damit der Webservic
 				if (numberBlocks[a] != '2 to 1') {
 					removeBet(this, '' + numberBlocks[a] + '', 'inside_whole', 35);
 				} else {
-					num = (a == 12) ? '3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36' : ((a == 25) ? '2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35' : '1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34');
+					let num = (a == 12) ? '3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36' : ((a == 25) ? '2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35' : '1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34');
 					removeBet(this, num, 'outside_column', 2);
 				}
 			};
-			var nbn = document.createElement('div');
+			let nbn = document.createElement('div');
 			nbn.setAttribute('class', 'nbn');
 			nbn.innerText = numberBlocks[i];
 			numberBlock.append(nbn);
@@ -485,17 +392,17 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		let bo3Board = document.createElement('div');
 		bo3Board.setAttribute('class', 'bo3_board');
 		let bo3Blocks = ['1 to 12', '13 to 24', '25 to 36'];
-		for (i = 0; i < bo3Blocks.length; i++) {
+		for (let i = 0; i < bo3Blocks.length; i++) {
 			let b = i;
-			var bo3Block = document.createElement('div');
+			let bo3Block = document.createElement('div');
 			bo3Block.setAttribute('class', 'bo3_block');
 			bo3Block.onclick = function () {
-				num = (b == 0) ? '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12' : ((b == 1) ? '13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24' : '25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36');
+				let num = (b == 0) ? '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12' : ((b == 1) ? '13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24' : '25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36');
 				setBet(this, num, 'outside_dozen', 2);
 			};
 			bo3Block.oncontextmenu = function (e) {
 				e.preventDefault();
-				num = (b == 0) ? '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12' : ((b == 1) ? '13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24' : '25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36');
+				let num = (b == 0) ? '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12' : ((b == 1) ? '13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24' : '25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36');
 				removeBet(this, num, 'outside_dozen', 2);
 			};
 			bo3Block.innerText = bo3Blocks[i];
@@ -506,17 +413,17 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		let otoBoard = document.createElement('div');
 		otoBoard.setAttribute('class', 'oto_board');
 		let otoBlocks = ['EVEN', 'RED', 'BLACK', 'ODD'];
-		for (i = 0; i < otoBlocks.length; i++) {
+		for (let i = 0; i < otoBlocks.length; i++) {
 			let d = i;
-			var colourClass = (otoBlocks[i] == 'RED') ? ' redNum' : ((otoBlocks[i] == 'BLACK') ? ' blackNum' : '');
-			var otoBlock = document.createElement('div');
+			let colourClass = (otoBlocks[i] == 'RED') ? ' redNum' : ((otoBlocks[i] == 'BLACK') ? ' blackNum' : '');
+			let otoBlock = document.createElement('div');
 			otoBlock.setAttribute('class', 'oto_block' + colourClass);
 			otoBlock.onclick = function () {
-				num = (d == 0) ? '2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36' : ((d == 1) ? '1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36' : ((d == 2) ? '2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35' : '1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35'));
+				let num = (d == 0) ? '2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36' : ((d == 1) ? '1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36' : ((d == 2) ? '2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35' : '1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35'));
 				setBet(this, num, 'outside_oerb', 1);
 			};
 			otoBlock.oncontextmenu = function (e) {
-				num = (d == 0) ? '2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36' : ((d == 1) ? '1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36' : ((d == 2) ? '2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35' : '1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35'));
+				let num = (d == 0) ? '2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36' : ((d == 1) ? '1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36' : ((d == 2) ? '2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35' : '1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35'));
 				e.preventDefault();
 				removeBet(this, num, 'outside_oerb', 1);
 			};
@@ -528,7 +435,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		let chipDeck = document.createElement('div');
 		chipDeck.setAttribute('class', 'chipDeck');
 		let chipValues = [1, 5, 10, 100, 'All', 'clear'];
-		for (i = 0; i < chipValues.length; i++) {
+		for (let i = 0; i < chipValues.length; i++) {
 			let cvi = i;
 			let chipColour = (i == 0) ? 'red' : ((i == 1) ? 'blue cdChipActive' : ((i == 2) ? 'orange' : ((i == 3) ? 'gold' : ((i == 4) ? 'black' : 'clearBet'))));
 			let chip = document.createElement('div');
@@ -536,8 +443,8 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			chip.onclick = async function () {
 				if (cvi !== 5) {
 					let cdChipActive = document.getElementsByClassName('cdChipActive');
-					for (i = 0; i < cdChipActive.length; i++) {
-						cdChipActive[i].classList.remove('cdChipActive');
+					for (let k = 0; k < cdChipActive.length; k++) {
+						cdChipActive[k].classList.remove('cdChipActive');
 					}
 					let curClass = this.getAttribute('class');
 					if (!curClass.includes('cdChipActive')) {
@@ -545,7 +452,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 					}
 					wager = parseInt(chip.childNodes[0].innerText);
 					if (cvi === 4) {
-						wager = await bankValue;
+						wager = bankValue;
 					}
 				} else {
 					bankValue = bankValue + currentBet;
@@ -571,21 +478,17 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		bank.setAttribute('class', 'bank');
 		let bankSpan = document.createElement('span');
 		bankSpan.setAttribute('id', 'bankSpan');
-		console.log(bankValue)
-		// bankValue.then((ergebnis) => {
-		// bankSpan.innerText = '' + ergebnis.toLocaleString("en-GB") + '';
-		// })
-		bankSpan.innerText = '' + await bankValue.toLocaleString("en-GB") + '';
+		bankSpan.innerText = '' + bankValue.toLocaleString("en-GB") + '';
 		bank.append(bankSpan);
 		bankContainer.append(bank);
 
-		let bet = document.createElement('div');
-		bet.setAttribute('class', 'bet');
+		let betEl = document.createElement('div');
+		betEl.setAttribute('class', 'bet');
 		let betSpan = document.createElement('span');
 		betSpan.setAttribute('id', 'betSpan');
 		betSpan.innerText = '' + currentBet.toLocaleString("en-GB") + '';
-		bet.append(betSpan);
-		bankContainer.append(bet);
+		betEl.append(betSpan);
+		bankContainer.append(betEl);
 		bettingBoard.append(bankContainer);
 
 		let pnBlock = document.createElement('div');
@@ -602,16 +505,13 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		container.append(bettingBoard);
 	}
 
-	// leert die Wetten
 	function clearBet() {
 		bet = [];
 		numbersBet = [];
 	}
 
-	// Setzt einen Einsatz, zieht den Betrag vom Konto ab, zeigt einen Chip auf dem Feld an und fügt die Wette der Liste hinzu (Erweiterung: Wie in Triple Guess den WettBetrag am Webservice speichern)
 	async function setBet(e, n, t, o) {
 		lastWager = wager;
-		// bankValue = await fetchBankValue();
 		wager = (bankValue < wager) ? bankValue : wager;
 		if (wager > 0) {
 			if (!container.querySelector('.spinBtn')) {
@@ -628,7 +528,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			currentBet = currentBet + wager;
 			document.getElementById('bankSpan').innerText = '' + bankValue.toLocaleString("en-GB") + '';
 			document.getElementById('betSpan').innerText = '' + currentBet.toLocaleString("en-GB") + '';
-			for (i = 0; i < bet.length; i++) {
+			for (let i = 0; i < bet.length; i++) {
 				if (bet[i].numbers == n && bet[i].type == t) {
 					bet[i].amt = bet[i].amt + wager;
 					let chipColour = (bet[i].amt < 5) ? 'red' : ((bet[i].amt < 10) ? 'blue' : ((bet[i].amt < 100) ? 'orange' : 'gold'));
@@ -639,7 +539,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 					return;
 				}
 			}
-			var obj = {
+			let obj = {
 				amt: wager,
 				type: t,
 				odds: o,
@@ -648,7 +548,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			bet.push(obj);
 
 			let numArray = n.split(',').map(Number);
-			for (i = 0; i < numArray.length; i++) {
+			for (let i = 0; i < numArray.length; i++) {
 				if (!numbersBet.includes(numArray[i])) {
 					numbersBet.push(numArray[i]);
 				}
@@ -667,44 +567,63 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		}
 	}
 
-	async function spin() {  // hier findet der Spin selbst statt
-		// hier chip
-		// var winningSpin = Math.floor(Math.random() * 37);  // Hier Zahl übergeben -> Wer gewinnt
+	async function spin() {
 		blockiereKlicks();
 		let cdChipActive = document.getElementsByClassName('cdChipActive');
-		for (i = 0; i < cdChipActive.length; i++) {
+		for (let i = 0; i < cdChipActive.length; i++) {
 			cdChipActive[i].classList.remove('cdChipActive');
 		}
 		const clearBtn = document.querySelector('.cdChip.clearBet');
 		if (clearBtn) clearBtn.style.display = 'none';
-		var winningSpin = await GetSpin();
-		// var winningSpin = 0;
+		let winningSpin = await GetSpin();
+
+		if (winningSpin === -1) {
+			alert("Fehler beim Spin. Bitte erneut versuchen.");
+			let spinBtn = document.createElement('div');
+			spinBtn.setAttribute('class', 'spinBtn');
+			spinBtn.innerText = 'spin';
+			spinBtn.onclick = function () {
+				this.remove();
+				spin();
+			};
+			container.append(spinBtn);
+			erlaubeKlicks();
+			if (clearBtn) clearBtn.style.display = '';
+			return;
+		}
+
 		console.log(winningSpin)
 		spinWheel(winningSpin);
 		setTimeout(async function () {
 			let winValue = 0;
-			let betTotal = 0;
-			if (numbersBet.includes(winningSpin)) {
-				for (i = 0; i < bet.length; i++) {
-					var numArray = bet[i].numbers.split(',').map(Number);
-					console.log(bet[i].numbers);
-					if (numArray.includes(winningSpin)) {
-						// Hier
-						// bankValue = (bankValue + (bet[i].odds * bet[i].amt) + bet[i].amt);
-						winValue = winValue + (bet[i].odds * bet[i].amt);
-						betTotal = betTotal + bet[i].amt;
-					}
+			let losingBetTotal = 0;
+			let winningBetTotal = 0;
+
+			for (let i = 0; i < bet.length; i++) {
+				let numArray = bet[i].numbers.split(',').map(Number);
+				if (numArray.includes(winningSpin)) {
+					winValue = winValue + (bet[i].odds * bet[i].amt);
+					winningBetTotal = winningBetTotal + bet[i].amt;
+				} else {
+					losingBetTotal = losingBetTotal + bet[i].amt;
 				}
+			}
+
+			if (winValue > 0) {
 				bankValue = await fetchBankValue();
-				win(winningSpin, winValue, betTotal);
-			}
-			else {
-				for (i = 0; i < bet.length; i++) {
-					betTotal = betTotal + bet[i].amt;
+				let netResult = winValue - losingBetTotal;
+				await safeBankvalue(netResult);
+				win(winningSpin, winValue, winningBetTotal);
+			} else {
+				let totalLoss = 0;
+				for (let i = 0; i < bet.length; i++) {
+					totalLoss = totalLoss + bet[i].amt;
 				}
-				await safeBankvalue(betTotal * -1);
+				await safeBankvalue(totalLoss * -1);
 			}
+
 			currentBet = 0;
+			bankValue = await fetchBankValue();
 			document.getElementById('bankSpan').innerText = '' + bankValue.toLocaleString("en-GB") + '';
 			document.getElementById('betSpan').innerText = '' + currentBet.toLocaleString("en-GB") + '';
 
@@ -720,8 +639,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			numbersBet = [];
 			removeChips();
 			wager = lastWager;
-			bankValue = await fetchBankValue();
-			if (bankValue == 0 && currentBet == 0) {	// wenn man verliert dann wird GameOver aufgerufen
+			if (bankValue == 0 && currentBet == 0) {
 				gameOver();
 			}
 			if (clearBtn) clearBtn.style.display = '';
@@ -729,7 +647,7 @@ async function main() { // große Verschachtelung für await damit der Webservic
 		}, 10000);
 	}
 
-	async function win(winningSpin, winValue, betTotal) { // wenn man gewinnt das gewinn fenster (pop up)
+	async function win(winningSpin, winValue, betTotal) {
 		if (winValue > 0) {
 			let notification = document.createElement('div');
 			notification.setAttribute('id', 'notification');
@@ -762,8 +680,6 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			nSpan.append(nsWin);
 			notification.append(nSpan);
 			container.prepend(notification);
-			//hier wird das gesamte fenster zusammengebaut und anschließend der Gewinn am Webservice gespeichert
-			await safeBankvalue(winValue)
 			setTimeout(function () {
 				notification.style.cssText = 'opacity:0';
 			}, 3000);
@@ -771,19 +687,13 @@ async function main() { // große Verschachtelung für await damit der Webservic
 				notification.remove();
 			}, 4000);
 		}
-		else {
-			let los = betTotal * -1;
-			await safeBankvalue(los);
-			console.log("Verloren")
-		}
-		// console.log("If verlassen")
 		bankValue = await fetchBankValue();
 		document.getElementById('bankSpan').innerText = '' + bankValue.toLocaleString("en-GB") + '';
 	}
 
-	function removeBet(e, n, t, o) { // setzt den Wettbetrag auf 0
+	function removeBet(e, n, t, o) {
 		wager = (wager == 0) ? 100 : wager;
-		for (i = 0; i < bet.length; i++) {
+		for (let i = 0; i < bet.length; i++) {
 			if (bet[i].numbers == n && bet[i].type == t) {
 				if (bet[i].amt != 0) {
 					wager = (bet[i].amt > wager) ? wager : bet[i].amt;
@@ -810,18 +720,16 @@ async function main() { // große Verschachtelung für await damit der Webservic
 	}
 
 	function spinWheel(winningSpin) {
-		// Bestimme die Gradzahl, auf die das Rad und die Kugel drehen sollen
 		let degree = 0;
 		for (let i = 0; i < wheelnumbersAC.length; i++) {
 			if (wheelnumbersAC[i] == winningSpin) {
 				degree = (i * 9.73) + 362;
 			}
 		}
-		// Startanimation: Das Rad dreht sich und die Kugel läuft schnell herum
 		wheel.style.cssText = 'animation: wheelRotate 5s linear infinite;';
 		ballTrack.style.cssText = 'animation: ballRotate 1s linear infinite;';
 
-		// Nach 2 Sekunden wird die Kugel langsamer (Animation wird angepasst)
+		let style;
 		setTimeout(function () {
 			ballTrack.style.cssText = 'animation: ballRotate 2s linear infinite;';
 			style = document.createElement('style');
@@ -829,47 +737,37 @@ async function main() { // große Verschachtelung für await damit der Webservic
 			style.innerText = '@keyframes ballStop {from {transform: rotate(0deg);}to{transform: rotate(-' + degree + 'deg);}}';
 			document.head.appendChild(style);
 		}, 2000);
-		// Nach 6 Sekunden stoppt die Kugel langsam auf dem Gewinnerfeld
 		setTimeout(function () {
 			ballTrack.style.cssText = 'animation: ballStop 3s linear;';
 		}, 6000);
-		// Nach 9 Sekunden bleibt die Kugel endgültig stehen
 		setTimeout(function () {
 			ballTrack.style.cssText = 'transform: rotate(-' + degree + 'deg);';
 		}, 9000);
-		// Nach 10 Sekunden wird die Animation zurückgesetzt
 		setTimeout(function () {
 			wheel.style.cssText = '';
-			style.remove();
+			if (style) style.remove();
 		}, 10000);
 	}
 
-	function removeChips() { //entfernt alle chips
-		var chips = document.getElementsByClassName('chip');
-		if (chips.length > 0) {
-			for (i = 0; i < chips.length; i++) {
-				chips[i].remove();
-			}
-			removeChips();
+	function removeChips() {
+		let chips = document.getElementsByClassName('chip');
+		while (chips.length > 0) {
+			chips[0].remove();
 		}
 	}
 
-	// während eines spins muss nicht geklickt werden deswegen wird alles blockiert
 	function blockiereKlicks() {
 		document.getElementById("klickSperre").style.display = "block";
 	}
 	function erlaubeKlicks() {
 		document.getElementById("klickSperre").style.display = "none";
 
-		// Alle bisher aktiven Chips deaktivieren
-		var activeChips = document.getElementsByClassName("cdChipActive");
-		for (var i = 0; i < activeChips.length; i++) {
+		let activeChips = document.getElementsByClassName("cdChipActive");
+		for (let i = 0; i < activeChips.length; i++) {
 			activeChips[i].classList.remove("cdChipActive");
 		}
 
-		// Den blauen Chip suchen und aktivieren
-		// Im Roulette-Code ist der blaue Chip immer der zweite Chip (Index 1)
-		var chips = document.getElementsByClassName("cdChip");
+		let chips = document.getElementsByClassName("cdChip");
 		if (chips.length > 1) {
 			chips[1].classList.add("cdChipActive");
 		}
